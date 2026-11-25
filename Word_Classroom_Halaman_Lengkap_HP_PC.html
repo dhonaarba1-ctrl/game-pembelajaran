@@ -187,12 +187,19 @@
  .gate .dialog .actions{position:sticky;bottom:-2px;z-index:2;margin-top:6px;padding:5px 0;background:white}
  .gate .notice{display:none}
 }
+
+/* Classroom desktop behavior: Enter is a paragraph, page breaks are explicit. */
+.word-keyboard-hint{position:fixed;right:9px;bottom:39px;z-index:30;background:#ffffffed;border:1px solid #bbd4f3;border-radius:7px;color:#27527e;font-size:10px;box-shadow:0 2px 8px #2b466520;padding:5px 8px;pointer-events:none;opacity:.9}
+.word-keyboard-hint.hidden{display:none}
+.word-ico svg{stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:650px){.word-keyboard-hint{display:none}}
 </style>
 </head>
 <body>
 <div class="topbar"><div class="logo">W</div><input id="docName" class="docname" value="Document1" aria-label="Document name" title="Document name"><button id="quickSave" title="Save (virtual)">💾</button><button id="quickUndo" title="Undo">↶</button><button id="quickRedo" title="Redo">↷</button><span class="muted">Word Classroom · Offline Practice</span><div class="gap"></div><span id="studentBadge" class="chip" style="background:#ffffff24;color:#fff;border-color:#ffffff35;cursor:pointer" title="Ganti siswa">👤 Masuk</span><button id="syncBtn" title="Kirim laporan saat internet tersedia">☁︎ Sync</button><button id="docMissionBtn" title="Pilih tugas dokumen mandiri">📄 Misi Dokumen</button><button id="docMissionToggle" class="hidden" title="Tampilkan/sembunyikan contoh dokumen">👁 Contoh</button><button id="practiceBtn">🎓 Latihan</button><button id="teacherBtn" class="teach">⚙ Guru</button><button id="fullScreenBtn" title="Enter Full Screen / Layar Penuh">⛶ Full Screen</button><button id="ribbonBtn" title="Show/hide ribbon">▤</button></div>
 <div id="tabs" class="tabbar"></div><div id="ribbon" class="ribbon"></div>
-<div id="workarea" class="workarea"><div id="navPane" class="navpane hidden"><h3>Navigation</h3><input id="navSearch" placeholder="Search document"><div id="navMatches"></div></div><aside id="docMissionPanel" class="docmission-panel hidden"><div class="docmission-head"><b id="docMissionCurrentName">Misi Dokumen</b><span class="grow"></span><button id="docMissionAll" title="Pilih misi lain">Semua Misi</button><button id="docMissionClose" title="Tutup contoh">✕</button></div><div class="docmission-body" id="docMissionBody"></div></aside><main class="editor-scroll" id="editScroll"><div class="page-wrap" id="pageWrap"><div class="ruler-wrap" id="rulerWrap"><div class="corner-ruler" id="cornerRuler"></div><div class="top-ruler" id="topRuler"><div class="ticks" id="topTicks"></div><div class="margin-guide top" id="topMarginLeft"></div><div class="margin-guide top" id="topMarginRight"></div></div><div class="left-ruler" id="leftRuler"><div class="ticks" id="leftTicks"></div><div class="margin-guide left" id="leftMarginTop"></div><div class="margin-guide left" id="leftMarginBottom"></div></div><article id="editor" class="pages-editor" contenteditable="true" spellcheck="true" role="textbox" aria-label="Area dokumen Word yang dapat diedit; otomatis membuat halaman berikutnya" aria-multiline="true"><section class="page" id="page" data-orient="portrait" data-size="A4" data-margins="Normal"><div class="page-header" id="pageHeader" contenteditable="false"></div><div class="page-content page-body" id="pageBody1"><p>Welcome to Word Classroom.</p><p>Start typing here, or press 🎓 Latihan to practice.</p></div><div class="page-footer" id="pageFooter" contenteditable="false"></div></section></article></div></div></main></div>
+<div id="workarea" class="workarea"><div id="navPane" class="navpane hidden"><h3>Navigation</h3><input id="navSearch" placeholder="Search document"><div id="navMatches"></div></div><aside id="docMissionPanel" class="docmission-panel hidden"><div class="docmission-head"><b id="docMissionCurrentName">Misi Dokumen</b><span class="grow"></span><button id="docMissionAll" title="Pilih misi lain">Semua Misi</button><button id="docMissionClose" title="Tutup contoh">✕</button></div><div class="docmission-body" id="docMissionBody"></div></aside><main class="editor-scroll" id="editScroll"><div class="page-wrap" id="pageWrap"><div class="ruler-wrap" id="rulerWrap"><div class="corner-ruler" id="cornerRuler"></div><div class="top-ruler" id="topRuler"><div class="ticks" id="topTicks"></div><div class="margin-guide top" id="topMarginLeft"></div><div class="margin-guide top" id="topMarginRight"></div></div><div class="left-ruler" id="leftRuler"><div class="ticks" id="leftTicks"></div><div class="margin-guide left" id="leftMarginTop"></div><div class="margin-guide left" id="leftMarginBottom"></div></div><article id="editor" class="pages-editor" contenteditable="true" spellcheck="true" role="textbox" aria-label="Area dokumen Word yang dapat diedit; otomatis membuat halaman berikutnya" aria-multiline="true"><section class="page" id="page" data-orient="portrait" data-size="A4" data-margins="Normal"><div class="page-header" id="pageHeader" contenteditable="false"></div><div class="page-content page-body" id="pageBody1"><p><br></p></div><div class="page-footer" id="pageFooter" contenteditable="false"></div></section></article></div></div></main></div>
+<div class="word-keyboard-hint" id="wordKeyboardHint">Enter = paragraf &nbsp;·&nbsp; Shift+Enter = baris &nbsp;·&nbsp; Ctrl+Enter = halaman</div>
 <div class="statusbar"><div class="page-nav-controls" title="Navigasi halaman"><button id="pagePrevBtn" aria-label="Halaman sebelumnya">‹</button><button id="pageJump" title="Pilih nomor halaman">1 / 1</button><button id="pageNextBtn" aria-label="Halaman berikutnya">›</button></div><span id="pageStatus">Page 1 of 1</span><span id="wordCount">0 words</span><span class="hide-sm" id="saveStatus">Saved locally</span><span class="grow"></span><span class="statusInfo" id="monitorInfo">Belum terhubung</span><button id="layoutBtn">Print Layout</button><button id="zoomOut" title="Zoom Out">−</button><input id="zoomSlider" type="range" min="25" max="200" step="5" value="100" aria-label="Zoom"><button id="zoomIn" title="Zoom In">+</button><button id="zoomPct" class="zoomNumber" title="Reset to 100%">100%</button><button id="mobileFullScreenBtn" title="Layar penuh / Full Screen" aria-label="Layar penuh">⛶</button></div>
 <button id="docMissionFab">📄 Misi Dokumen</button><button id="docMissionExampleFab">👁 Contoh</button>
 <div id="docMissionPicker" class="docmission-picker"><header><div><h2>📄 Misi Dokumen Microsoft Word</h2><p>Pilih salah satu dokumen resmi, lihat contohnya, lalu buat sendiri. Semua misi dapat dipilih bebas.</p></div><span class="grow"></span><button id="docMissionPickerClose">✕ Tutup</button></header><div class="docmission-tools"><input id="docMissionSearch" placeholder="Cari misi: surat tugas, kop surat, daftar hadir..." aria-label="Cari misi dokumen"><select id="docMissionCategory" aria-label="Filter kategori"><option value="">Semua kategori</option><option>Surat & Administrasi</option><option>Rapat & Organisasi</option><option>Laporan & Formulir</option><option>Pemformatan</option></select><span id="docMissionCounter" class="docmission-counter"></span></div><div class="docmission-grid" id="docMissionGrid"></div></div>
@@ -356,7 +363,29 @@ function repaginate(){
  finally{if(marker)restoreCaretMarkers(marker);reflowActive=false;pageObserver.takeRecords()}
 }
 function currentPageFromSelection(){const sel=window.getSelection();const p=sel?.anchorNode?.parentElement?.closest('.page');return Math.max(1,pages().indexOf(p)+1)}
-function queuePagination(immediate=false){if(reflowActive)return;clearTimeout(reflowTimer);if(immediate)repaginate();else reflowTimer=setTimeout(repaginate,110)}
+let wordLastParagraphAt=0,wordIsComposing=false;
+function queuePagination(immediate=false){
+ if(reflowActive)return;
+ clearTimeout(reflowTimer);
+ if(immediate){repaginate();return}
+ // During a normal Enter / IME input, avoid destroying and recreating the
+ // paragraph and its caret if the page has plenty of space. Keep all existing
+ // paper boundaries; paginate immediately only if paper actually overflows.
+ if(wordIsComposing)return;
+ if(Date.now()-wordLastParagraphAt<650 && bodies().length && !bodies().some(bodyOverflow)){
+   updatePageNavigator();return;
+ }
+ reflowTimer=setTimeout(repaginate,260);
+}
+editor.addEventListener('compositionstart',()=>{wordIsComposing=true},true);
+editor.addEventListener('compositionend',()=>{wordIsComposing=false;queuePagination()},true);
+editor.addEventListener('beforeinput',e=>{
+ if(e.inputType==='insertParagraph'){
+   wordLastParagraphAt=Date.now();
+   try{document.execCommand('defaultParagraphSeparator',false,'p')}catch(_e){}
+ }
+},true);
+
 const pageObserver=new MutationObserver(()=>{if(!reflowActive)queuePagination()});
 pageObserver.observe(editor,{subtree:true,childList:true,characterData:true});
 $('pagePrevBtn').onclick=()=>goToDocumentPage(currentPageFromSelection()-1);
@@ -364,7 +393,15 @@ $('pageNextBtn').onclick=()=>goToDocumentPage(currentPageFromSelection()+1);
 $('pageJump').onclick=()=>{showModal('Go To Page',`<p>Masukkan nomor halaman (1–${pages().length}).</p><label>Page number</label><input type="number" id="jumpPageNumber" min="1" max="${pages().length}" value="${currentPageFromSelection()}">`,[{label:'Go',primary:true,onClick:()=>{const n=parseInt($('jumpPageNumber').value)||1;closeModal();goToDocumentPage(n)}}])};
 editor.addEventListener('mouseup',()=>setTimeout(updatePageNavigator,0));
 editor.addEventListener('keyup',()=>setTimeout(updatePageNavigator,0));
-editor.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();insertWordPageBreak('page');}});
+editor.addEventListener('keydown',e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+   e.preventDefault();insertWordPageBreak('page');return;
+ }
+ if(e.key==='Enter'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+   // Enter / Shift+Enter remain native editor actions. This is NOT Page Break.
+   wordLastParagraphAt=Date.now();
+ }
+});
 
 
 let docMissionMode=false,currentDocMissionId=null,docMissionDocs={},docMissionScores={};
@@ -451,7 +488,17 @@ $('selectionColor').onchange=e=>{applyInlineColor(e.target.value,false);refreshS
 $('selectionHighlight').onpointerdown=saveSelection;
 $('selectionHighlight').onchange=e=>{applyInlineColor(e.target.value,true);refreshSelectionToolbar()};
 
-function captureDoc(){history.push(editor.innerHTML);if(history.length>30)history.shift();redoHistory=[]}
+function captureDoc(){const snapshot=editor.innerHTML;if(history.at(-1)!==snapshot){history.push(snapshot);if(history.length>50)history.shift()}redoHistory=[]}
+let classroomLastInputSnapshot=0;
+editor.addEventListener('beforeinput',e=>{
+ if(wordIsComposing)return;
+ if((e.inputType||'').startsWith('insert')||(e.inputType||'').startsWith('delete')){
+   const now=Date.now();if(e.inputType==='insertParagraph'||now-classroomLastInputSnapshot>850){captureDoc();classroomLastInputSnapshot=now}
+ }
+},true);
+function classroomUndo(){if(!history.length){document.execCommand('undo');return}redoHistory.push(editor.innerHTML);editor.innerHTML=history.pop();afterEdit();toast('Undo selesai')}
+function classroomRedo(){if(!redoHistory.length){document.execCommand('redo');return}history.push(editor.innerHTML);editor.innerHTML=redoHistory.pop();afterEdit();toast('Redo selesai')}
+
 function normalizeHardBreaks(){for(const n of editor.querySelectorAll('.pagebreak[data-hardbreak="true"]')){n.textContent='';n.setAttribute('contenteditable','false')}}
 function insertWordPageBreak(kind='page'){
  if(documentState.restricted){toast('Dokumen sedang dilindungi. Nonaktifkan Restrict Editing.');return}
@@ -476,8 +523,32 @@ function insertWordPageBreak(kind='page'){
  const newRange=document.createRange();if(nextBlock.nodeType===3)newRange.setStart(nextBlock,0);else{newRange.selectNodeContents(nextBlock);newRange.collapse(true)}
  sel.removeAllRanges();sel.addRange(newRange);savedRange=newRange.cloneRange();
  queuePagination(true);afterEdit();recordAction(kind==='section'?'sectionBreak':'pageBreak');
- const current=currentPageFromSelection();toast(kind==='blank'?'Blank Page ditambahkan':kind==='section'?'Section Break (Next Page) dibuat':'Page Break dibuat');
- goToDocumentPage(current);
+ // The continuation paragraph is the intended caret target, NOT page start.
+ if(nextBlock?.isConnected){const sr=document.createRange();sr.selectNodeContents(nextBlock);sr.collapse(true);sel.removeAllRanges();sel.addRange(sr);savedRange=sr.cloneRange();editor.focus({preventScroll:true})}
+ const current=currentPageFromSelection();
+ const sheet=pages()[current-1];if(sheet){const v=$('editScroll'),a=sheet.getBoundingClientRect(),b=v.getBoundingClientRect();v.scrollTop+=Math.min(0,a.top-b.top-15)}
+ toast(kind==='section'?'Section Break (Next Page) dibuat':'Page Break dibuat');
+}
+
+function insertWordBlankPage(){
+ if(documentState.restricted){toast('Dokumen sedang dilindungi');return}
+ captureDoc();restoreSelection();
+ const sel=window.getSelection();let r=sel?.rangeCount?sel.getRangeAt(0).cloneRange():null;
+ let body=r?(r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement)?.closest?.('.page-body'):null;
+ if(!body||!editor.contains(body)){body=bodies().at(-1);r=null}
+ if(!r){r=document.createRange();r.selectNodeContents(body);r.collapse(false)}
+ if(!r.collapsed)r.collapse(false);
+ const tail=document.createRange();tail.setStart(r.startContainer,r.startOffset);tail.setEnd(body,body.childNodes.length);
+ const fragment=tail.extractContents();
+ const hasTail=[...fragment.childNodes].some(n=>n.nodeType===3&&n.textContent.trim() || n.nodeType===1&&n.textContent.trim());
+ const makeBreak=()=>{const n=document.createElement('div');n.className='pagebreak';n.dataset.hardbreak='true';n.dataset.breakType='blank';n.contentEditable='false';n.setAttribute('aria-label','Blank Page break');return n};
+ body.appendChild(makeBreak());
+ const blank=document.createElement('p');blank.appendChild(document.createElement('br'));body.appendChild(blank);
+ if(hasTail){body.appendChild(makeBreak());body.appendChild(fragment)}
+ queuePagination(true);afterEdit();recordAction('blankPage');
+ if(blank.isConnected){const rr=document.createRange();rr.selectNodeContents(blank);rr.collapse(true);sel.removeAllRanges();sel.addRange(rr);savedRange=rr.cloneRange();editor.focus({preventScroll:true})}
+ const pageNum=currentPageFromSelection();const v=$('editScroll'),sh=pages()[pageNum-1];if(sh){const a=sh.getBoundingClientRect(),b=v.getBoundingClientRect();v.scrollTop+=a.top-b.top-8}
+ toast('Blank Page: halaman kosong dibuat, Enter tetap paragraf baru');
 }
 function insertWordCover(style){
  if(documentState.restricted){toast('Dokumen dilindungi');return}
@@ -625,7 +696,116 @@ Help:[G('Help',B('Word Help','❔','help'),B('Keyboard Shortcuts','⌨','shortcu
 function renderRibbon(){ $('tabs').innerHTML=tabs.map(t=>`<button data-tab="${t}" class="${t===uiTab?'active':''} ${t==='File'?'fileTab':''}">${t}</button>`).join('');$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(b.dataset.tab==='File'){openFile('Home');return}uiTab=b.dataset.tab;renderRibbon()});const groups=RIBBONS[uiTab]||[];$('ribbon').innerHTML=groups.map(g=>`<div class="group"><div class="group-inner">${g.name==='Font'?`<div class="toolcol"><div class="toolrow"><select class="font-field" id="fontPicker" title="Font Family"><option>Calibri</option><option>Aptos</option><option>Arial</option><option>Times New Roman</option><option>Verdana</option><option>Georgia</option><option>Tahoma</option><option>Courier New</option><option>Cambria</option><option>Garamond</option><option>Trebuchet MS</option><option>Segoe UI</option><option>Comic Sans MS</option><option>Book Antiqua</option><option>Bookman Old Style</option><option>Century Gothic</option><option>Consolas</option><option>Franklin Gothic Medium</option><option>Impact</option><option>Lucida Sans</option><option>Palatino Linotype</option><option>Roboto</option><option>Noto Sans</option><option>Liberation Sans</option><option>Liberation Serif</option><option>DejaVu Sans</option></select><button class="font-other-btn" id="fontCustomBtn" type="button" title="Jenis font lainnya">Lain…</button><select class="font-field font-size" id="fontSizePicker" title="Font Size">${[6,7,8,9,10,11,12,14,16,18,20,22,24,28,32,36,48,72,96].map(x=>`<option value="${x}" ${x===11?'selected':''}>${x}</option>`).join('')}</select><input class="font-field font-size" id="fontSizeDirect" type="number" min="6" max="96" value="11" title="Ukuran huruf khusus (pt)" style="width:53px"></div><div class="toolrow">${g.buttons.map(renderTool).join('')}</div></div>`:g.buttons.map(renderTool).join('')}</div><span class="group-title">${esc(g.name)}</span></div>`).join('');$('ribbon').querySelectorAll('[data-cmd]').forEach(b=>{b.onpointerdown=()=>saveSelection();b.onclick=()=>command(b.dataset.cmd,b.dataset.value||'')});const ff=$('fontPicker');if(ff){ff.querySelectorAll('option').forEach(o=>o.style.fontFamily=fontStack(o.value));ff.onpointerdown=saveSelection;ff.onchange=e=>applyFont(e.target.value)};const fontOther=$('fontCustomBtn');if(fontOther){fontOther.onpointerdown=saveSelection;fontOther.onclick=showCustomFontDialog;}const fs=$('fontSizePicker');if(fs){fs.onpointerdown=saveSelection;fs.onchange=e=>applySize(+e.target.value)}const direct=$('fontSizeDirect');if(direct){direct.onpointerdown=saveSelection;direct.onchange=e=>applySize(+e.target.value)}}
 function iconMarkup(b){return svgIcon(b.cmd,b.label,b.icon)}
 function svgBase(inner){return `<svg viewBox="0 0 24 24" aria-hidden="true">${inner}</svg>`}
-function svgIcon(cmd,label,fallback){const map={
+
+function wsOutline(svg){return `<svg viewBox="0 0 24 24" fill="none" stroke="#2764a9" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg}</svg>`}
+let _wordSvgExtraMap=null;
+function wsGlyph(cmd){
+if(_wordSvgExtraMap)return _wordSvgExtraMap[cmd]||null;
+const doc=(inner='')=>wsOutline(`<path d="M6 2.8h8l4 4V21H6z" fill="#edf4fe"/><path d="M14 2.8v4h4"/>${inner}`);
+const lines=(x=8,y=10)=>`<path d="M${x} ${y}h8M${x} ${y+3}h8M${x} ${y+6}h5"/>`;
+const search=wsOutline('<circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5 5"/>');
+const table=wsOutline('<rect x="3.5" y="5" width="17" height="14" rx="1"/><path d="M3.5 10h17M3.5 14.5h17M9.2 5v14M15 5v14"/>');
+const panel=wsOutline('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 10v10"/>');
+const page=doc(lines());
+const arrow=(dir='right')=>wsOutline(`<path d="M4 6h15M4 10h12M4 14h15M4 18h12"/><path d="M${dir==='right'?'15':'9'} 10l${dir==='right'?'4 -3 0 6':'-4 -3 0 6'}"/>`);
+const marker=wsOutline('<path d="M7 4h10M7 20h10M10 4v16"/><path d="M13 4v16"/>');
+const nums=wsOutline('<rect x="4" y="3" width="16" height="18" rx="2"/><text x="8" y="14" fill="#2764a9" stroke="none" font-size="8">123</text>');
+const style=wsOutline('<path d="M5 18h14M8 17l4-12 4 12M10 12h4"/>');
+const chain=wsOutline('<path d="M9 8h-2a5 5 0 0 0 0 10h4M15 16h2a5 5 0 0 0 0-10h-4M8 12h8"/>');
+const a={
+ formatPainter:wsOutline('<path d="M4 6h12v5H4zM9 11v4M7 15h4v5H7" fill="#d9e9ff"/>'),
+ strikeThrough:wsOutline('<text x="6" y="17" fill="#2764a9" stroke="none" font-weight="bold" font-size="14">abc</text><path d="M3 12h18"/>'),
+ removeFormat:wsOutline('<path d="m5 18 7-12 6 12M9 13h6"/><path d="m15 21 6-6" stroke="#d35e63"/>'),
+ superscript:wsOutline('<text x="4" y="17" fill="#2764a9" stroke="none" font-size="14">x</text><text x="14" y="9" fill="#2764a9" stroke="none" font-size="9">2</text>'),
+ subscript:wsOutline('<text x="4" y="15" fill="#2764a9" stroke="none" font-size="14">x</text><text x="14" y="21" fill="#2764a9" stroke="none" font-size="9">2</text>'),
+ indent:arrow('right'),outdent:arrow('left'),
+ lineSpacing:wsOutline('<path d="M9 6h12M9 12h12M9 18h12M4 4v16m-2-13 2-3 2 3m-4 10 2 3 2-3"/>'),
+ shading:wsOutline('<path d="m5 14 9-9 5 5-9 9H5z" fill="#fff4bf"/><path d="M4 21h16"/>'),
+ paragraphBorder:wsOutline('<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M7 9h10M7 13h10M7 17h7"/>'),
+ find:search,replace:wsOutline('<path d="M3 9a7 7 0 0 1 12-4l2 2M17 3v4h-4M21 15a7 7 0 0 1-12 4l-2-2M7 21v-4h4"/><text x="9" y="14" font-size="7" fill="#2764a9" stroke="none">Aa</text>'),
+ selectAll:wsOutline('<rect x="4" y="4" width="16" height="16" stroke-dasharray="2 2"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+ coverPage:doc('<path d="M8 11h8M8 15h8" stroke-width="2"/><path d="M8 8h8" stroke="#e6ad42" stroke-width="3"/>'),
+ blankPage:doc(),
+ iconShape:wsOutline('<circle cx="12" cy="12" r="8" fill="#d9eafb"/><path d="m8 13 3 3 5-7"/>'),
+ smartArt:wsOutline('<rect x="2" y="3" width="7" height="5" rx="1" fill="#d4ebfd"/><rect x="15" y="3" width="7" height="5" rx="1" fill="#d4ebfd"/><rect x="8.5" y="16" width="7" height="5" rx="1" fill="#d4ebfd"/><path d="M6 8v4h6M18 8v4h-6v4"/>'),
+ screenshot:wsOutline('<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M7 11h3M7 8h3M14 9h4M8 16l3-3 3 2 2-3 3 4"/>'),
+ link:chain,bookmark:wsOutline('<path d="M6 4h12v17l-6-4-6 4z" fill="#dceeff"/>'),crossref:chain,
+ headerFooterMargins:page,
+ textbox:wsOutline('<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M7 9h10M12 9v8"/>'),
+ wordArt:wsOutline('<path d="M3 19 7 6l5 13 5-13 4 13" stroke-width="2.6"/>'),
+ dateTime:wsOutline('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M7 2v6M17 2v6M4 10h16M8 14h2M13 14h2M8 17h2"/>'),
+ signature:wsOutline('<path d="M3 18c3-7 5-11 7-10 2 2-5 9-3 9 3 0 6-7 8-6 2 0 0 5 3 5h3M3 21h18"/>'),
+ equation:wsOutline('<text x="3" y="17" font-size="13" fill="#2764a9" stroke="none">x²+y</text>'),
+ symbol:wsOutline('<text x="4" y="18" font-size="18" fill="#2764a9" stroke="none">Ω</text>'),
+ drawPen:wsOutline('<path d="M5 18 16 4l4 4L9 20H5z" fill="#e5effc"/>'),
+ theme:panel,themeColors:wsOutline('<circle cx="8" cy="9" r="4" fill="#f9b2b2"/><circle cx="16" cy="9" r="4" fill="#9fd3f7"/><circle cx="12" cy="16" r="4" fill="#bce0aa"/>'),themeFonts:style,
+ watermark:doc('<text x="7" y="15" font-size="7" fill="#99b6d5" stroke="none" transform="rotate(-25 12 12)">DRAFT</text>'),
+ pageColor:wsOutline('<rect x="5" y="4" width="14" height="16" rx="1" fill="#d5e9ff"/><path d="M9 17h6"/>'),
+ pageBorder:wsOutline('<rect x="4" y="3" width="16" height="18" rx="1"/><rect x="7" y="6" width="10" height="12" rx="1" stroke-dasharray="2 1"/>'),
+ breaksMenu:doc('<path d="M7 12h10" stroke-dasharray="2 2"/>'),removePageBreak:doc('<path d="M7 12h10" stroke-dasharray="2 2"/><path d="m10 15 4 4m0-4-4 4" stroke="#dd5b5b"/>'),
+ paragraphSettings:panel,tabStops:marker,
+ position:wsOutline('<rect x="4" y="5" width="10" height="10" fill="#ddeafb"/><rect x="10" y="11" width="10" height="10"/><path d="m15 5 5 0 0 5"/>'),
+ wrapText:wsOutline('<path d="M4 5h16M4 19h16M4 9h6M4 13h6"/><rect x="12" y="8" width="8" height="8" fill="#d6eafe"/>'),
+ bringForward:wsOutline('<rect x="4" y="4" width="11" height="11" fill="#c1dfff"/><rect x="9" y="9" width="11" height="11"/>'),sendBackward:wsOutline('<rect x="9" y="9" width="11" height="11" fill="#c1dfff"/><rect x="4" y="4" width="11" height="11"/>'),
+ toc:doc('<path d="M8 9h7M8 12h8M8 15h6"/>'),addTextTOC:doc('<path d="M8 9h7M8 12h8M8 15h6M18 14v6m-3-3h6"/>'),
+ footnote:doc('<text x="13" y="11" font-size="8" fill="#2764a9" stroke="none">1</text><path d="M8 17h8"/>'),
+ endnote:doc('<path d="M8 17h8M8 19h7"/><text x="13" y="11" font-size="7" fill="#2764a9" stroke="none">2</text>'),
+ citation:wsOutline('<path d="M4 9c0-3 3-4 5-4v3c-2 0-2 2-2 3h3v6H4zM13 9c0-3 3-4 5-4v3c-2 0-2 2-2 3h3v6h-8z" fill="#deecff"/>'),
+ sources:wsOutline('<path d="M6 3h11v18H6zM9 7h5M9 11h5M9 15h5"/><path d="M3 6v12"/>'),
+ bibliography:wsOutline('<path d="M5 4c4-2 6-1 7 0v16c-3-2-5-2-7 0zM12 4c4-2 6-1 8 0v16c-3-2-5-2-8 0z"/>'),
+ caption:wsOutline('<rect x="4" y="5" width="16" height="10" rx="1"/><path d="M7 18h10M9 21h6"/>'),
+ markEntry:wsOutline('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M9 16h6"/><path d="m16 16 4 4"/>'),
+ index:wsOutline('<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M8 7h8M8 11h8M8 15h8M8 19h6"/>'),
+ envelopes:wsOutline('<rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 7 9 7 9-7"/>'),
+ labels:table,
+ startMerge:wsOutline('<rect x="3" y="5" width="13" height="12" rx="1"/><path d="m5 9 5 4 5-4M18 6v12M16 10l2-3 2 3"/>'),
+ recipients:wsOutline('<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 8a3 3 0 0 1 0 6M17 15a5 5 0 0 1 4 5"/>'),
+ addressBlock:doc('<path d="M8 9h8M8 12h8M8 16h5"/>'),
+ greeting:wsOutline('<path d="M4 19V6l8 6 8-6v13H4z"/><path d="M4 6l8 6 8-6"/>'),
+ mergeField:wsOutline('<path d="M9 4H6v16h3M15 4h3v16h-3"/><text x="9" y="15" font-size="9" fill="#2764a9" stroke="none">A</text>'),
+ previewMerge:search,finishMerge:wsOutline('<rect x="5" y="4" width="13" height="16" rx="1"/><path d="m8 12 3 3 6-6" stroke="#2b8b53" stroke-width="2.2"/>'),
+ spelling:wsOutline('<text x="4" y="15" font-size="10" fill="#2764a9" stroke="none">ABC</text><path d="m6 19 2 2 5-5" stroke="#2e9449"/>'),
+ wordCount:nums,
+ thesaurus:wsOutline('<path d="M5 4c4-2 6-1 7 0v16c-3-2-5-2-7 0zM12 4c4-2 6-1 7 0v16c-3-2-5-2-7 0z"/><text x="9" y="13" font-size="6" fill="#2764a9" stroke="none">Aa</text>'),
+ translate:wsOutline('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-6 7-6 11 0 18M12 3c6 7 6 11 0 18"/>'),
+ language:wsOutline('<circle cx="12" cy="12" r="9"/><text x="6" y="15" font-size="8" stroke="none" fill="#2764a9">A文</text>'),
+ comment:wsOutline('<path d="M4 5h16v12H9l-5 4z" fill="#e6f1ff"/><path d="M7 9h10M7 12h7"/>'),
+ comments:wsOutline('<path d="M4 5h16v12H9l-5 4z"/><path d="M7 9h10M7 12h7"/>'),
+ trackChanges:wsOutline('<path d="M4 17 16 5l3 3-12 12H4z"/><path d="M12 5h9M12 20h9"/>'),
+ acceptChange:wsOutline('<path d="m5 12 4 4 10-10" stroke="#3ca65d" stroke-width="3"/>'),
+ rejectChange:wsOutline('<path d="m5 5 14 14M19 5 5 19" stroke="#df5c5c" stroke-width="2.7"/>'),
+ restrict:wsOutline('<rect x="5" y="10" width="14" height="11" rx="2" fill="#dceaff"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'),
+ readMode:wsOutline('<path d="M4 5c4-2 6-1 8 0v15c-3-2-5-2-8 0zM12 5c4-2 6-1 8 0v15c-3-2-5-2-8 0z"/>'),
+ printLayout:page,webLayout:wsOutline('<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9h18M8 9v10"/>'),
+ navigation:wsOutline('<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M9 4v16M12 9h5M12 12h5M12 15h3"/>'),
+ onePage:page,pageWidth:wsOutline('<path d="M3 9h18M3 9l3-3M3 9l3 3M21 9l-3-3M21 9l-3 3M7 13h10v8H7z"/>'),
+ newWindow:wsOutline('<rect x="3" y="4" width="14" height="14" rx="1"/><rect x="7" y="8" width="14" height="13" rx="1" fill="#eff6ff"/>'),
+ split:wsOutline('<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 12h16"/>'),
+ tableColumnWidth:table,tableRowHeight:table,tablePosition:table,cellPadding:table,
+ help:wsOutline('<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 5 2c-2 1-2 2-2 3M12 18h.01"/>'),
+ shortcuts:wsOutline('<rect x="2" y="6" width="20" height="13" rx="1"/><path d="M5 10h2m2 0h2m2 0h2m2 0h2M5 13h2m2 0h2m2 0h2m2 0h2M7 16h10"/>'),
+ about:wsOutline('<circle cx="12" cy="12" r="9"/><path d="M12 10v7M12 7h.01"/>')
+ };
+
+ // Contextual Word-like iconography for Picture/Shape/Table Design and Layout.
+ Object.assign(a,{
+ wsCrop:a.screenshot,wsReset:a.replace,wsPosition:a.position,wsWrap:a.wrapText,
+ wsForward:a.bringForward,wsBackward:a.sendBackward,wsSize:a.pageWidth,
+ wsDelete:a.rejectChange,wsText:a.textbox,wsFill:a.pageColor,
+ wsOutline:a.pageBorder,wsBorders:a.tableColumnWidth,
+ wsClearCells:a.removeFormat,wsCellFill:a.shading,
+ wsAllBorders:a.tableColumnWidth,wsNoBorders:a.pageBorder,
+ wsAddRow:a.tableRowHeight,wsAddCol:a.tableColumnWidth,
+ wsDelRow:a.rejectChange,wsDelCol:a.rejectChange,
+ wsColumnWidth:a.tableColumnWidth,wsRowHeight:a.tableRowHeight,
+ wsCellMargin:a.cellPadding,wsSizeAndPosition:a.position,
+ style:wsOutline('<path d="M4 18 8 6l4 12M6 13h5M13 18l3-9 4 9"/>')
+ });
+ return (_wordSvgExtraMap=a)[cmd]||null
+}
+
+let _wordSvgBaseMap=null;
+function svgIcon(cmd,label,fallback){const map=_wordSvgBaseMap||(_wordSvgBaseMap={
  paste:svgBase('<rect class="s" x="5" y="4" width="11" height="15" rx="1.6"/><rect class="d" x="8" y="2" width="8" height="4" rx="1"/><rect class="accent" x="9" y="8" width="6" height="1.5"/><rect class="accent" x="9" y="11" width="4" height="1.5"/>'),
  cut:svgBase('<circle class="red" cx="7" cy="16" r="2.6"/><circle class="red" cx="14.5" cy="16" r="2.6"/><path class="g" d="M8.7 14.8 18 6" fill="none"/><path class="g" d="M8.7 17.2 18 12" fill="none"/>'),
  copy:svgBase('<rect class="d" x="6" y="5" width="10" height="12" rx="1.6"/><rect class="s" x="9" y="8" width="10" height="12" rx="1.6"/>'),
@@ -656,8 +836,9 @@ function svgIcon(cmd,label,fallback){const map={
  zoomDialog:svgBase('<circle class="s" cx="10" cy="10" r="5"/><path class="g" d="M14 14l4 4" fill="none"/><path class="g" d="M10 7v6M7 10h6" fill="none"/>'),
  zoom100:svgBase('<rect class="s" x="4" y="6" width="16" height="12" rx="1.5"/><text class="t" x="6" y="15" font-size="7">100</text>'),
  ruler:svgBase('<rect class="warn" x="4" y="9" width="16" height="6" rx="1"/><path class="g" d="M7 9v6M10 9v4M13 9v6M16 9v4" fill="none"/>')
- };
+ });
  if(map[cmd]) return map[cmd];
+ const real=wsGlyph(cmd);if(real)return real;
  const txt=(fallback||label||'?').replace(/<[^>]+>/g,'').trim().slice(0,2).toUpperCase();
  return svgBase(`<rect class="s" x="4" y="4" width="16" height="16" rx="2"/><text class="t" x="6" y="15" font-size="8">${txt}</text>`)
 }
@@ -742,10 +923,24 @@ function pick(title,desc,options,cb){showModal(title,`<p>${desc}</p><label>Pilih
 function askText(title,label,initial,cb,placeholder=''){showModal(title,`<label>${esc(label)}</label><input id="dialogInput" placeholder="${esc(placeholder)}" value="${esc(initial)}">`,[{label:'OK',primary:true,onClick:()=>{const v=$('dialogInput').value;closeModal();cb(v)}}],()=>{$('dialogInput').focus();$('dialogInput').select()})}
 function setState(field,value,key){documentState[field]=value;setPageState();recordAction(key||field+'_'+String(value));saveStudentState()}
 function unsupported(title){showModal(title,`<p>Ini adalah <b>simulasi pembelajaran</b>. Perintah <b>${esc(title)}</b> diperkenalkan dengan contoh agar siswa mengetahui lokasi dan alurnya di Microsoft Word.</p><p>Untuk latihan tingkat lanjut, gunakan Microsoft Word asli saat fasilitas komputer tersedia.</p>`,[{label:'Pahami',primary:true,onClick:closeModal}]);recordAction('sim_'+title.replace(/\W/g,'').slice(0,20))}
+let wordFormatClipboard=null;
+function formatPainterSelection(){
+ const selected=window.getSelection(),node=selected?.anchorNode;
+ if(!wordFormatClipboard){
+   if(!node||!editor.contains(node)){toast('Pilih sumber format dalam dokumen');return}
+   const el=node.nodeType===1?node:node.parentElement,sty=getComputedStyle(el);
+   wordFormatClipboard={fontFamily:sty.fontFamily,fontSize:sty.fontSize,fontWeight:sty.fontWeight,fontStyle:sty.fontStyle,color:sty.color,textDecoration:sty.textDecorationLine};
+   toast('Format disalin. Blok teks tujuan, lalu tekan Format Painter sekali lagi.');recordAction('formatPainter');return;
+ }
+ const r=selectionForFont();if(!r){toast('Blok teks tujuan sebelum menerapkan format');return}
+ captureDoc();const span=document.createElement('span');Object.assign(span.style,wordFormatClipboard);span.appendChild(r.extractContents());r.insertNode(span);wordFormatClipboard=null;afterEdit();recordAction('formatPainterApplied');toast('Format diterapkan ke teks yang dipilih');
+}
+
 function command(cmd,v=''){
  if(['bold','italic','underline','strikeThrough','superscript','subscript','removeFormat','justifyLeft','justifyCenter','justifyRight','justifyFull','insertUnorderedList','insertOrderedList','indent','outdent'].includes(cmd)){appliedStyleCommand(cmd);return}
  switch(cmd){
  case 'selectAll':selectDocumentContents();return;
+ case 'formatPainter':formatPainterSelection();break;
  case 'style':{const valid=targetSelectionMatches();exec('formatBlock',v);if(valid)recordAction('style_'+v);else toast('Pilih teks target dahulu');break}
  case 'fontColor':case 'foreColor':showWordColorDialog('Font Color',false);break;
  case 'hiliteColor':showWordColorDialog('Text Highlight Color',true);break;
@@ -771,12 +966,14 @@ function command(cmd,v=''){
  case 'iconShape':mutateHtml('<span style="font-size:37px;color:#195abd">◆</span>');recordAction('iconShape');break;
  case 'smartArt':mutateHtml('<div style="display:flex;gap:6px"><span class="shape">Plan</span><span class="shape">Create</span><span class="shape">Check</span></div>');recordAction('smartArt');break;
  case 'chart':mutateHtml('<div style="border:1px solid #bbcadb;padding:13px;display:flex;gap:9px;align-items:end;height:160px;max-width:270px"><div style="height:45%;background:#83adf6;flex:1"></div><div style="height:65%;background:#3b7bcf;flex:1"></div><div style="height:85%;background:#1e549d;flex:1"></div></div>');recordAction('chart');break;
+ case 'screenshot':showPicturePicker();toast('Pilih hasil tangkapan layar dari HP atau PC');break;
+ case 'signature':mutateHtml('<p style="margin:16px 0 24px;text-align:right">Tanda tangan,</p><p style="text-align:right;margin:0 0 8px">(........................................)</p>');recordAction('signature');break;
  case 'link':askText('Insert Link','Masukkan alamat URL','https://example.org',x=>{mutateHtml(`<a href="${esc(x.startsWith('https://')?x:'#')}" target="_blank" rel="noopener">${esc(selectedText()||x)}</a> `);recordAction('link')});break;
  case 'header':showHeaderFooterTextSettings('header');break;
  case 'footer':showHeaderFooterTextSettings('footer');break;
  case 'pageNumber':showPageNumberSettings();break;
  case 'pageBreak':insertWordPageBreak('page');break;
- case 'blankPage':insertWordPageBreak('blank');recordAction('blankPage');break;
+ case 'blankPage':insertWordBlankPage();break;
  case 'breaksMenu':showBreaksMenu();break;
  case 'removePageBreak':removeWordPageBreak();break;
  case 'textbox':mutateHtml('<div class="textbox">Ketik teks di sini</div><p><br></p>');recordAction('textbox');break;
@@ -792,7 +989,7 @@ function command(cmd,v=''){
  case 'crossref':mutateHtml(' Lihat Bagian 1. ');recordAction('crossref');break;
  case 'index':mutateHtml('<h2>Index</h2><p>Dokumen, 1</p><p>Latihan, 1</p>');recordAction('index');break;
  case 'find':askText('Find','Search text','latihan',x=>{recordAction('find');const match=wordText().toLowerCase().includes(x.toLowerCase());toast(match?'Teks ditemukan':'Teks tidak ditemukan');if(match)selectTarget(x)});break;
- case 'replace':showModal('Find and Replace','<label>Find what</label><input id="findWord" value="sekolah"><label>Replace with</label><input id="replaceWord" value="kelas">',[{label:'Replace All',primary:true,onClick:()=>{const a=$('findWord').value,b=$('replaceWord').value;if(!a)return;const before=editor.innerHTML;const escaped=a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');const rx=new RegExp(escaped,'gi');editor.innerHTML=before.replace(rx,()=>esc(b));closeModal();recordAction('replace');afterEdit();toast('Replace All selesai')}}]);break;
+ case 'replace':showModal('Find and Replace','<label>Find what</label><input id="findWord" value="sekolah"><label>Replace with</label><input id="replaceWord" value="kelas">',[{label:'Replace All',primary:true,onClick:()=>{const find=$('findWord').value,to=$('replaceWord').value;if(!find)return;captureDoc();let count=0;const escaped=find.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');const rx=new RegExp(escaped,'gi');for(const body of bodies()){const walk=document.createTreeWalker(body,NodeFilter.SHOW_TEXT);let node;const nodes=[];while(node=walk.nextNode())nodes.push(node);for(const n of nodes){const old=n.nodeValue;const updated=old.replace(rx,()=>{count++;return to});if(updated!==old)n.nodeValue=updated}}closeModal();recordAction('replace');afterEdit();toast(count+' bagian teks diganti; format tetap dipertahankan')}}]);break;
  case 'wordCount':showModal('Word Count',`<p>Words: <b>${words()}</b></p><p>Characters: <b>${wordText().length}</b></p><p>Paragraphs: <b>${editor.querySelectorAll('p').length}</b></p>`,[{label:'OK',primary:true,onClick:closeModal}]);recordAction('wordCount');break;
  case 'comment':askText('New Comment','Tulis komentar untuk dokumen','Bagian ini perlu diperiksa.',x=>{mutateHtml(`<div class="comment-chip" data-comment="true">💬 ${esc(x)}</div>`);recordAction('comment')});break;
  case 'comments':showModal('Comments',`<p>${editor.querySelectorAll('[data-comment]').length} komentar pada dokumen ini.</p>`,[{label:'OK',onClick:closeModal}]);break;
@@ -813,8 +1010,8 @@ function command(cmd,v=''){
  case 'navigation':$('navPane').classList.toggle('hidden');recordAction('navigation');break;
  case 'zoom100':setZoom(100);break;case 'onePage':setZoom(60);recordAction('onePage');break;case 'pageWidth':setZoom(window.innerWidth<800?70:100);recordAction('pageWidth');break;
  case 'zoomDialog':pick('Zoom','Choose zoom',['25','30','40','50','60','70','80','100','120','150','180','200'],x=>setZoom(+x));break;
- case 'undo':exec('undo');recordAction('undo');break;
- case 'redo':exec('redo');recordAction('redo');break;
+ case 'undo':classroomUndo();recordAction('undo');break;
+ case 'redo':classroomRedo();recordAction('redo');break;
  case 'copy':restoreSelection();documentState.localClipboard=selectedText();recordAction('copy');toast('Teks disalin ke clipboard virtual');break;
  case 'cut':restoreSelection();documentState.localClipboard=selectedText();exec('delete');recordAction('cut');break;
  case 'paste':mutateHtml(esc(documentState.localClipboard));recordAction('paste');break;
@@ -823,13 +1020,13 @@ function command(cmd,v=''){
  case 'wordArt':mutateHtml('<h1 style="color:#2859ba;text-shadow:1px 2px #bdd3f9">WORD ART</h1>');recordAction('wordArt');break;
  case 'theme':pick('Themes','Choose document theme',['Office','Blue','Classic'],x=>{recordAction('theme');toast('Theme '+x+' applied in simulation')});break;
  case 'watermark':askText('Watermark','Text watermark','DRAFT',x=>{page.style.backgroundImage=`linear-gradient(135deg, transparent,transparent)`;page.dataset.watermark=x;recordAction('watermark');toast('Watermark simulated: '+x)});break;
- case 'help':showModal('Word Classroom Help','<p>1. Tekan <b>Latihan</b> untuk memilih level.</p><p>2. Ikuti misi, edit dokumen, lalu tekan <b>Periksa Jawaban</b>.</p><p>3. Pilih File untuk latihan Save, Open, dan Print virtual.</p><p>4. Gunakan tombol − / + di bawah untuk Zoom 25–200%. Tekan Enter untuk paragraf baru. Blok satu huruf, kata, atau kalimat untuk memformat hanya bagian itu. Gunakan toolbar warna untuk pilihan custom.</p>');break;
- case 'shortcuts':showModal('Keyboard Shortcuts','<p><b>Ctrl+B</b> Bold · <b>Ctrl+I</b> Italic · <b>Ctrl+U</b> Underline · <b>Ctrl+S</b> Save (simulasi) · <b>Ctrl+P</b> Print Preview · <b>Ctrl+Z</b> Undo.</p>');break;
+ case 'help':showModal('Word Classroom Help','<p>1. Tekan <b>Latihan</b> untuk memilih level.</p><p>2. Ikuti misi, edit dokumen, lalu tekan <b>Periksa Jawaban</b>.</p><p>3. Pilih File untuk latihan Save, Open, dan Print virtual.</p><p>4. Gunakan tombol − / + di bawah untuk Zoom 25–200%. Enter = paragraf baru; Shift+Enter = baris baru; Ctrl+Enter = Page Break. Blok satu huruf, kata, atau kalimat untuk memformat hanya bagian itu. Gunakan toolbar warna untuk pilihan custom.</p>');break;
+ case 'shortcuts':showModal('Keyboard Shortcuts','<p><b>Enter</b> paragraf · <b>Shift+Enter</b> baris baru · <b>Ctrl+Enter</b> Page Break · <b>Ctrl+B</b> Bold · <b>Ctrl+I</b> Italic · <b>Ctrl+U</b> Underline · <b>Ctrl+S</b> Save (simulasi) · <b>Ctrl+P</b> Print Preview · <b>Ctrl+Z</b> Undo.</p>');break;
  default:unsupported(cmd.replace(/([A-Z])/g,' $1'));
  }
 }
 $('navSearch').oninput=e=>{const t=e.target.value.trim();$('navMatches').innerHTML=t?`<button id="navResult">${wordText().toLowerCase().includes(t.toLowerCase())?'Hasil ditemukan: '+esc(t):'Tidak ditemukan'}</button>`:'';const b=$('navResult');if(b)b.onclick=()=>selectTarget(t)};
-document.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey))return;const k=e.key.toLowerCase();if(k==='s'){e.preventDefault();virtualSave()}if(k==='p'){e.preventDefault();printPreview()}if(k==='z'&&document.activeElement!==editor){e.preventDefault();command('undo')}if(k==='b'&&document.activeElement!==editor){e.preventDefault();exec('bold')}});
+document.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey))return;const k=e.key.toLowerCase();if(k==='s'){e.preventDefault();virtualSave()}if(k==='p'){e.preventDefault();printPreview()}if(k==='z'){e.preventDefault();command(e.shiftKey?'redo':'undo')}if(k==='b'&&document.activeElement!==editor){e.preventDefault();exec('bold')}});
 </script>
 <!-- PAGE 2: file menu, practice, report, app startup -->
 <script>

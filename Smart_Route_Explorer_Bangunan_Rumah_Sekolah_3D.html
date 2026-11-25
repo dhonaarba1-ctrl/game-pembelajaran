@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0d2440">
+<title>SMART ROUTE EXPLORER · Informatika Kelas IX</title>
+<style>
+:root{--navy:#0c233e;--deep:#081829;--blue:#245588;--cyan:#50d9ff;--gold:#ffca6b;--ink:#203449;--cream:#fff9ec;--muted:#99b6cc;--green:#3ed5a8;--red:#ff7b80;--radius:22px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,"Segoe UI",Arial,sans-serif;background:#091c30;color:#effaff}button,input,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ffd47a;outline-offset:2px}#app{height:100dvh;width:100vw;overflow:hidden}#app>section{width:100%;height:100%;overflow:hidden}.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border:1px solid #ffffff27;border-radius:13px;color:#f4fbff;background:linear-gradient(160deg,#27456b,#10294a);font-weight:850;letter-spacing:.01em;box-shadow:0 5px 0 #06182d70;transition:filter .18s,transform .14s;min-height:43px}.btn:hover{filter:brightness(1.13)}.btn:active{transform:translateY(2px)}.btn.primary{background:linear-gradient(160deg,#ffe49a,#f9a83d);border-color:#ffe9b4;color:#262e32;box-shadow:0 5px 0 #a26627}.btn.aqua{background:linear-gradient(160deg,#45dbe7,#268cc6);border-color:#a4ffff;color:#062a3c}.btn.ghost{background:#0b2647aa}.btn.sm{min-height:36px;padding:8px 12px;font-size:12px}.btn.round{width:43px;height:43px;padding:0;border-radius:50%;font-size:20px}.btn:focus-visible{outline:3px solid #fff2a4}.eyebrow{font-size:11px;font-weight:1000;letter-spacing:.17em;text-transform:uppercase;color:#ffd27d}.subtle{color:#bdd2e2}h1,h2,h3,p{margin-top:0}.kicker{color:#ffd37f;font-weight:900;letter-spacing:.14em;font-size:12px;text-transform:uppercase}
+.topbar{height:65px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:10px clamp(13px,2vw,30px);background:#071b32f5;border-bottom:1px solid #79d9ff33;gap:12px;position:relative;z-index:7}.brand{font-weight:1000;letter-spacing:.025em;font-size:clamp(13px,1.5vw,20px);color:#f9faff;text-shadow:0 2px 10px #13b6ff44}.brand em{font-style:normal;color:var(--gold)}.topactions{display:flex;align-items:center;gap:7px}.tag{font-size:11px;font-weight:850;background:#12395b;border:1px solid #87dfff4b;border-radius:20px;padding:7px 10px;white-space:nowrap}.layout{display:flex;flex-direction:column;min-height:0;height:100%;background:radial-gradient(circle at 50% 10%,#1b4d7c,#0b223a 60%,#07182b)}
+/* Landing */
+#homeScene{position:relative;background:#071c32}#heroCanvas{position:absolute;inset:0;width:100%;height:100%;filter:saturate(1.06)}.heroShading{position:absolute;inset:0;background:linear-gradient(90deg,#06172ce9 0%,#07233dcb 40%,#123b5c20 84%),linear-gradient(0deg,#041424e5,transparent 56%);pointer-events:none}.heroContent{position:absolute;inset:0;display:flex;align-items:center;padding:clamp(18px,5vw,84px);z-index:2}.heroText{max-width:650px}.heroLabel{display:inline-block;border:1px solid #79c8ff70;border-radius:40px;background:#0f3a62cc;padding:10px 15px;font-weight:800;color:#f5dba2;font-size:13px;margin-bottom:19px}.heroText h1{font-weight:1000;line-height:.9;letter-spacing:-.06em;font-size:clamp(49px,7vw,102px);text-shadow:0 8px 30px #000a;margin:0 0 22px}.heroText h1 span{color:#ffd167;text-shadow:0 5px 28px #dc8f3b50}.heroText p{line-height:1.65;font-size:clamp(14px,1.8vw,19px);color:#e2f0fb;max-width:490px}.heroActions{display:flex;gap:13px;flex-wrap:wrap;margin-top:26px}.heroActions .btn{min-height:51px;padding:12px 25px}.heroFoot{margin-top:25px;display:flex;gap:8px;flex-wrap:wrap}.heroFoot span{border:1px solid #c1e6ff4a;background:#061c3480;border-radius:25px;padding:7px 11px;font-size:11px;font-weight:750}.heroFloating{position:absolute;right:5%;top:11%;border:1px solid #71deff80;background:#083151b0;backdrop-filter:blur(8px);padding:12px 15px;border-radius:15px;box-shadow:0 0 30px #1bb0ec31;animation:bob 4s ease-in-out infinite;z-index:1}.heroFloating strong{color:#ffe6a2}.heroFloating small{display:block;color:#d7f3ff;margin-top:3px}@keyframes bob{50%{transform:translateY(-12px)}}
+/* Menu */
+.menuContent{padding:26px;min-height:0;overflow-y:auto;display:flex;align-items:center;justify-content:center}.menuCard{width:min(900px,100%);padding:clamp(18px,3vw,35px);border-radius:26px;background:linear-gradient(135deg,#123a63f7,#0a223ec9);border:1px solid #72d4ff55;box-shadow:0 25px 65px #0008;text-align:center}.menuCard h2{font-size:clamp(25px,3vw,41px);margin:5px 0 10px}.menuGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:25px}.menuTile{background:linear-gradient(160deg,#245a89,#113657);border:1px solid #7ddfff55;border-radius:19px;padding:24px 12px;color:#fff;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-weight:900;box-shadow:0 8px 20px #0004}.menuTile:hover{filter:brightness(1.12)}.menuTile i{font-style:normal;font-size:35px}.menuTile.main{background:linear-gradient(150deg,#ffd47e,#c58239);color:#242a30}
+/* Materials */
+.materialGrid{display:grid;grid-template-columns:minmax(0,.96fr) minmax(0,1.04fr);gap:18px;flex:1;min-height:0;padding:18px clamp(14px,2vw,26px)}.materialLeft,.materialRight{background:#f9f6ed;color:#253d50;border:1px solid #fce6bb;border-radius:22px;overflow:auto;min-height:0;box-shadow:0 12px 30px #0005}.materialLeft{padding:clamp(19px,2.4vw,36px);scrollbar-width:thin}.materialTitle{font-size:clamp(28px,3vw,48px);letter-spacing:-.04em;margin:7px 0 12px;line-height:1.09;color:#173452}.materialIntro{font-size:clamp(13px,1.25vw,16px);line-height:1.65;color:#47596a}.teachingPoint{margin-top:14px;padding:13px 14px;border-left:4px solid #2c9fca;border-radius:9px;background:#e7eef3;color:#2b485d;line-height:1.56;font-size:14px}.teachingPoint b{color:#17416a}.lessonExample{border:1px solid #e0bd7d;background:linear-gradient(120deg,#fff4da,#f3e3c3);border-radius:15px;padding:15px;margin-top:15px;font-size:14px;line-height:1.6}.lessonExample b{color:#8b5720}.lessonList{margin:12px 0;padding-left:22px;line-height:1.7;font-size:14px;color:#34546a}.materialRight{display:flex;flex-direction:column;background:linear-gradient(180deg,#14395b,#08243c);color:#f1fbff;position:relative}.diagramTitle{padding:17px 20px 4px;font-weight:900;display:flex;justify-content:space-between}.diagramHint{margin:4px 20px 0;color:#c0d7e9;font-size:12px;line-height:1.5}.diagramArea{position:relative;flex:1;min-height:175px;padding:8px 12px;touch-action:pan-y}.diagramArea canvas{width:100%;height:100%;display:block;border-radius:15px;cursor:pointer}.diagramMessage{margin:8px 14px 14px;border-radius:12px;padding:10px 12px;background:#0b2544;border:1px solid #5bccf665;color:#d7e9f7;min-height:42px;font-size:12px;line-height:1.4}.lessonFooter{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 clamp(14px,2vw,26px) 18px}.lessonFooter .leftBtns,.lessonFooter .rightBtns{display:flex;gap:9px}.lessonFootProgress{font-size:12px;color:#c0d2e6;font-weight:900}.stepProgress{height:5px;width:108px;border-radius:9px;background:#ffffff28;overflow:hidden}.stepProgress i{display:block;background:linear-gradient(90deg,#51d8fc,#ffcf6e);height:100%;transition:width .3s}
+/* level selection */
+.levelSection{flex:1;overflow:auto;padding:20px clamp(14px,3vw,40px)}.levelIntro{text-align:center;margin-bottom:16px}.levelIntro h2{margin:4px 0 6px;font-size:clamp(25px,3vw,40px)}.levelIntro p{color:#bad3e8;font-size:14px}.levelGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;max-width:1260px;margin:0 auto}.levelCard{position:relative;text-align:left;border:1px solid #77c9ed66;border-radius:20px;background:linear-gradient(160deg,#285c83,#102d4e);color:#f0fbff;padding:15px;min-height:178px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;box-shadow:0 8px 0 #04192b68;overflow:hidden}.levelCard.locked{filter:saturate(.34);opacity:.72}.levelCard .levelIcon{font-size:34px;filter:drop-shadow(0 4px 8px #0009)}.levelCard .number{font-size:12px;color:#ffe3ae;font-weight:950}.levelCard strong{font-size:15px;line-height:1.25}.levelCard small{color:#b5d1e3;font-size:11px}.stars{color:#ffd16f;letter-spacing:2px;font-size:16px}
+/* Game */
+#gameScene{display:flex;flex-direction:column;height:100%;background:#0b213b}#gameScene .topbar{height:55px;padding-top:7px;padding-bottom:7px}.gameArea{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(258px,292px);gap:10px;padding:10px}.cityWrap{position:relative;overflow:hidden;border-radius:20px;border:1px solid #78d6ff72;background:#b6dcf6;box-shadow:inset 0 0 0 3px #ffffff40}.cityWrap canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}.cityWrap canvas.dragging{cursor:grabbing}.cityTopHUD{position:absolute;left:12px;right:12px;top:12px;display:flex;gap:7px;align-items:flex-start;justify-content:space-between;pointer-events:none}.cityTopHUD .pill{border-radius:13px;background:#0d3153e6;border:1px solid #89e7ff77;padding:9px 12px;color:white;box-shadow:0 6px 16px #0815285c;max-width:72%;font-size:12px;font-weight:850}.cityTopHUD .pill span{display:block;color:#ffd388;font-size:10px;margin-bottom:3px}.mapTool{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:7px}.mapTool button{height:39px;width:39px;border:1px solid #c1f6ffdd;border-radius:10px;background:#0d3761ee;color:#fff;font-size:21px;font-weight:900;box-shadow:0 3px 10px #08233777}.mapLegend{position:absolute;left:12px;bottom:12px;background:#0c2a49df;border:1px solid #8bcaff71;padding:8px 10px;border-radius:11px;font-size:10px;color:#f4faff;max-width:min(300px,76%)}.gameSidebar{display:flex;flex-direction:column;min-height:0;gap:10px;overflow:auto;scrollbar-width:thin}.missionCard,.routeCard{background:linear-gradient(145deg,#153c63,#0d284a);border:1px solid #70c6f462;border-radius:17px;padding:13px;box-shadow:0 9px 24px #0003}.missionCard .eyebrow{margin-bottom:8px}.missionCard h3{font-size:19px;margin:0 0 9px}.missionCard p{font-size:12px;line-height:1.5;color:#cfdef0;margin:0 0 8px}.missionInfo{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.stat{background:#082340;border:1px solid #ffffff20;border-radius:11px;padding:9px}.stat span{display:block;color:#a8c7db;font-size:10px;margin-bottom:5px}.stat strong{font-size:17px;color:#fff}.routeCard{flex:1;min-height:0;display:flex;flex-direction:column}.routePath{background:#071e37;border-radius:9px;padding:10px;font-size:12px;line-height:1.55;color:#ffe7ab;min-height:54px;overflow-wrap:anywhere}.calcLabel{font-weight:800;font-size:12px;margin-top:9px;margin-bottom:5px;display:block}.calcInput{width:100%;min-height:40px;border-radius:10px;border:1px solid #7dcaff88;padding:9px 11px;font-size:14px;color:#132d48;background:#f6faff}.routeHelp{color:#b7ccdf;font-size:11px;line-height:1.4;margin-top:8px}.gameFooter{display:flex;align-items:center;justify-content:center;gap:9px;padding:0 10px 10px;flex-wrap:wrap}.gameFooter .btn{min-height:40px}.gameFooter .btn.primary{min-width:143px}.mapModeFlag{display:inline-block;color:#ffdc95;padding:4px 8px;border-radius:8px;background:#76533588;font-size:11px;font-weight:900}
+/* Simulation overlay */
+.simHUD{position:absolute;bottom:58px;left:12px;right:12px;border:1px solid #bbebff99;background:#072746dc;border-radius:15px;padding:11px;display:flex;align-items:center;gap:12px;pointer-events:none}.simHUD strong{font-size:13px;white-space:nowrap}.simProgress{height:9px;flex:1;border-radius:20px;overflow:hidden;background:#ffffff2d}.simProgress b{display:block;width:0;background:linear-gradient(90deg,#69e0ff,#f4d16f);height:100%;transition:width .08s linear}.simHUD small{font-size:11px;color:#c5e5f2}
+/* Results */
+.resultsScroll{flex:1;min-height:0;overflow:auto;display:flex;align-items:center;justify-content:center;padding:20px}.resultSheet{width:min(920px,100%);background:linear-gradient(160deg,#14456f,#0a2746);border:1px solid #76ddff88;border-radius:25px;padding:clamp(18px,3vw,33px);text-align:center;box-shadow:0 18px 55px #0006}.resultSheet h1{font-size:clamp(29px,4vw,48px);margin:8px 0}.resultSheet{position:relative;overflow:hidden}.confetti{position:absolute;top:-30px;opacity:0;pointer-events:none;border-radius:2px;animation:fall .9s ease-in forwards;z-index:2}@keyframes fall{0%{opacity:1;transform:translateY(-15px) rotate(0deg)}100%{opacity:0;transform:translateY(180px) rotate(210deg)}}.resultNumbers{display:flex;align-items:stretch;justify-content:center;gap:12px;flex-wrap:wrap;margin:18px 0}.resultNum{background:#071e39;border:1px solid #6ac7eb6c;border-radius:15px;padding:15px;min-width:155px}.resultNum span{display:block;color:#b7cfdd;font-size:11px}.resultNum b{display:block;margin-top:5px;font-size:clamp(25px,4vw,40px);color:#ffe3a9}.resultCompare{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;margin:14px 0}.resultCompare div{background:#092943;border:1px solid #ffffff24;border-radius:12px;padding:12px;font-size:12px;line-height:1.6}.resultActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:19px}.reflection{margin-top:18px;background:#0c3152;border:1px solid #ffffff33;padding:15px;border-radius:14px;text-align:left}.reflection label{display:block;margin:8px 0;font-size:13px;color:#e2f1fa;line-height:1.5}.reflection input{accent-color:#34cdea;margin-right:7px}.reflection .btn{margin-top:9px}
+/* tutorial / report */
+.tutorialGrid{padding:17px;overflow:auto;flex:1;display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.tutorialPreview{position:relative;min-height:350px;background:linear-gradient(#94d8fb,#c3e8fe);border-radius:20px;overflow:hidden;border:1px solid #8ce4ff}.tutorialPreview canvas{height:100%;width:100%}.tutorialSteps{background:linear-gradient(135deg,#154268,#0b2749);border:1px solid #66d0ff6c;border-radius:20px;padding:23px;overflow:auto}.tutorialSteps h2{font-size:clamp(24px,3vw,37px)}.tutorialStep{padding:12px;background:#113457;border:1px solid #84ceff48;border-radius:13px;margin-bottom:11px;font-size:14px;line-height:1.5}.tutorialStep strong{color:#ffe1a6}.reportTable{width:100%;border-collapse:collapse;font-size:13px}.reportTable td,.reportTable th{text-align:left;padding:11px;border-bottom:1px solid #ffffff30}.reportTable th{color:#ffda90}.reportTable td{color:#e5f5ff}
+@media(max-width:950px){.gameArea{grid-template-columns:minmax(0,1fr) 245px;gap:6px;padding:6px}.cityTopHUD .pill{max-width:80%}.gameSidebar{gap:6px}.missionCard,.routeCard{padding:10px}.missionCard h3{font-size:15px}.gameFooter{gap:5px}.gameFooter .btn{padding:8px 10px;font-size:11px;min-height:36px}.levelGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.topbar{height:55px;padding:7px 11px}.topbar .tag{display:none}.brand{font-size:13px}.topactions .btn{padding:6px 9px;min-height:34px;font-size:11px}.heroContent{padding:25px}.heroText h1{font-size:clamp(42px,11vw,67px)}.heroFloating{right:8%;top:7%;padding:7px;font-size:10px}.heroActions .btn{min-height:43px;padding:10px 13px;font-size:12px}.menuGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.materialGrid{grid-template-columns:1fr;overflow:auto;display:block;padding:10px;flex:1}.materialLeft{min-height:0;max-height:none;overflow:visible;padding:18px;border-radius:18px 18px 0 0}.materialRight{min-height:300px;border-radius:0 0 18px 18px}.diagramArea{height:240px;flex:none}.lessonFooter{padding:5px 10px 10px;background:#081e36;gap:7px}.lessonFooter .btn{font-size:11px;min-height:38px;padding:7px 10px}.lessonFootProgress{font-size:10px}.levelGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.levelCard{min-height:160px;padding:13px}.tutorialGrid{grid-template-columns:1fr}.tutorialPreview{min-height:240px;height:270px}.resultCompare{grid-template-columns:1fr}}
+@media(max-width:700px) and (orientation:portrait){.gameArea{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;flex:1;gap:6px}.gameSidebar{display:grid;grid-template-columns:1fr 1fr;max-height:164px;overflow:auto}.missionCard,.routeCard{min-height:0}.missionCard p{display:none}.missionInfo{display:none}.routeCard{min-height:112px}.routePath{font-size:11px;min-height:30px;max-height:53px;overflow:auto;padding:6px}.calcLabel{margin-top:5px}.calcInput{min-height:34px;padding:5px 8px}.routeHelp{display:none}.cityWrap{min-height:210px}.gameFooter{padding:0 5px 7px;gap:4px}.gameFooter .btn{font-size:10px;padding:6px 8px;min-height:32px}.gameFooter .btn.primary{min-width:104px}.mapLegend{font-size:9px}.cityTopHUD .pill{padding:6px 9px;font-size:10px}}
+@media(max-height:480px) and (orientation:landscape){.topbar{height:40px}.gameArea{gap:5px;padding:5px}.gameSidebar{grid-template-rows:auto 1fr}.missionCard{padding:7px 9px}.missionCard .eyebrow{font-size:9px;margin-bottom:2px}.missionCard h3{font-size:13px;margin-bottom:3px}.missionCard p{font-size:10px;margin:0}.gameSidebar .missionInfo{display:none}.missionCard{flex:none}.routeCard{flex:1}.routeHelp{display:none}.stat{padding:5px}.stat span{font-size:9px}.stat strong{font-size:12px}.routeCard{padding:7px}.routePath{padding:6px;min-height:37px;font-size:10px}.routeHelp{display:none}.calcInput{min-height:28px;padding:4px}.calcLabel{margin:4px 0 3px;font-size:10px}.gameFooter{padding-bottom:5px}.gameFooter .btn{min-height:29px}.cityTopHUD .pill{font-size:9px;padding:6px 8px}.mapTool{right:6px;bottom:6px}.mapTool button{width:29px;height:29px}.mapLegend{left:6px;bottom:6px;font-size:9px}.materialGrid{padding:5px}.materialLeft{padding:13px}.materialTitle{font-size:25px}.lessonFooter{padding-bottom:6px}.heroText h1{font-size:clamp(39px,8vh,60px)}.heroLabel{margin-bottom:8px}.heroText p{margin-bottom:5px;max-width:380px;font-size:12px}.heroActions{margin-top:9px}}
+</style></head>
+<body><main id="app"></main>
+<script>
+(()=>{'use strict';
+const $=(id)=>document.getElementById(id);
+const LEVELS=[
+ {title:'Rute Pertama',sub:'Hubungkan simpul',cols:3,rows:3,start:[0,1],goal:[2,1],mode:'distance',emoji:'🏡',detail:'Pergilah dari Rumah menuju Sekolah melalui ruas yang saling terhubung.'},
+ {title:'Jalur Terpendek',sub:'Bandingkan jarak',cols:4,rows:3,start:[0,1],goal:[3,1],mode:'distance',emoji:'📏',detail:'Ada beberapa pilihan. Cari jalur dengan jumlah kilometer paling kecil.'},
+ {title:'Teka-Teki Simpang',sub:'Baca bobot jalan',cols:4,rows:4,start:[0,3],goal:[3,0],mode:'distance',emoji:'🧭',detail:'Amati bobot tiap ruas sebelum memilih persimpangan.'},
+ {title:'Kota Satu Arah',sub:'Patuhi arah panah',cols:5,rows:4,start:[0,1],goal:[4,2],mode:'distance',emoji:'➡️',detail:'Sebagian jalan hanya boleh dilewati mengikuti arah panah.',directed:true},
+ {title:'Jalan Ditutup',sub:'Cari jalan alternatif',cols:5,rows:4,start:[0,2],goal:[4,1],mode:'distance',emoji:'🚧',detail:'Jalan dekat Pasar sedang diperbaiki. Hindari ruas berpenghalang.',blocked:true},
+ {title:'Jam Sibuk',sub:'Cari waktu tercepat',cols:5,rows:4,start:[0,0],goal:[4,3],mode:'time',emoji:'🚦',detail:'Jalan pendek bisa lebih lambat akibat macet. Cari waktu terkecil.',traffic:true},
+ {title:'Dua Tujuan',sub:'Kunjungi Pasar dulu',goalKind:'post',cols:5,rows:4,start:[0,1],via:[2,3],goal:[4,0],mode:'distance',emoji:'📦',detail:'Ambil paket di Rumah, singgah di Pasar, lalu antar ke Kantor Pos. Kamu boleh melewati simpul yang sama bila diperlukan.'},
+ {title:'Misi Darurat',sub:'Ambulans tercepat',goalKind:'hospital',cols:5,rows:5,start:[0,4],goal:[4,0],mode:'time',emoji:'🚑',detail:'Antar pasien ke Rumah Sakit dengan waktu tempuh tercepat.',traffic:true,blocked:true},
+ {title:'Hemat Energi',sub:'Perhatikan bahan bakar',goalKind:'post',cols:5,rows:5,start:[0,0],goal:[4,4],mode:'fuel',emoji:'⛽',detail:'Antar kiriman dari Rumah ke Kantor Pos dengan penggunaan bahan bakar paling hemat.',traffic:true},
+ {title:'Navigator Ahli',sub:'Gabungan semua aturan',goalKind:'hospital',cols:6,rows:5,start:[0,4],via:[3,1],goal:[5,0],mode:'time',emoji:'🏆',detail:'Berangkat dari Rumah, singgah di Pasar, lalu tiba di Rumah Sakit. Patuhi jalan satu arah dan hindari kemacetan.',traffic:true,blocked:true,directed:true}
+];
+const LESSONS=[
+ {title:'Mengenal Jaringan Jalan',desc:'Kota adalah jaringan lokasi yang dihubungkan oleh jalan. Rumah, sekolah, rumah sakit, dan pasar dapat direpresentasikan sebagai titik-titik pada jaringan.',points:['Lokasi dan persimpangan adalah tempat yang dapat dituju.','Jalan menghubungkan lokasi dan menentukan ke mana kendaraan bisa bergerak.','Peta jalan membantu kita memilih rute dengan alasan yang jelas.'],example:'Contoh: rumah dan sekolah ditampilkan sebagai bangunan di sisi jalan. Simpul bercincin di jalan adalah titik berangkat dan titik tujuan; ruas di antaranya menunjukkan pilihan jalur.',note:'Ketuk salah satu lingkaran pada diagram untuk mengetahui lokasinya.'},
+ {title:'Apa itu Graph?',desc:'Graph (graf) adalah struktur data yang terdiri atas simpul dan sisi. Graf dapat digunakan untuk menggambarkan hubungan antarobjek, termasuk jaringan jalan.',points:['Vertex atau simpul mewakili sebuah lokasi.','Edge atau sisi mewakili hubungan antara dua lokasi.','Graf tidak selalu berbentuk peta: jaringan pertemanan dan internet juga dapat dimodelkan sebagai graf.'],example:'Rumah A terhubung ke Taman B, Taman B terhubung ke Sekolah C. Hubungannya dapat ditulis A—B—C.',note:'Ketuk simpul dan lihat jalur yang menghubungkannya.'},
+ {title:'Simpul (Vertex)',desc:'Simpul adalah titik pada graf. Dalam permainan ini, simpul menjadi persimpangan atau lokasi yang dapat dipilih siswa untuk membangun rute.',points:['Setiap simpul mempunyai identitas atau label.','Satu simpul dapat terhubung ke satu atau lebih simpul lain.','Tujuan perjalanan juga merupakan sebuah simpul.'],example:'Ketika kendaraan berhenti di persimpangan B, pemain perlu memilih simpul berikutnya yang terhubung.',note:'Ketuk lingkaran A, B, C, atau D pada diagram.'},
+ {title:'Sisi (Edge)',desc:'Sisi merupakan garis penghubung antara dua simpul. Pada peta, sisi mewakili sebuah ruas jalan.',points:['Ruas hanya bisa digunakan jika dua simpulnya benar-benar terhubung.','Tidak setiap pasangan simpul mempunyai sisi.','Jika jalan terputus, siswa harus mencari jalan yang masih memiliki sambungan.'],example:'Jika A terhubung ke B, tetapi tidak ada sisi A ke D, kendaraan tidak dapat langsung melompat dari A ke D.',note:'Ketuk sebuah ruas garis untuk melihat hubungan dua simpul.'},
+ {title:'Graph Berbobot',desc:'Graf berbobot adalah graf yang setiap sisinya memiliki nilai seperti jarak, waktu perjalanan, atau konsumsi bahan bakar.',points:['Bobot rute diperoleh dengan menjumlahkan bobot semua ruas yang dilewati.','Jalur dengan jumlah ruas lebih sedikit belum tentu memiliki bobot lebih kecil.','Jenis bobot harus disesuaikan dengan tujuan misi.'],example:'Rute A→B→D memiliki bobot 2 + 4 = 6 km. Rute A→C→D memiliki bobot 3 + 2 = 5 km sehingga lebih pendek.',note:'Amati angka bobot pada garis diagram.'},
+ {title:'Graph Berarah',desc:'Pada graf berarah, setiap sisi mempunyai arah. Contohnya adalah jalan satu arah yang hanya boleh dilewati mengikuti panah.',points:['A→B tidak otomatis berarti boleh berkendara dari B→A.','Jalan dua arah dapat digunakan dari kedua sisi.','Memilih arah yang dilarang membuat rute tidak valid.'],example:'Jalan dari Taman menuju Pasar boleh dilalui, tetapi arah sebaliknya dilarang apabila terdapat rambu satu arah.',note:'Perhatikan tanda panah pada ruas diagram.'},
+ {title:'Menentukan Rute Terbaik',desc:'Sebuah rute merupakan urutan simpul yang saling terhubung, dimulai dari lokasi awal sampai tujuan.',points:['Rute valid harus menggunakan sisi yang tersedia.','Jumlahkan bobot semua sisi pada rute.','Bandingkan beberapa rute, lalu pilih hasil yang paling kecil untuk objektif yang diminta.'],example:'A→B→D = 2+4 = 6 km; A→C→D = 3+2 = 5 km. Rute kedua lebih pendek.',note:'Coba ketuk A, C, lalu D pada diagram.'},
+ {title:'Rute Terpendek vs Tercepat',desc:'Jarak dan waktu adalah dua bobot yang berbeda. Jalan yang lebih pendek bisa lebih lambat jika macet atau memiliki batas kecepatan rendah.',points:['Rute terpendek meminimalkan total kilometer.','Rute tercepat meminimalkan total menit perjalanan.','Kedua hasilnya tidak selalu sama.'],example:'Rute X berjarak 4 km tetapi membutuhkan 15 menit; rute Y berjarak 6 km tetapi membutuhkan 9 menit. Y lebih cepat walaupun lebih jauh.',note:'Bandingkan angka kilometer dan menit pada contoh.'},
+ {title:'Gangguan dan Rute Alternatif',desc:'Jaringan jalan dapat berubah karena kemacetan, penutupan, kecelakaan, atau aturan lalu lintas. Rute harus dihitung ulang dengan kondisi terbaru.',points:['Jalan yang ditutup tidak boleh dimasukkan ke rute.','Jalan macet masih bisa dilewati, tetapi bobot waktunya bertambah.','Rute alternatif dapat lebih efisien ketika kondisi jalan berubah.'],example:'Jika ruas B—D ditutup, pengendara harus mencari jalan lain, misalnya melalui simpul C.',note:'Perhatikan ruas bergaris merah yang menandakan penutupan.'},
+ {title:'Cara Bermain Smart Route Explorer',desc:'Kamu akan membangun rute pada miniatur kota 3D. Setiap persimpangan dapat diketuk untuk memilih jalur berikutnya.',points:['Temukan bangunan RUMAH dan bangunan tujuan di sisi jalan; ketuk bangunannya atau simpul terdekat untuk mulai menyusun rute.','Gunakan Urungkan atau Reset jika salah memilih.','Masukkan hasil penjumlahan bobot menurut perhitunganmu.','Tekan UJI RUTE agar mobil menjalankan perjalanan sesuai jalur yang dipilih.','Baca laporan hasil, lalu pilih alasan yang tepat untuk memperoleh nilai penuh.'],example:'Setiap level maksimal 10 poin. Ada 10 level, sehingga skor keseluruhan maksimal 100. Nilai dapat ditingkatkan dengan mencoba ulang.',note:'Setelah ini, pilih Tutorial atau langsung masuk ke Pilih Level.'}
+];
+const KEY='smart-route-explorer-v1'; let store={scores:Array(10).fill(0),unlocked:1,hints:Array(10).fill(0),tries:Array(10).fill(0),name:''};
+try{const old=JSON.parse(localStorage.getItem(KEY));if(old){store={...store,...old}; if(!Array.isArray(store.scores)||store.scores.length!==10)store.scores=Array(10).fill(0);if(!Array.isArray(store.hints))store.hints=Array(10).fill(0);if(!Array.isArray(store.tries))store.tries=Array(10).fill(0)}}catch{}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch{}}
+const app=$('app'); let scene='home',levelIdx=0,lessonIdx=0,graph=null,renderer=null,selectedRoute=[],simData=null,simState=null,estimate='',hintsUsed=0,answered=false,lastScore=null;let heroRenderer=null,diagramAnim=0,tutorialAnim=null;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct=(n,m)=>m?Math.round(100*n/m):0;const sum=a=>a.reduce((x,y)=>x+y,0);const rand=(n)=>{let z=Math.sin(n*127.1+13.2)*43758.5453;return z-Math.floor(z)};
+const modeName=mode=>mode==='time'?'Waktu':mode==='fuel'?'Bahan bakar':'Jarak';
+const unit=mode=>mode==='time'?'menit':mode==='fuel'?'L':'km';
+const fmt=(value,mode)=>mode==='fuel'?value.toFixed(2):mode==='time'?value.toFixed(1):value.toFixed(1);
+const nId=(c,r,cols)=>r*cols+c;
+const pair=(a,b)=>[Math.min(a,b),Math.max(a,b)].join('-');
+function makeGraph(level,i){
+ // Perempatan kini memiliki koordinat geografis lokal dalam KM, bukan kotak ukuran sama.
+ // Ruas diukur dari koordinat itu. Skala visual 1 km sama di seluruh peta.
+ const gx=[0],gy=[0];
+ for(let c=1;c<level.cols;c++)gx.push(gx[c-1]+(.95+rand(303+i*43+c*17)*.92));
+ for(let r=1;r<level.rows;r++)gy.push(gy[r-1]+(.95+rand(727+i*61+r*23)*.90));
+ const nodes=[];
+ for(let r=0;r<level.rows;r++)for(let c=0;c<level.cols;c++){
+  const id=nId(c,r,level.cols);
+  const offX=(rand(111+i*101+c*17+r*41)-.5)*.25;
+  const offY=(rand(999+i*79+c*37+r*11)-.5)*.25;
+  nodes.push({id,c,r,px:gx[c]+offX,py:gy[r]+offY,label:String.fromCharCode(65+(id%26))+(id>=26?'2':'')});
+ }
+
+ const start=nId(...level.start,level.cols), goal=nId(...level.goal,level.cols), via=level.via?nId(...level.via,level.cols):null;
+ const edges=[];
+ for(const n of nodes){for(const [dc,dr] of [[1,0],[0,1]]){const C=n.c+dc,R=n.r+dr;if(C>=level.cols||R>=level.rows)continue;const to=nId(C,R,level.cols);const neighbor=nodes[to];const distanceKM=Math.hypot(neighbor.px-n.px,neighbor.py-n.py);const d=Math.round(distanceKM*10)/10;let traffic=!!level.traffic&&rand(n.id*41+i*9)>.61;let blocked=!!level.blocked&&rand(n.id*17+i*71)>.82;let directed=!!level.directed&&rand(n.id*49+i*13)>.72;let reverse=directed&&rand(n.id*9+i*35)>.5;
+ const e={id:pair(n.id,to),a:n.id,b:to,dist:d,time:Math.round((d*2.7+(traffic?5.8:0.4+rand(n.id+i)*1.5))*10)/10,fuel:Math.round((d*(.19+(traffic?.085:.025)+rand(i+n.id)*.06))*100)/100,traffic,blocked,directed,from:reverse?to:n.id,to:reverse?n.id:to};edges.push(e);
+ }}
+ // Guarantee visible one-way streets while preserving an achievable backbone.
+ if(level.directed&&edges.filter(e=>e.directed).length<2){
+   const candidates=edges.filter(e=>e.b===e.a+1);
+   for(const j of [1,4,8]){const e=candidates[j];if(e){e.directed=true;e.from=e.a;e.to=e.b}}
+ }
+ // Keep an always-available reasonable backbone when special rules are added.
+ let g={nodes,edges,level,start,goal,via,cols:level.cols,rows:level.rows};
+ let res=optimal(g,level.mode);if(!Number.isFinite(res.cost)){
+  for(const e of edges)e.blocked=false;
+  res=optimal(g,level.mode);
+  if(!Number.isFinite(res.cost)){for(const e of edges)e.directed=false;}
+ }
+ // Reintroduce one-way streets that do not block the known achievable route.
+ if(level.directed&&edges.filter(e=>e.directed).length<2){
+  const safe=new Set(optimal(g,level.mode).route.slice(1).map((id,j,route)=>pair(optimal(g,level.mode).route[j],id)));
+  const extra=edges.filter(e=>!e.blocked&&!safe.has(e.id)&&e.b===e.a+1);
+  for(const e of extra.slice(0,3)){e.directed=true;e.from=e.a;e.to=e.b;}
+ }
+ return g;
+}
+function nodeEdges(g,a){return g.edges.filter(e=>!e.blocked&&(e.a===a||e.b===a)).filter(e=>!e.directed||e.from===a).map(e=>({e,to:e.a===a?e.b:e.a}));}
+function shortest(g,from,to,mode){const len=g.nodes.length,d=Array(len).fill(Infinity),p=Array(len).fill(null),visited=new Set();d[from]=0;for(let count=0;count<len;count++){let a=-1,lowest=Infinity;for(let j=0;j<len;j++)if(!visited.has(j)&&d[j]<lowest){lowest=d[j];a=j}if(a<0||a===to)break;visited.add(a);for(const {e,to:b} of nodeEdges(g,a)){const alt=d[a]+e[mode==='distance'?'dist':mode];if(alt<d[b]-1e-8){d[b]=alt;p[b]=a}}}
+ const route=[];let cur=to;if(Number.isFinite(d[to])){while(cur!==null){route.unshift(cur);cur=p[cur]}}return{cost:d[to],route};}
+function optimal(g,mode){if(g.via!==null){const A=shortest(g,g.start,g.via,mode),B=shortest(g,g.via,g.goal,mode);return{cost:A.cost+B.cost,route:A.route.concat(B.route.slice(1))}}return shortest(g,g.start,g.goal,mode)}
+function lookupEdge(g,a,b){return g.edges.find(e=>e.id===pair(a,b))}
+function routeCost(g,route,mode){let total=0;for(let i=1;i<route.length;i++){const e=lookupEdge(g,route[i-1],route[i]);if(!e||e.blocked||(e.directed&&e.from!==route[i-1]))return Infinity;total+=e[mode==='distance'?'dist':mode]}return total}
+function goalKind(level){return level.goalKind||'school'}
+function placeName(kind){return {home:'Rumah',school:'Sekolah',hospital:'Rumah Sakit',market:'Pasar',post:'Kantor Pos'}[kind]||'Tujuan'}
+function nodeLabel(g,id){if(id===g.start)return 'Rumah';if(id===g.goal)return placeName(goalKind(g.level));if(id===g.via)return 'Pasar';return 'Simpang '+g.nodes[id].label}
+function missionBuildings(g){
+ let places=[{id:g.start,kind:'home',title:'RUMAH',color:'#ffcb6c',role:'AWAL'},
+             {id:g.goal,kind:goalKind(g.level),title:placeName(goalKind(g.level)).toUpperCase(),color:'#54e5a6',role:'TUJUAN'}];
+ if(g.via!==null)places.push({id:g.via,kind:'market',title:'PASAR',color:'#ffbf81',role:'SINGGAH'});
+ // A physical market sits next to the blocked road on level 5, even when not a waypoint.
+ if(g.level.title==='Jalan Ditutup'&&g.via===null){
+   let e=g.edges.find(e=>e.blocked);
+   if(e){let id=e.a===g.start||e.a===g.goal?e.b:e.a;
+     if(id!==g.start&&id!==g.goal)places.push({id,kind:'market',title:'PASAR',color:'#eabf7c',role:'LANDMARK',secondary:true});}
+ }
+ return places;
+}
+const grade=v=>v>=90?'Sangat Baik':v>=70?'Baik':v>=50?'Cukup':'Perlu Belajar Lagi';
+function totalScore(){return sum(store.scores)}
+function header(title,actions=true){return `<header class="topbar"><div class="brand">SMART ROUTE <em>EXPLORER</em></div><div class="topactions">${title?`<span class="tag">${esc(title)}</span>`:''}${actions?`<button class="btn ghost sm" data-action="menu">⌂ MENU</button>`:''}<button class="btn ghost sm" data-action="sound" id="soundBtn">${soundOn?'🔊':'🔇'}</button></div></header>`}
+let soundOn=true,audioCtx=null;function tone(f=640,d=.13){if(!soundOn)return;try{const C=window.AudioContext||window.webkitAudioContext;audioCtx??=new C();if(audioCtx.state==='suspended')audioCtx.resume();let o=audioCtx.createOscillator(),v=audioCtx.createGain();o.type='sine';o.frequency.setValueAtTime(f,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(Math.max(f*.7,50),audioCtx.currentTime+d);v.gain.setValueAtTime(.045,audioCtx.currentTime);v.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+d);o.connect(v);v.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}catch{}}
+function destroyRenderer(){if(renderer){renderer.dispose();renderer=null}if(heroRenderer){heroRenderer.dispose();heroRenderer=null}if(tutorialAnim){cancelAnimationFrame(tutorialAnim);tutorialAnim=null}}
+function navigate(page){destroyRenderer();scene=page; if(page==='home')showHome();else if(page==='menu')showMenu();else if(page==='lessons')showLesson();else if(page==='levels')showLevels();else if(page==='tutorial')showTutorial();else if(page==='game')showGame();else if(page==='result')showResult();else if(page==='report')showReport();}
+function showHome(){app.innerHTML=`<section id="homeScene"><canvas id="heroCanvas"></canvas><div class="heroShading"></div><div class="heroFloating"><strong>🧭 MISI NAVIGASI</strong><small>Temukan rute paling efisien!</small></div><div class="heroContent"><div class="heroText"><div class="heroLabel">MEDIA PEMBELAJARAN INFORMATIKA · KELAS IX</div><h1>SMART<br>ROUTE<br><span>EXPLORER</span></h1><p>Bangun rute pada kota 3D, hindari jalan ditutup dan kemacetan, lalu jalankan kendaraanmu. Belajar simpul, sisi, dan graph melalui petualangan nyata.</p><div class="heroActions"><button class="btn primary" data-action="menu">▶ MULAI PETUALANGAN</button><button class="btn aqua" data-action="lessons">▣ PELAJARI GRAPH</button></div><div class="heroFoot"><span>✦ 10 Level</span><span>✦ Jalur & Kendaraan Beranimasi</span><span>✦ Skor 100</span><span>✦ HP dan PC</span></div></div></div></section>`;let canvas=$('heroCanvas');heroRenderer=new IsoRenderer(canvas,makeGraph(LEVELS[3],3),{hero:true});heroRenderer.start()}
+function showMenu(){app.innerHTML=`<section class="layout">${header('MENU UTAMA')}<div class="menuContent"><div class="menuCard"><div class="eyebrow">INFORMATIKA KELAS IX</div><h2>Petualangan Mencari Rute Terbaik</h2><p class="subtle">Pelajari struktur data graph, bangun jalur sendiri, lalu lihat mobil menempuh hasil keputusanmu.</p><div class="menuGrid"><button class="menuTile" data-action="lessons"><i>📖</i><span>MATERI GRAPH</span></button><button class="menuTile main" data-action="levels"><i>🗺️</i><span>PILIH LEVEL</span></button><button class="menuTile" data-action="tutorial"><i>🎮</i><span>TUTORIAL</span></button><button class="menuTile" data-action="report"><i>🏆</i><span>NILAI & CAPAIAN</span></button><button class="menuTile" data-action="home"><i>🏠</i><span>HALAMAN DEPAN</span></button><button class="menuTile" data-action="help"><i>💡</i><span>PETUNJUK CEPAT</span></button></div><p style="color:#bed2e6;font-size:12px;margin:19px 0 0">Progres tersimpan pada browser perangkat ini • Total nilai saat ini: <strong style="color:#ffe0a1">${totalScore()}/100</strong></p></div></div></section>`}
+const SAMPLE_NODES=[{x:50,y:190,label:'A',name:'Rumah'},{x:180,y:65,label:'B',name:'Taman'},{x:182,y:255,label:'C',name:'Pasar'},{x:330,y:175,label:'D',name:'Sekolah'}];
+const SAMPLE_EDGES=[[0,1,2],[0,2,3],[1,3,4],[2,3,2],[1,2,5]];
+function drawLessonDiagram(){const c=$('lessonCanvas');if(!c)return;let box=c.getBoundingClientRect();let w=box.width||500,h=box.height||260;const dpr=Math.min(2,devicePixelRatio||1);c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);let ctx=c.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);const sx=w/400,sy=h/320;ctx.scale(sx,sy);let bg=ctx.createLinearGradient(0,0,0,320);bg.addColorStop(0,'#15486a');bg.addColorStop(1,'#082840');ctx.fillStyle=bg;ctx.fillRect(0,0,400,320);
+ for(let k=0;k<18;k++){ctx.fillStyle='rgba(125,223,255,.06)';ctx.beginPath();ctx.arc(rand(k)*400,rand(k+22)*320,1.5,0,Math.PI*2);ctx.fill()}
+ const ex=lessonIdx===5||lessonIdx===8;
+ for(const [a,b,d] of SAMPLE_EDGES){let A=SAMPLE_NODES[a],B=SAMPLE_NODES[b];ctx.strokeStyle=ex&&a===1&&b===3?'#ff9477':'#85bcd4';ctx.lineWidth=ex&&a===1&&b===3?9:6;ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.setLineDash([]);let xm=(A.x+B.x)/2,ym=(A.y+B.y)/2;if(lessonIdx>=4){ctx.fillStyle='#07213d';ctx.beginPath();ctx.roundRect(xm-17,ym-12,34,23,8);ctx.fill();ctx.fillStyle='#ffe1a3';ctx.font='bold 15px Segoe UI';ctx.textAlign='center';ctx.fillText(String(d),xm,ym+5)}if(lessonIdx===5&&a===1&&b===3){ctx.fillStyle='#ff8c77';ctx.font='bold 16px Arial';ctx.fillText('→',xm+9,ym-18)}if(lessonIdx===8&&a===1&&b===3){ctx.fillStyle='white';ctx.font='bold 13px Arial';ctx.fillText('TUTUP',xm,ym-13)}}
+ if(lessonIdx===6){let p=[0,2,3];ctx.beginPath();p.forEach((idx,i)=>{const v=SAMPLE_NODES[idx];i?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y)});ctx.strokeStyle='#4ce2ff';ctx.lineWidth=9;ctx.shadowBlur=14;ctx.shadowColor='#48ffff';ctx.stroke();ctx.shadowBlur=0}
+ SAMPLE_NODES.forEach((n,i)=>{ctx.beginPath();ctx.arc(n.x,n.y,25,0,Math.PI*2);ctx.fillStyle=['#ffb851','#359cdf','#39c995','#f08b72'][i];ctx.shadowBlur=16;ctx.shadowColor='#0006';ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=3;ctx.strokeStyle='#e5fcff';ctx.stroke();ctx.font='bold 20px Arial';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText(n.label,n.x,n.y+7);ctx.fillStyle='#e8f7ff';ctx.font='bold 13px Arial';ctx.fillText(n.name,n.x,n.y+41)})}
+function showLesson(){let s=LESSONS[lessonIdx];app.innerHTML=`<section class="layout">${header('MATERI '+(lessonIdx+1)+' / '+LESSONS.length)}<div class="materialGrid"><article class="materialLeft"><div class="kicker">BAB: BERPIKIR KOMPUTASIONAL · GRAPH</div><h2 class="materialTitle">${esc(s.title)}</h2><p class="materialIntro">${esc(s.desc)}</p>${s.points.map((p,i)=>`<div class="teachingPoint"><b>${i+1}.</b> ${esc(p)}</div>`).join('')}<div class="lessonExample"><b>CONTOH NYATA</b><div style="margin-top:7px">${esc(s.example)}</div></div></article><aside class="materialRight"><div class="diagramTitle">🔷 Jaringan Jalan Interaktif <span style="color:#ffd67b">A–D</span></div><p class="diagramHint">${esc(s.note)}</p><div class="diagramArea"><canvas id="lessonCanvas" aria-label="Diagram contoh graph yang bisa diketuk"></canvas></div><div class="diagramMessage" id="lessonMsg">Ketuk simpul atau ruas untuk melihat penjelasannya.</div></aside></div><footer class="lessonFooter"><div class="leftBtns"><button class="btn sm" data-action="lessonPrev">← SEBELUMNYA</button><button class="btn sm" data-action="menu">⌂ MENU</button></div><div class="lessonFootProgress">${lessonIdx+1} / ${LESSONS.length}<div class="stepProgress"><i style="width:${(lessonIdx+1)/LESSONS.length*100}%"></i></div></div><div class="rightBtns"><button class="btn primary sm" data-action="lessonNext">${lessonIdx===LESSONS.length-1?'PILIH LEVEL ▶':'SELANJUTNYA →'}</button></div></footer></section>`;drawLessonDiagram();let ca=$('lessonCanvas');ca.addEventListener('click',e=>{const rect=ca.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width*400,y=(e.clientY-rect.top)/rect.height*320;let closest=SAMPLE_NODES.map((v,i)=>({d:Math.hypot(x-v.x,y-v.y),v,i})).sort((a,b)=>a.d-b.d)[0];if(closest.d<40){$('lessonMsg').textContent=`Simpul ${closest.v.label} mewakili ${closest.v.name}. Ketuk simpul berikutnya untuk memahami hubungannya.`;tone(620);return}let near=null;for(const [a,b,d] of SAMPLE_EDGES){let A=SAMPLE_NODES[a],B=SAMPLE_NODES[b],t=Math.max(0,Math.min(1,((x-A.x)*(B.x-A.x)+(y-A.y)*(B.y-A.y))/((B.x-A.x)**2+(B.y-A.y)**2)));let dd=Math.hypot(x-(A.x+t*(B.x-A.x)),y-(A.y+t*(B.y-A.y)));if(!near||dd<near.d)near={d:dd,a,b,w:d}}if(near&&near.d<22){$('lessonMsg').textContent=`Ruas ${SAMPLE_NODES[near.a].label}–${SAMPLE_NODES[near.b].label} menghubungkan dua simpul dengan contoh bobot ${near.w} km.`;tone(520)}})}
+function showLevels(){app.innerHTML=`<section class="layout">${header('PILIH LEVEL')}<div class="levelSection"><div class="levelIntro"><div class="eyebrow">10 MISI NAVIGASI</div><h2>Pilih Tantangan Kota</h2><p>Setiap level bernilai maksimal 10 poin. Selesaikan satu level untuk membuka level berikutnya. Posisi Rumah dan tujuan diacak setiap kali level dimainkan, termasuk saat mengulang.</p><div style="font-weight:900;color:#ffdc8b">SKOR: ${totalScore()}/100 · TERBUKA: ${store.unlocked}/10</div></div><div class="levelGrid">${LEVELS.map((v,i)=>`<button class="levelCard ${i>=store.unlocked?'locked':''}" data-action="level" data-level="${i}" ${i>=store.unlocked?'disabled':''}><div class="number">LEVEL ${String(i+1).padStart(2,'0')} ${i>=store.unlocked?'· TERKUNCI':''}</div><div class="levelIcon">${i>=store.unlocked?'🔒':v.emoji}</div><strong>${esc(v.title)}</strong><small>${esc(v.sub)}</small><div class="stars">${store.scores[i]?`${store.scores[i]} / 10 ★`:'☆☆☆'}</div></button>`).join('')}</div></div></section>`}
+function showTutorial(){app.innerHTML=`<section class="layout">${header('TUTORIAL')}<div class="tutorialGrid"><div class="tutorialPreview"><canvas id="tutorialCanvas"></canvas></div><div class="tutorialSteps"><div class="eyebrow">PANDUAN INTERAKTIF</div><h2>Cara Mencari Rute</h2><div class="tutorialStep"><strong>1 · Pahami misi</strong><div>Baca titik awal, tujuan, serta aturan jarak, waktu, atau energi.</div></div><div class="tutorialStep"><strong>2 · Ketuk persimpangan</strong><div>Jalur hanya bisa disambung ke simpul yang memiliki ruas jalan langsung.</div></div><div class="tutorialStep"><strong>3 · Hitung bobot</strong><div>Tambahkan nilai pada semua ruas. Masukkan perkiraan total sebelum menguji rute.</div></div><div class="tutorialStep"><strong>4 · Uji dan amati</strong><div>Mobil virtual bergerak sepanjang jalur yang kamu pilih. Perhatikan belokan, hambatan, dan waktu tempuh.</div></div><div class="tutorialStep"><strong>5 · Evaluasi</strong><div>Lihat perbandingan dengan rute optimal, jawab pertanyaan refleksi, dan dapatkan nilai.</div></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn aqua" data-action="playTutorial">▶ PUTAR CONTOH</button><button class="btn primary" data-action="levels">MULAI MISI →</button></div></div></div></section>`;makeTutorialCanvas()}
+function makeTutorialCanvas(){const c=$('tutorialCanvas');if(!c)return;let t0=performance.now();function draw(t){if(scene!=='tutorial')return;const rc=c.getBoundingClientRect(),w=rc.width||450,h=rc.height||290,d=Math.min(2,devicePixelRatio||1);if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=w*d;c.height=h*d;}let ctx=c.getContext('2d');ctx.setTransform(d,0,0,d,0,0);ctx.fillStyle='#abdaf0';ctx.fillRect(0,0,w,h);let pts=[[.13,.78],[.34,.48],[.52,.72],[.69,.33],[.88,.55]].map(([x,y])=>[w*x,h*y]);const lines=[[0,1],[1,2],[2,3],[3,4],[0,2],[1,3]];ctx.lineCap='round';for(const [a,b]of lines){ctx.strokeStyle='#445260';ctx.lineWidth=20;ctx.beginPath();ctx.moveTo(...pts[a]);ctx.lineTo(...pts[b]);ctx.stroke();ctx.strokeStyle='#dadbcf';ctx.lineWidth=2;ctx.setLineDash([9,11]);ctx.stroke();ctx.setLineDash([])}const pidx=[0,1,3,4];ctx.strokeStyle='#49eaff';ctx.shadowColor='#1dcdfa';ctx.shadowBlur=18;ctx.lineWidth=7;ctx.beginPath();pidx.forEach((id,j)=>{j?ctx.lineTo(...pts[id]):ctx.moveTo(...pts[id])});ctx.stroke();ctx.shadowBlur=0;for(let i=0;i<pts.length;i++){ctx.beginPath();ctx.arc(...pts[i],10,0,Math.PI*2);ctx.fillStyle=i===0?'#eeba51':i===4?'#64ce9b':'#2599d9';ctx.fill();ctx.strokeStyle='#eaffff';ctx.lineWidth=2;ctx.stroke()}let progress=(t-t0)/6600%1*3,seg=Math.min(2,Math.floor(progress)),u=progress-seg;let a=pts[pidx[seg]],b=pts[pidx[seg+1]],x=a[0]+(b[0]-a[0])*u,y=a[1]+(b[1]-a[1])*u;ctx.fillStyle='#ffcc56';ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(b[1]-a[1],b[0]-a[0]));ctx.fillRect(-15,-8,30,16);ctx.fillStyle='#0d3454';ctx.fillRect(0,-6,9,12);ctx.restore();ctx.fillStyle='#103854';ctx.font='bold 13px Arial';ctx.fillText('RUMAH',pts[0][0]-16,pts[0][1]-18);ctx.fillText('TUJUAN',pts[4][0]-17,pts[4][1]-18);tutorialAnim=requestAnimationFrame(draw)}tutorialAnim=requestAnimationFrame(draw)}
+// Posisi rumah, tujuan dan titik singgah dibentuk ulang pada SETIAP misi.
+// Simpan hanya pasangan terakhir agar tombol Ulangi tidak mengulang peta yang sama.
+const lastMissionPositions={};
+try { Object.assign(lastMissionPositions,JSON.parse(localStorage.getItem('sre-last-mission-locations')||'{}')); } catch(e) {}
+function randomMissionPositions(level,index){
+ const nodes=[];
+ for(let r=0;r<level.rows;r++)for(let c=0;c<level.cols;c++)nodes.push({c,r,id:r*level.cols+c});
+ const last=lastMissionPositions[index];
+ const minSteps=(level.cols+level.rows>=7)?3:2;
+ const options=[];
+ for(const a of nodes)for(const b of nodes){
+  const dx=Math.abs(a.c-b.c),dy=Math.abs(a.r-b.r);
+  if(dx===0||dy===0||dx+dy<minSteps)continue; // selalu ada belokan, bukan garis lurus
+  const viaCandidates=level.via?nodes.filter(v=>v.id!==a.id&&v.id!==b.id&&
+    Math.abs(v.c-a.c)+Math.abs(v.r-a.r)>=2&&
+    Math.abs(v.c-b.c)+Math.abs(v.r-b.r)>=2):[];
+  if(level.via&&!viaCandidates.length)continue;
+  let weight=1;
+  // Variasikan posisi tengah/tepi kota dan misi arah utara/selatan/timur/barat.
+  if(a.c>0&&a.c<level.cols-1)weight+=.5;
+  if(a.r>0&&a.r<level.rows-1)weight+=.5;
+  if(b.c>0&&b.c<level.cols-1)weight+=.5;
+  if(b.r>0&&b.r<level.rows-1)weight+=.5;
+  const recent=last&&(a.id===last.start||b.id===last.goal||
+    (a.id===last.goal&&b.id===last.start));
+  if(recent)weight=.0001;
+  options.push({a,b,viaCandidates,weight});
+ }
+ let pool=options.filter(p=>p.weight>.01);
+ if(!pool.length)pool=options;
+ let total=pool.reduce((z,p)=>z+p.weight,0),pick=Math.random()*total;
+ let chosen=pool[pool.length-1];
+ for(const o of pool){pick-=o.weight;if(pick<=0){chosen=o;break}}
+ let via=null;
+ if(level.via){
+  let choices=chosen.viaCandidates.filter(v=>!last||v.id!==last.via);
+  if(!choices.length)choices=chosen.viaCandidates;
+  via=choices[Math.floor(Math.random()*choices.length)];
+ }
+ lastMissionPositions[index]={start:chosen.a.id,goal:chosen.b.id,via:via?.id??null};
+ try {localStorage.setItem('sre-last-mission-locations',JSON.stringify(lastMissionPositions))} catch(e) {}
+ return {...level,start:[chosen.a.c,chosen.a.r],goal:[chosen.b.c,chosen.b.r],
+  ...(level.via?{via:[via.c,via.r]}:{})};
+}
+function selectLevel(i){if(i>=store.unlocked)return;levelIdx=i;graph=makeGraph(randomMissionPositions(LEVELS[i],i),i);selectedRoute=[graph.start];estimate='';simData=null;simState=null;answered=false;hintsUsed=0;navigate('game')}
+function routeText(){return selectedRoute.map(id=>graph.nodes[id].label).join(' → ')}
+function routeExpected(){return routeCost(graph,selectedRoute,graph.level.mode)}
+function gameMetric(){return graph.level.mode}
+function gameModeDescription(){return graph.level.mode==='distance'?'Jarak terpendek':graph.level.mode==='time'?'Waktu tercepat':'Bahan bakar terkecil'}
+function sidebarHTML(){let g=graph,l=g.level;let cost=routeCost(g,selectedRoute,l.mode);return `<div class="missionCard"><div class="eyebrow">MISI ${String(levelIdx+1).padStart(2,'0')}</div><h3>${l.emoji} ${esc(l.title)}</h3><p>${esc(l.detail)}</p><p class="routeHelp" style="margin-top:2px">📍 Ikuti bangunan RUMAH dan ${placeName(goalKind(l)).toUpperCase()} di tepi jalan. Ketuk simpul atau bangunan untuk memilih lokasi; lokasi berubah tiap permainan.</p><div class="missionInfo"><div class="stat"><span>DARI</span><strong>${nodeLabel(g,g.start)}</strong></div><div class="stat"><span>KE</span><strong>${nodeLabel(g,g.goal)}</strong></div>${g.via!==null?`<div class="stat" style="grid-column:1/-1"><span>WAJIB MELALUI</span><strong>${nodeLabel(g,g.via)}</strong></div>`:''}<div class="stat" style="grid-column:1/-1"><span>TARGET</span><strong>${gameModeDescription()}</strong></div></div></div><div class="routeCard"><div class="eyebrow">RUTE PILIHANMU</div><div class="routePath" id="routeNode">${esc(routeText())}</div><div class="missionInfo"><div class="stat"><span>SIMPUL</span><strong id="routeSteps">${selectedRoute.length}</strong></div><div class="stat"><span>STATUS</span><strong id="routeStatus">${selectedRoute.at(-1)===g.goal?'Di tujuan':'Merancang'}</strong></div></div><label class="calcLabel" for="estimateInput">Perkiraan total ${modeName(l.mode).toLowerCase()} (${unit(l.mode)})</label><input type="number" step="0.1" inputmode="decimal" id="estimateInput" class="calcInput" placeholder="Hitung jumlah bobot ruas" value="${esc(estimate)}"><div class="routeHelp">Nilai pada jalan adalah <strong>${modeName(l.mode).toLowerCase()}</strong>. Hitung sendiri terlebih dahulu untuk memperoleh poin perhitungan.</div></div>`}
+function showGame(){let g=graph,l=g.level;app.innerHTML=`<section id="gameScene">${header(`LEVEL ${levelIdx+1} / 10 · SKOR ${totalScore()}/100`)}<div class="gameArea"><div class="cityWrap" id="cityWrap"><canvas id="cityCanvas" aria-label="Peta kota tiga dimensi, ketuk simpul untuk membangun rute"></canvas><div class="cityTopHUD"><div class="pill"><span>${esc(gameModeDescription().toUpperCase())}</span><div id="gameMsg">Ketuk simpul untuk menyusun rute • ketuk ruas jalan untuk membaca bobotnya.</div></div><div class="pill" style="white-space:nowrap"><span>LEVEL</span>${levelIdx+1} / 10</div></div><div class="mapTool"><button title="Perbesar" data-action="zoomIn">+</button><button title="Perkecil" data-action="zoomOut">−</button><button title="Fokus Peta" data-action="focus">⌖</button></div><div class="mapLegend">🏠 Rumah &nbsp; 🏫/🏥 Tujuan &nbsp; 🔵 Simpul &nbsp; <span style="color:#ffca69">Merah = jalan ditutup</span></div><div class="simHUD hidden" id="simHUD"><strong>🚗 Mobil berjalan</strong><div class="simProgress"><b id="simProgress"></b></div><small id="simPercent">0%</small></div></div><aside class="gameSidebar">${sidebarHTML()}</aside></div><footer class="gameFooter"><button class="btn sm" data-action="undo">↶ URUNGKAN</button><button class="btn sm" data-action="reset">⟲ RESET</button><button class="btn sm" data-action="hint">💡 PETUNJUK</button><button class="btn primary" data-action="testRoute">▶ UJI RUTE</button><button class="btn sm" data-action="levels">☰ LEVEL</button></footer></section>`;renderer=new IsoRenderer($('cityCanvas'),g,{hero:false});renderer.start();renderer.onNodeClick=node=>addNode(node);
+renderer.onEdgeClick=e=>{renderer.highEdgeId=e.id;renderer.highT=performance.now()+2400;
+ let v=e[g.level.mode==='distance'?'dist':g.level.mode];
+ let message=e.blocked?`Jalan ${g.nodes[e.a].label}–${g.nodes[e.b].label} DITUTUP`:
+  `Ruas ${g.nodes[e.a].label}–${g.nodes[e.b].label}: ${fmt(v,g.level.mode)} ${unit(g.level.mode)}${e.directed?' (satu arah)':''}`;
+ notice(message,e.blocked);
+};}
+function notice(message,bad=false){let el=$('gameMsg');if(el)el.textContent=message;if(bad)tone(230,.23);else tone(660,.1)}
+function addNode(node){if(scene!=='game'||simState||!graph)return;let last=selectedRoute.at(-1);if(node===last){notice('Simpul yang sama sudah dipilih. Pilih persimpangan yang terhubung.');return}const edge=lookupEdge(graph,last,node);if(!edge){notice('Tidak ada jalan langsung menuju simpul itu.',true);return}if(edge.blocked){notice('Jalan ditutup! Cari ruas lain yang masih bisa dilalui.',true);return}if(edge.directed&&edge.from!==last){notice('Jalan satu arah! Kamu memilih arah yang dilarang.',true);return}if(selectedRoute.includes(node)&&graph.via===null){notice('Rute berputar ke simpul sebelumnya. Gunakan Urungkan untuk kembali.',true);return}selectedRoute.push(node);renderer.setRoute(selectedRoute);let txt=`Simpul ${graph.nodes[node].label} dipilih. ${node===graph.goal?'Tujuan tercapai, siap Uji Rute!':'Lanjutkan ke persimpangan berikutnya.'}`;notice(txt);$('routeNode').textContent=routeText();$('routeSteps').textContent=selectedRoute.length;$('routeStatus').textContent=node===graph.goal?'Di tujuan':'Merancang';}
+function undo(){if(scene!=='game'||simState)return;if(selectedRoute.length<=1)return notice('Kamu masih berada di titik awal.');selectedRoute.pop();renderer.setRoute(selectedRoute);$('routeNode').textContent=routeText();$('routeSteps').textContent=selectedRoute.length;$('routeStatus').textContent='Merancang';notice('Segmen terakhir dihapus.')}
+function reset(){if(scene!=='game'||simState)return;selectedRoute=[graph.start];renderer.setRoute(selectedRoute);$('routeNode').textContent=routeText();$('routeSteps').textContent=1;$('routeStatus').textContent='Merancang';notice('Rute dikosongkan. Pilih persimpangan berikutnya.')}
+function hint(){if(scene!=='game'||simState)return;hintsUsed++;store.hints[levelIdx]++;save();let optimum=optimal(graph,gameMetric()).route;let last=selectedRoute.at(-1);let idx=optimum.indexOf(last);if(idx>=0&&idx<optimum.length-1){let next=optimum[idx+1];renderer.highlightNode(next);notice(`Petunjuk: dari ${graph.nodes[last].label}, pertimbangkan menuju simpul ${graph.nodes[next].label}.`)}else notice('Petunjuk: cari jalur yang tetap terhubung, lalu bandingkan total bobotnya.')}
+function testRoute(){if(scene!=='game'||simState)return;if(selectedRoute.length<2)return notice('Pilih setidaknya satu ruas jalan terlebih dahulu.',true);if(selectedRoute.at(-1)!==graph.goal)return notice('Rute belum sampai lokasi tujuan.',true);if(graph.via!==null&&!selectedRoute.includes(graph.via))return notice('Rute wajib melewati Pasar lebih dahulu.',true);let expected=routeExpected();if(!Number.isFinite(expected))return notice('Rute tidak valid. Periksa arah dan penutupan jalan.',true);estimate=$('estimateInput').value.replace(',','.');store.tries[levelIdx]++;save();simData={route:[...selectedRoute],expected,opt:optimal(graph,gameMetric()).cost,guess:Number(estimate),guessed:estimate.trim()!==''};simState={t:0,progress:0,duration:Math.min(16,5+selectedRoute.length*.48+(graph.level.traffic?1.6:0))};$('simHUD').classList.remove('hidden');renderer.startSimulation(simData.route);notice('Perjalanan dimulai. Mobil mengikuti rute yang kamu pilih.');tone(700,.15)}
+function finishDriving(){let g=graph;const s=simData,ratio=s.expected/Math.max(.00001,s.opt);let efficiency=ratio<=1.001?3:ratio<=1.10?2:ratio<=1.25?1:0;let calc=s.guessed?(Math.abs(s.guess-s.expected)<=(g.level.mode==='fuel'?.07:.11)?2:Math.abs(s.guess-s.expected)/s.expected<.16?1:0):0;let valid=4;const points=valid+efficiency+calc;lastScore={points,valid,efficiency,calc,reflection:0,ratio,route:[...s.route],cost:s.expected,opt:s.opt,guess:s.guess,guessed:s.guessed,hints:hintsUsed,usedLevel:levelIdx};simState=null;renderer?.stopSimulation();navigate('result')}
+function reflectionAnswers(){const mode=LEVELS[levelIdx].mode;const correct=mode==='time'?'Waktu perjalanan total':mode==='fuel'?'Konsumsi bahan bakar total':'Jarak seluruh ruas';let options=['Jumlah belokan paling sedikit','Jarak seluruh ruas','Waktu perjalanan total','Konsumsi bahan bakar total'];return{correct,options}}
+function showResult(){const r=lastScore,l=LEVELS[r.usedLevel];if(!r)return navigate('levels');const correct=reflectionAnswers();let gradeLevel=r.points>=9?'Sangat Baik':r.points>=7?'Baik':r.points>=5?'Cukup':'Coba Lagi';app.innerHTML=`<section class="layout">${header('HASIL LEVEL '+(levelIdx+1))}<div class="resultsScroll"><div class="resultSheet"><div class="eyebrow">✦ ${r.points>=7?'MISI BERHASIL!':'RUTE BERHASIL DIJALANKAN'} ✦</div><h1>${esc(l.title)}</h1><p class="subtle">Mobil telah menempuh seluruh ruas yang kamu pilih. Bandingkan dengan jalur terbaik.</p><div class="resultNumbers"><div class="resultNum"><span>SKOR LEVEL</span><b id="resultPoints">${r.points} / 10</b></div><div class="resultNum"><span>SKOR KESELURUHAN</span><b id="resultTotal">${totalScore()} / 100</b></div><div class="resultNum"><span>KATEGORI</span><b id="resultGrade" style="font-size:20px">${gradeLevel}</b></div></div><div class="resultCompare"><div><b style="color:#ffdc94">PERBANDINGAN RUTE</b><br>Rute pilihanmu: <b>${fmt(r.cost,l.mode)} ${unit(l.mode)}</b><br>Rute optimal: <b>${fmt(r.opt,l.mode)} ${unit(l.mode)}</b><br>Selisih: <b>${fmt(Math.max(0,r.cost-r.opt),l.mode)} ${unit(l.mode)}</b></div><div><b style="color:#ffdc94">RINCIAN NILAI</b><br>Rute valid: ${r.valid}/4<br>Efisiensi: ${r.efficiency}/3<br>Perhitungan bobot: ${r.calc}/2<br>Alasan rute: <span id="reflectionPoint">0</span>/1</div></div><p style="color:#d9ebf5;font-size:13px;line-height:1.55">${r.ratio<=1.001?'Bagus! Rute yang kamu susun sudah paling efisien berdasarkan kondisi jalan.':'Rute sudah mencapai tujuan. Masih ada alternatif yang lebih efisien, coba perhatikan bobot ruas dan kondisi jalan.'}</p><div class="reflection" id="reflectionBox"><b>REFLEKSI PEMBELAJARAN · +1 POIN</b><div style="color:#e3eaf4;font-size:12px;margin:6px 0">Pada level ini, ukuran utama untuk menentukan rute terbaik adalah...</div>${correct.options.map((a,i)=>`<label><input type="radio" name="reason" value="${esc(a)}">${esc(a)}</label>`).join('')}<button class="btn aqua sm" data-action="scoreReason">PERIKSA ALASAN</button><div id="reasonFeedback" style="font-size:12px;margin-top:8px"></div></div><div class="resultActions"><button class="btn" data-action="retry">↻ ULANGI LEVEL</button><button class="btn primary" data-action="nextLevel">${levelIdx<9?'LEVEL BERIKUTNYA →':'LIHAT NILAI AKHIR'}</button><button class="btn" data-action="levels">☰ PILIH LEVEL</button><button class="btn" data-action="lessons">▣ MATERI</button></div></div></div></section>`;commitScore();if(r.points>=7){const box=document.querySelector('.resultSheet');for(let j=0;j<28;j++){const f=document.createElement('i');f.className='confetti';f.style.left=(rand(j*5)*100)+'%';f.style.width=(4+j%3*2)+'px';f.style.height=(8+j%5*2)+'px';f.style.background=['#ffcf74','#55d9f5','#86dbb5','#ff8992'][j%4];f.style.animationDelay=(j%11*.07)+'s';box.appendChild(f);setTimeout(()=>f.remove(),1800)}}}
+function commitScore(){if(!lastScore)return;let v=lastScore.points+lastScore.reflection;store.scores[levelIdx]=Math.max(store.scores[levelIdx],v);if(levelIdx+1<10)store.unlocked=Math.max(store.unlocked,levelIdx+2);save();if($('resultPoints'))$('resultPoints').textContent=v+' / 10';if($('resultTotal'))$('resultTotal').textContent=totalScore()+' / 100';if($('resultGrade'))$('resultGrade').textContent=v>=9?'Sangat Baik':v>=7?'Baik':v>=5?'Cukup':'Coba Lagi'}
+function scoreReason(){if(answered)return;let input=document.querySelector('input[name="reason"]:checked');if(!input)return $('reasonFeedback').textContent='Pilih satu alasan terlebih dahulu.';answered=true;let ok=input.value===reflectionAnswers().correct;lastScore.reflection=ok?1:0;let msg=$('reasonFeedback');msg.textContent=ok?'✓ Tepat! Kamu sudah memahami bobot yang dioptimalkan pada misi.':'Belum tepat. Jawaban yang benar: '+reflectionAnswers().correct+'.';msg.style.color=ok?'#7df2cf':'#ffd18c';$('reflectionPoint').textContent=lastScore.reflection;document.querySelectorAll('input[name="reason"]').forEach(i=>i.disabled=true);commitScore();tone(ok?840:300,.18)}
+function showReport(){let achieved=store.scores.filter(v=>v>0).length;app.innerHTML=`<section class="layout">${header('HASIL BELAJAR')}<div class="resultsScroll"><div class="resultSheet"><div class="eyebrow">RAPOR PETUALANGAN</div><h1>Capaian Smart Route Explorer</h1><div class="resultNumbers"><div class="resultNum"><span>TOTAL NILAI</span><b>${totalScore()} / 100</b></div><div class="resultNum"><span>LEVEL SELESAI</span><b>${achieved} / 10</b></div><div class="resultNum"><span>KATEGORI</span><b style="font-size:20px">${grade(totalScore())}</b></div></div><div style="overflow-x:auto"><table class="reportTable"><thead><tr><th>Level</th><th>Materi</th><th>Nilai</th><th>Percobaan</th><th>Petunjuk</th></tr></thead><tbody>${LEVELS.map((l,i)=>`<tr><td>${i+1}</td><td>${esc(l.title)}</td><td>${store.scores[i]}/10</td><td>${store.tries[i]||0}</td><td>${store.hints[i]||0}</td></tr>`).join('')}</tbody></table></div><div class="resultActions"><button class="btn primary" data-action="levels">▶ PILIH LEVEL</button><button class="btn" data-action="csv">↓ UNDUH LAPORAN CSV</button><button class="btn" data-action="menu">⌂ MENU</button></div></div></div></section>`}
+function exportCsv(){let data=[['Level','Nama Level','Skor','Percobaan','Petunjuk'],...LEVELS.map((l,i)=>[i+1,l.title,store.scores[i],store.tries[i],store.hints[i]])];let csv='\uFEFF'+data.map(row=>row.map(s=>'"'+String(s).replaceAll('"','""')+'"').join(',')).join('\r\n');let a=document.createElement('a'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob);a.href=url;a.download='Nilai_Smart_Route_Explorer.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),300)}
+function help(){alert('SMART ROUTE EXPLORER\n\n1. Buka Materi untuk mengenal graph, simpul, sisi, dan bobot.\n2. Pilih Level.\n3. Ketuk persimpangan yang tersambung jalan untuk menyusun rute.\n4. Urungkan atau Reset jika salah.\n5. Hitung total bobot, lalu isi perkiraan pada kolom.\n6. Tekan Uji Rute: mobil akan mengikuti jalur yang kamu buat.\n7. Jawab soal refleksi pada hasil untuk 1 poin tambahan.\n\nPada HP: ketuk simpul, geser peta dengan satu jari, cubit dengan dua jari untuk zoom. Di PC: klik simpul, drag peta, atau scroll untuk zoom.')}
+// ------- 2.5D CITY ENGINE (no external dependencies) -------
+class IsoRenderer{
+ constructor(canvas,g,opts={}){this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.g=g;this.opts=opts;this.running=false;this.t=0;this.frameHandle=0;this.pan={x:0,y:0};this.zoom=1;this.route=opts.hero?optimal(g,g.level.mode).route:[];this.highId=null;this.highT=0;this.sim=null;this.pointerMap=new Map();this.down=null;this.pinching=null;this.onNodeClick=null;this.onEdgeClick=null;this.highEdgeId=null;this.landmarks=this.planLandmarks();this.bindEvents();this.resize()}
+ planLandmarks(){
+  let occupied=new Set(),results=[],g=this.g;
+  // Place edge/corner destinations first: they have fewer valid adjacent lots.
+  // This prevents both landmarks from being drawn in the same city block.
+  const candidatesFor=sp=>{let n=g.nodes[sp.id],count=0;for(const dr of [-1,0])for(const dc of [-1,0]){let cx=n.c+dc,ry=n.r+dr;if(cx>=0&&ry>=0&&cx<g.cols-1&&ry<g.rows-1)count++}return count};
+  const specs=missionBuildings(g).sort((a,b)=>(candidatesFor(a)+(a.secondary?100:0))-(candidatesFor(b)+(b.secondary?100:0)));
+  for(const spec of specs){
+   const n=g.nodes[spec.id],choices=[];
+   for(const dr of [-1,0])for(const dc of [-1,0]){
+    const cx=n.c+dc,ry=n.r+dr;
+    if(cx<0||ry<0||cx>=g.cols-1||ry>=g.rows-1)continue;
+    const ids=[nId(cx,ry,g.cols),nId(cx+1,ry,g.cols),nId(cx+1,ry+1,g.cols),nId(cx,ry+1,g.cols)];
+    const ns=ids.map(i=>g.nodes[i]);const x=ns.reduce((v,p)=>v+p.px,0)/4,y=ns.reduce((v,p)=>v+p.py,0)/4;
+    let used=occupied.has(cx+','+ry),score=used?1e5:0;
+    // Prefer a lot directly next to this intersection, away from other landmarks.
+    score+=Math.hypot(x-n.px,y-n.py)*9;
+    for(const prev of results)score+=20/Math.max(.2,Math.hypot(x-prev.x,y-prev.y));
+    score+=(cx*7+ry*17+spec.id)%7*.01;
+    choices.push({cx,ry,x,y,score,cellKey:cx+','+ry});
+   }
+   choices.sort((a,b)=>a.score-b.score);
+   const chosen=choices[0];if(!chosen||occupied.has(chosen.cellKey)){if(spec.secondary)continue;else continue;}
+   occupied.add(chosen.cellKey);results.push({...spec,...chosen});
+  }
+  this.landmarkLots=new Map(results.map(v=>[v.cellKey,v]));
+  return results;
+ }
+ bindEvents(){let c=this.canvas;this._resize=()=>this.resize();window.addEventListener('resize',this._resize);this._down=e=>{c.setPointerCapture?.(e.pointerId);this.pointerMap.set(e.pointerId,{x:e.clientX,y:e.clientY});if(this.pointerMap.size===1){this.down={x:e.clientX,y:e.clientY,panX:this.pan.x,panY:this.pan.y,drag:false}}else if(this.pointerMap.size===2){let pts=[...this.pointerMap.values()];this.pinching={d:Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y),zoom:this.zoom};this.down=null}};this._move=e=>{if(!this.pointerMap.has(e.pointerId))return;this.pointerMap.set(e.pointerId,{x:e.clientX,y:e.clientY});if(this.pinching&&this.pointerMap.size===2){let a=[...this.pointerMap.values()];let d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);this.zoom=Math.max(.68,Math.min(2.2,this.pinching.zoom*d/Math.max(5,this.pinching.d)));this.reproject();return}if(this.down){let dx=e.clientX-this.down.x,dy=e.clientY-this.down.y;if(Math.hypot(dx,dy)>8){this.down.drag=true;let rect=c.getBoundingClientRect();this.pan.x=this.down.panX+dx/Math.max(.1,rect.width)*this.width;this.pan.y=this.down.panY+dy/Math.max(.1,rect.height)*this.height;c.classList.add('dragging')}}};this._up=e=>{let d=this.down;this.pointerMap.delete(e.pointerId);if(this.pointerMap.size<2)this.pinching=null;if(this.pointerMap.size===0){this.down=null;c.classList.remove('dragging')}if(d&&!d.drag&&!this.opts.hero&&!this.sim&&this.pointerMap.size===0){let p=this.clientPoint(e.clientX,e.clientY),hit=this.hitNode(p.x,p.y);if(hit!==null)this.onNodeClick?.(hit);else{let road=this.hitEdge(p.x,p.y);if(road)this.onEdgeClick?.(road)}}};this._wheel=e=>{e.preventDefault();this.zoom=Math.max(.62,Math.min(2.25,this.zoom*(e.deltaY<0?1.12:.89)));this.reproject()};c.addEventListener('pointerdown',this._down);c.addEventListener('pointermove',this._move);c.addEventListener('pointerup',this._up);c.addEventListener('pointercancel',this._up);c.addEventListener('wheel',this._wheel,{passive:false})}
+ resize(){let r=this.canvas.getBoundingClientRect();this.width=Math.max(280,r.width||500);this.height=Math.max(230,r.height||300);let dpr=Math.min(2,devicePixelRatio||1);this.canvas.width=Math.round(this.width*dpr);this.canvas.height=Math.round(this.height*dpr);this.ctx.setTransform(dpr,0,0,dpr,0,0);this.reproject()}
+ reproject(){let g=this.g;const ux=102,uy=53;
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  for(const n of g.nodes){let a=(n.px-n.py)*ux,b=(n.px+n.py)*uy;minX=Math.min(minX,a);maxX=Math.max(maxX,a);minY=Math.min(minY,b);maxY=Math.max(maxY,b)}
+  const mapWidth=maxX-minX+205,mapHeight=maxY-minY+200;
+  const sx=(this.width*.92)/mapWidth,sy=(this.height*.78)/mapHeight;
+  this.scale=Math.min(sx,sy,1.55)*this.zoom;
+  this.isoX=(x,y)=>(x-y)*ux*this.scale+this.width*.5-(maxX+minX)*.5*this.scale+this.pan.x;
+  this.isoY=(x,y,z=0)=>(x+y)*uy*this.scale+this.height*.50-(maxY+minY)*.5*this.scale-z*this.scale+this.pan.y;
+ }
+ P(x,y,z=0){return{x:this.isoX(x,y),y:this.isoY(x,y,z)}}
+ hitNode(x,y){
+  const clickNodes=this.g.nodes.map(n=>{let p=this.P(n.px,n.py,0);return{id:n.id,d:Math.hypot(x-p.x,y-p.y)}});
+  let nearest=clickNodes.reduce((a,b)=>a.d<b.d?a:b);
+  // Exact taps on the lettered intersection always take precedence.
+  if(nearest.d<Math.max(9,8*this.scale))return nearest.id;
+  for(const lbl of this.landmarkLabels||[]){if(lbl.secondary)continue;
+   if(x>=lbl.x-3&&x<=lbl.x+lbl.w+3&&y>=lbl.y-3&&y<=lbl.y+lbl.h+3)return lbl.id;
+  }
+  // Touch the roof or facade of a distinct landmark to select its adjoining node.
+  for(const land of this.landmarks){if(land.secondary)continue;
+   const p=this.P(land.x,land.y,0),rx=Math.max(15,32*this.scale),ry=Math.max(35,78*this.scale);
+   if(Math.abs(x-p.x)<=rx&&y>=p.y-ry&&y<=p.y+10)return land.id;
+  }
+  if(nearest.d<Math.max(19,14*this.scale)+6)return nearest.id;
+  return null;
+ }
+ hitEdge(x,y){let best=null,score=Infinity;
+   for(const e of this.g.edges){const a=this.g.nodes[e.a],b=this.g.nodes[e.b],p=this.P(a.px,a.py),q=this.P(b.px,b.py);
+    const dx=q.x-p.x,dy=q.y-p.y,t=Math.min(.86,Math.max(.14,((x-p.x)*dx+(y-p.y)*dy)/(dx*dx+dy*dy||1)));
+    const d=Math.hypot(x-p.x-t*dx,y-p.y-t*dy);
+    if(d<Math.max(9,11*this.scale)&&d<score){best=e;score=d}}
+   return best;
+ }
+ clientPoint(x,y){const r=this.canvas.getBoundingClientRect();return{x:(x-r.left)/r.width*this.width,y:(y-r.top)/r.height*this.height}}
+ setRoute(r){this.route=r;}
+ highlightNode(id){this.highId=id;this.highT=performance.now()+3500;}
+ startSimulation(route){this.sim={route,progress:0}}stopSimulation(){this.sim=null}
+ zoomBy(v){this.zoom=Math.max(.62,Math.min(2.2,this.zoom*v));this.reproject()}focus(){this.zoom=1;this.pan={x:0,y:0};this.reproject()}
+ start(){if(this.running)return;this.running=true;let last=0;const run=t=>{if(!this.running)return;let dt=Math.min(.045,(t-(last||t))/1000);last=t;this.t+=dt;this.draw();this.frameHandle=requestAnimationFrame(run)};this.frameHandle=requestAnimationFrame(run)}
+ dispose(){this.running=false;cancelAnimationFrame(this.frameHandle);window.removeEventListener('resize',this._resize);const c=this.canvas;c.removeEventListener('pointerdown',this._down);c.removeEventListener('pointermove',this._move);c.removeEventListener('pointerup',this._up);c.removeEventListener('pointercancel',this._up);c.removeEventListener('wheel',this._wheel)}
+ poly(points,fill,stroke=null,lineWidth=1){let c=this.ctx;if(!points.length)return;c.beginPath();c.moveTo(points[0].x,points[0].y);for(const p of points.slice(1))c.lineTo(p.x,p.y);c.closePath();c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=lineWidth;c.stroke()}}
+ line(points,color,width=2,dash=[]){let c=this.ctx;c.beginPath();points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.strokeStyle=color;c.setLineDash(dash);c.stroke();c.setLineDash([])}
+ box3d(x,y,w,d,h,colors){let a=this.P(x,y,h),b=this.P(x+w,y,h),cc=this.P(x+w,y+d,h),dd=this.P(x,y+d,h),aa=this.P(x,y,0),bb=this.P(x+w,y,0),ccc=this.P(x+w,y+d,0),ddd=this.P(x,y+d,0);this.poly([dd,cc,ccc,ddd],colors.front);this.poly([b,cc,ccc,bb],colors.side);this.poly([a,b,cc,dd],colors.top,'#ffffff25',1);return{a,b,c:cc,d:dd,base:[aa,bb,ccc,ddd]}}
+ drawSky(){let c=this.ctx,w=this.width,h=this.height;let bg=c.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#81caf7');bg.addColorStop(.44,'#d4eaff');bg.addColorStop(1,'#a1c99b');c.fillStyle=bg;c.fillRect(0,0,w,h);c.fillStyle='rgba(255,250,200,.7)';c.beginPath();c.arc(w*.82,h*.16,Math.max(17,w*.022),0,Math.PI*2);c.fill();for(let i=0;i<7;i++){let x=((i*.173+.07)*w+Math.sin(this.t*.06+i)*6),y=h*.1+(i%3)*14;c.fillStyle='rgba(255,255,255,.25)';c.beginPath();c.ellipse(x,y,55+(i%3)*18,15,0,0,Math.PI*2);c.fill()}}
+ drawGround(){let g=this.g,margin=.48;let xs=g.nodes.map(n=>n.px),ys=g.nodes.map(n=>n.py);
+  const l=Math.min(...xs)-margin,r=Math.max(...xs)+margin,t=Math.min(...ys)-margin,b=Math.max(...ys)+margin;
+  this.poly([this.P(l,t),this.P(r,t),this.P(r,b),this.P(l,b)],'#79b16d','#5a9c66',7*this.scale);
+  for(let y=0;y<g.rows-1;y++)for(let x=0;x<g.cols-1;x++){
+   const ids=[nId(x,y,g.cols),nId(x+1,y,g.cols),nId(x+1,y+1,g.cols),nId(x,y+1,g.cols)];
+   const a=ids.map(id=>g.nodes[id]);let cx=a.reduce((v,p)=>v+p.px,0)/4,cy=a.reduce((v,p)=>v+p.py,0)/4;
+   const p=a.map(v=>this.P(cx+(v.px-cx)*.82,cy+(v.py-cy)*.82));
+   this.poly(p,(x+y)%2===0?'#92c47a':'#84bc77');
+  }
+ }
+ drawRoads(){let c=this.ctx;for(let e of this.g.edges){let A=this.g.nodes[e.a],B=this.g.nodes[e.b],a=this.P(A.px,A.py),b=this.P(B.px,B.py);this.line([a,b],'rgba(19,36,42,.24)',35*this.scale);this.line([a,b],'#d9d8c9',32*this.scale);this.line([a,b],'#536675',28*this.scale);this.line([a,b],'#7f8d93',23*this.scale);this.line([a,b],e.blocked?'#b75652':'#e6e1b7',2.2*this.scale,[9*this.scale,8*this.scale]);if(e.traffic&&!e.blocked){this.line([a,b],'#ffbb3c',2.5*this.scale,[3*this.scale,10*this.scale])}if(e.blocked){let mx=(a.x+b.x)/2,my=(a.y+b.y)/2;let ang=Math.atan2(b.y-a.y,b.x-a.x);c.save();c.translate(mx,my);c.rotate(ang+Math.PI/2);c.fillStyle='#e66a43';c.fillRect(-12*this.scale,-4*this.scale,24*this.scale,8*this.scale);c.fillStyle='#fff';c.fillRect(-7*this.scale,-4*this.scale,4*this.scale,8*this.scale);c.fillRect(3*this.scale,-4*this.scale,4*this.scale,8*this.scale);c.restore();}if(e.directed&&!e.blocked){let f=this.g.nodes[e.from],t=this.g.nodes[e.to],p=this.P(f.px,f.py),q=this.P(t.px,t.py),mx=(p.x+q.x)/2,my=(p.y+q.y)/2,ang=Math.atan2(q.y-p.y,q.x-p.x);c.save();c.translate(mx,my);c.rotate(ang);this.line([{x:-5*this.scale,y:-5*this.scale},{x:2*this.scale,y:0},{x:-5*this.scale,y:5*this.scale}],'#ffec9e',2*this.scale);c.restore()}}}
+ drawBuilding(cx,cy,type=0,index=0){
+  const c=this.ctx,s=this.scale,variant=((index%6)+6)%6;
+  const h=[40,45,53,64,47,37][variant]*(.92+rand(index+3)*.16),w=.40+rand(index*2+2)*.09,d=.37+rand(index*2+4)*.12;
+  const x=cx,y=cy;
+  const palettes=[
+   {roof:'#c56753',facade:'#f5dfc7',side:'#cb9f88'},
+   {roof:'#3f5f80',facade:'#f4f8fa',side:'#b1c7d8'},
+   {roof:'#d6a861',facade:'#fff1c9',side:'#bfa77a'},
+   {roof:'#3c6d84',facade:'#cadfed',side:'#8eb0c6'},
+   {roof:'#a54c51',facade:'#e7edec',side:'#9bbeb8'},
+   {roof:'#87604e',facade:'#ffdbb6',side:'#c8977b'}
+  ],pal=palettes[variant];
+  const col=this.box3d(x-w/2,y-d/2,w,d,h,{top:'#f0f4f1',front:pal.facade,side:pal.side});
+  const frontY=y+d/2+.002,sideX=x+w/2+.002;
+  const levels=Math.max(1,Math.floor(h/18));
+  for(let floor=0;floor<levels;floor++){
+   const zz=8+floor*(h-12)/levels;
+   for(let k=0;k<3;k++){
+    const xx=x-w*.36+k*w*.35;
+    const p1=this.P(xx,frontY,zz),p2=this.P(xx+w*.20,frontY,zz),p3=this.P(xx+w*.20,frontY,zz+7),p4=this.P(xx,frontY,zz+7);
+    this.poly([p1,p2,p3,p4],floor%2?'#538fb0':'#34729b','#c3ecfc88',.8*s);
+   }
+   for(let k=0;k<2;k++){
+    const yy=y-d*.34+k*d*.42;
+    const p1=this.P(sideX,yy,zz),p2=this.P(sideX,yy+d*.22,zz),p3=this.P(sideX,yy+d*.22,zz+7),p4=this.P(sideX,yy,zz+7);
+    this.poly([p1,p2,p3,p4],'#2f6d96','#c3eaf677',.6*s);
+   }
+  }
+  // Entry doorway and stair shade at street level.
+  const dr1=this.P(x-w*.12,frontY,0),dr2=this.P(x+w*.13,frontY,0),dr3=this.P(x+w*.13,frontY,12),dr4=this.P(x-w*.12,frontY,12);
+  this.poly([dr1,dr2,dr3,dr4],'#39546b','#e3ded088',.7*s);
+  // Roof shapes: tile roof for houses, flat terraced office / civic roof for towers.
+  const zroof=(variant===0||variant===2||variant===5)?13:5;
+  const a=this.P(x-w*.57,y-d*.58,h),b=this.P(x+w*.57,y-d*.58,h),cc=this.P(x+w*.57,y+d*.58,h),dd=this.P(x-w*.57,y+d*.58,h);
+  if(variant===0||variant===2||variant===5){
+   const u=this.P(x-w*.57,y,h+zroof),v=this.P(x+w*.57,y,h+zroof);
+   this.poly([a,b,v,u],pal.roof,'#f9e2be99',.7*s);
+   this.poly([u,v,cc,dd],variant===0?'#ad513f':'#946949','#ffffff44',.7*s);
+   for(let j=0;j<4;j++){
+    let t=(j+1)/5,st=this.P(x-w*.57+t*w*1.14,y,h+zroof),en=this.P(x-w*.57+t*w*1.14,y+d*.58,h);
+    this.line([st,en],'#ffffff1e',.7*s);
+   }
+  }else{
+   this.poly([a,b,cc,dd],pal.roof,'#c2d7e999',1*s);
+   let ac=this.P(x+w*.17,y-d*.02,h+4*s);
+   c.fillStyle='#edf2f1';c.fillRect(ac.x-6*s,ac.y-4*s,12*s,7*s);
+   if(variant===4){c.font=`900 ${Math.max(9,12*s)}px Arial`;c.textAlign='center';c.fillStyle='#ffecec';c.fillText('✚',ac.x-13*s,ac.y+1*s)}
+  }
+  // Warm illuminated sign on occasional commercial premises.
+  if(variant===2){let sign=this.P(x,frontY,h*.48);c.save();c.fillStyle='#c37b36';c.beginPath();c.roundRect(sign.x-17*s,sign.y-6*s,34*s,12*s,2*s);c.fill();c.fillStyle='#fff3d7';c.font=`900 ${Math.max(7,8*s)}px Arial`;c.textAlign='center';c.fillText('TOKO',sign.x,sign.y+2*s);c.restore()}
+ }
+ drawLandmarkBuilding(land){
+ const c=this.ctx,s=this.scale,x=land.x,y=land.y;
+ const colors={home:{front:'#ffdfb3',side:'#d6a47c',roof:'#bd5942'},school:{front:'#f6ebcf',side:'#c0cfdb',roof:'#b94f40'},hospital:{front:'#f5fafb',side:'#b6d4e1',roof:'#4e97af'},market:{front:'#f6ddad',side:'#e4b178',roof:'#f2994b'},post:{front:'#fff1cd',side:'#a9c8e3',roof:'#316994'}};
+ const pal=colors[land.kind]||colors.school;
+ const wide=land.kind==='school'?.76:land.kind==='hospital'?.65:.58;
+ const depth=land.kind==='school'?.61:.55;
+ const height=land.kind==='school'?48:land.kind==='hospital'?55:land.kind==='home'?28:land.kind==='market'?27:37;
+ // Plot with curb and small door path to the actual graph node. This path is not a graph edge.
+ const n=this.g.nodes[land.id],base=this.P(x,y,0),junction=this.P(n.px,n.py,0);
+ c.save();c.fillStyle='rgba(15,38,40,.20)';c.beginPath();c.ellipse(base.x,base.y+5*s,35*s,13*s,0,0,Math.PI*2);c.fill();c.restore();
+ this.line([junction,base],'#f1dfba',Math.max(1.4,4*s),[3*s,5*s]);
+ this.box3d(x-wide/2,y-depth/2,wide,depth,height,{top:'#fff5df',front:pal.front,side:pal.side});
+ const frontY=y+depth/2+.002,rightX=x+wide/2+.002;
+ // Visible facade windows, window ledges, and entrance.
+ for(let level=0;level<(height>43?2:1);level++){
+  const z=13+level*17;
+  for(let j=0;j<3;j++){
+   const px=x-wide*.40+j*wide*.28;
+   this.poly([this.P(px,frontY,z),this.P(px+wide*.17,frontY,z),this.P(px+wide*.17,frontY,z+8),this.P(px,frontY,z+8)],'#4b95c7','#faffff',1.1*s);
+  }
+  const py=y-depth*.31;
+  this.poly([this.P(rightX,py,z),this.P(rightX,py+depth*.20,z),this.P(rightX,py+depth*.20,z+8),this.P(rightX,py,z+8)],'#518eb8','#f2faff',.9*s);
+ }
+ this.poly([this.P(x-wide*.11,frontY,0),this.P(x+wide*.10,frontY,0),this.P(x+wide*.10,frontY,12),this.P(x-wide*.11,frontY,12)],land.kind==='hospital'?'#397ca0':'#775545','#f8f3d6',.9*s);
+ const a=this.P(x-wide*.55,y-depth*.55,height),b=this.P(x+wide*.55,y-depth*.55,height),d=this.P(x-wide*.55,y+depth*.55,height),e=this.P(x+wide*.55,y+depth*.55,height);
+ if(land.kind==='home'||land.kind==='school'||land.kind==='market'){
+  const h=land.kind==='school'?15:land.kind==='market'?8:17;
+  const q=this.P(x,y-depth*.02,height+h),qq=this.P(x+wide*.04,y-depth*.02,height+h);
+  this.poly([a,b,qq,q],pal.roof,'#fff5d9',1.2*s);
+  this.poly([q,qq,e,d],land.kind==='school'?'#a53a31':land.kind==='market'?'#e3b35b':'#934735','#fff8db80',1*s);
+ }else{this.poly([a,b,e,d],pal.roof,'#dff8ff',1.5*s)}
+ if(land.kind==='home'){
+   // Chimney, front balcony and a clear warm red gable.
+   this.box3d(x+wide*.21,y-depth*.09,.10,.11,11,{top:'#a44d36',front:'#dd9b6b',side:'#b16a48'});
+   const porch=this.P(x,frontY,0);c.fillStyle='#f8dfaf';c.fillRect(porch.x-9*s,porch.y+1*s,18*s,4*s);
+ }else if(land.kind==='school'){
+   // School flagpole and outdoor nameplate.
+   let pole=this.P(x+wide*.28,y-depth*.34,height+38),foot=this.P(x+wide*.28,y-depth*.34,height);
+   this.line([foot,pole],'#d9e5ea',2*s);
+   this.poly([pole,{x:pole.x+17*s,y:pole.y+3*s},{x:pole.x+17*s,y:pole.y+10*s},{x:pole.x,y:pole.y+9*s}],'#eb5555');
+   const sign=this.P(x,frontY,height*.70);c.fillStyle='#174d7b';c.beginPath();c.roundRect(sign.x-24*s,sign.y-5*s,48*s,12*s,2*s);c.fill();c.fillStyle='white';c.font=`900 ${Math.max(7,8*s)}px Arial`;c.textAlign='center';c.fillText('SEKOLAH',sign.x,sign.y+3*s);
+ }else if(land.kind==='hospital'){
+   const sign=this.P(x,frontY,height*.78);c.fillStyle='#e9fbff';c.beginPath();c.roundRect(sign.x-18*s,sign.y-9*s,36*s,18*s,3*s);c.fill();c.fillStyle='#e64048';c.fillRect(sign.x-3*s,sign.y-7*s,6*s,14*s);c.fillRect(sign.x-8*s,sign.y-2.5*s,16*s,5*s);
+ }else if(land.kind==='market'){
+   const sign=this.P(x,frontY,height*.55);c.fillStyle='#ffd7a7';c.beginPath();c.roundRect(sign.x-18*s,sign.y-7*s,36*s,14*s,2*s);c.fill();c.fillStyle='#9a431d';c.font=`900 ${Math.max(7,8*s)}px Arial`;c.textAlign='center';c.fillText('PASAR',sign.x,sign.y+3*s);
+   for(let j=0;j<5;j++){let u=(j/5)*wide-wide/2;this.poly([this.P(x+u,frontY+.01,19),this.P(x+u+wide/5,frontY+.01,19),this.P(x+u+wide/5,frontY+.01,25),this.P(x+u,frontY+.01,25)],j%2?'#fff0d8':'#d75a4c')}
+ }else if(land.kind==='post'){
+   const sign=this.P(x,frontY,height*.68);c.fillStyle='#164b8d';c.beginPath();c.roundRect(sign.x-20*s,sign.y-7*s,40*s,14*s,2*s);c.fill();c.fillStyle='#ffd45b';c.font=`900 ${Math.max(6.5,7*s)}px Arial`;c.textAlign='center';c.fillText('POS',sign.x,sign.y+3*s);
+ }
+ }
+ drawLandmarkLabels(){
+  const c=this.ctx,placed=[];this.landmarkLabels=[];
+  const compact=this.scale<.72;
+  const outside=this.width<500&&this.height>430;
+  const allNodes=this.g.nodes.map(n=>this.P(n.px,n.py,0));
+  const mapTop=Math.min(...allNodes.map(n=>n.y)),mapBottom=Math.max(...allNodes.map(n=>n.y));
+  for(const land of this.landmarks){
+   const base=this.P(land.x,land.y,0);
+   let height=land.kind==='school'?48:land.kind==='hospital'?55:land.kind==='home'?28:land.kind==='market'?27:37;
+   let roof=this.P(land.x,land.y,height+(land.kind==='school'?15:land.kind==='home'?17:8));
+   const fs=outside?9.4:compact?9.8:land.secondary?10:12;
+   c.font=`900 ${fs}px Arial`;const txt=land.title,tw=c.measureText(txt).width;
+   const w=Math.min(Math.max(outside?48:compact?52:60,tw+(outside?14:compact?17:24)),outside?102:145);
+   const h=outside?20:compact?21:land.secondary?23:29;
+   let x=Math.max(6,Math.min(this.width-w-6,roof.x-w/2));
+   let y=roof.y-h-14;
+   if(outside){
+     // On a narrow phone, place location labels OUTSIDE the road network.
+     // Landmark buildings remain inside the adjacent sidewalk lot.
+     if(land.kind==='home')y=Math.min(this.height-60,mapBottom+20);
+     else y=Math.max(75,mapTop-h-(land.kind==='market'?1:23));
+   }else y=Math.max(this.height<390?48:72,y);
+   for(let i=0;i<6;i++){
+    const found=placed.find(p=>x<p.x+p.w+4&&x+w>p.x-4&&y<p.y+p.h+4&&y+h>p.y-4);
+    if(!found)break;
+    if(outside){x=x+w+7<this.width-8?x+w+7:Math.max(6,x-w-7)}
+    else y+=h+6;
+   }
+   y=Math.max(52,Math.min(this.height-h-38,y));
+   placed.push({x,y,w,h});this.landmarkLabels.push({x,y,w,h,id:land.id,secondary:land.secondary});
+   c.save();c.lineWidth=outside?1.4:1.8;c.strokeStyle=land.color;
+   c.shadowColor=land.color;c.shadowBlur=outside?4:compact?5:11;
+   c.fillStyle=land.secondary?'#34516cee':'#082941f0';c.beginPath();c.roundRect(x,y,w,h,7);c.fill();c.stroke();c.shadowBlur=0;
+   if(!land.secondary){c.fillStyle=land.color;c.beginPath();c.arc(x+9,y+h/2,outside?2.5:compact?3:4,0,Math.PI*2);c.fill()}
+   c.fillStyle='#fff9e8';c.textAlign='center';c.textBaseline='middle';c.font=`900 ${fs}px Arial`;
+   c.fillText(txt,x+w/2+(land.secondary?0:outside?2:4),y+h/2,w-11);c.restore();
+   // Fine leader: this connects a POI label to its building, not to another road.
+   c.save();c.strokeStyle=land.color;c.lineWidth=1.2;c.globalAlpha=outside?.54:.65;c.setLineDash([2,4]);
+   c.beginPath();c.moveTo(x+w/2,y+(land.kind==='home'&&outside?0:h));c.lineTo(base.x,Math.max(base.y-8,roof.y));c.stroke();c.setLineDash([]);c.restore();
+  }
+ }
+ drawTree(x,y,i){let c=this.ctx,s=this.scale,pos=this.P(x,y,0),top=this.P(x,y,24);this.line([pos,top],'#6f6741',4*s);const blobs=[[0,0,13],[-7,4,9],[6,5,10]];for(const [dx,dy,rr] of blobs){let g=c.createRadialGradient(top.x+dx*s-3*s,top.y+dy*s-4*s,1,top.x+dx*s,top.y+dy*s,rr*s);g.addColorStop(0,i%2?'#b9e59d':'#a2e5a9');g.addColorStop(.8,i%2?'#4b9959':'#439f73');g.addColorStop(1,'#2f734c');c.fillStyle=g;c.beginPath();c.arc(top.x+dx*s,top.y+dy*s,rr*s,0,Math.PI*2);c.fill()}}
+ drawPark(x,y,seed){let c=this.ctx,s=this.scale;let base=this.P(x,y,1);c.fillStyle='#659ea1';c.beginPath();c.ellipse(base.x,base.y,21*s,10*s,0,0,Math.PI*2);c.fill();c.fillStyle='#aedbd7';c.beginPath();c.ellipse(base.x,base.y,15*s,7*s,0,0,Math.PI*2);c.fill();let w=this.P(x,y,13);c.strokeStyle='#a0ebff';c.lineWidth=2*s;c.beginPath();c.moveTo(base.x,base.y);c.quadraticCurveTo(w.x-7*s,w.y-6*s,w.x,w.y);c.stroke();this.drawTree(x-.20,y+.1,seed+2);this.drawTree(x+.2,y-.16,seed+3)}
+ drawCityObjects(){const g=this.g;const ops=[];
+  for(let r=0;r<g.rows-1;r++)for(let x=0;x<g.cols-1;x++){
+   let seed=r*19+x*5,ids=[nId(x,r,g.cols),nId(x+1,r,g.cols),nId(x+1,r+1,g.cols),nId(x,r+1,g.cols)];
+   let cell=ids.map(id=>g.nodes[id]);let cx=cell.reduce((sum,n)=>sum+n.px,0)/4,cy=cell.reduce((sum,n)=>sum+n.py,0)/4;
+   ops.push({depth:cx+cy,fn:()=>{const land=this.landmarkLots.get(x+','+r);if(land)this.drawLandmarkBuilding(land);else if(seed%8===5)this.drawPark(cx,cy,seed);else this.drawBuilding(cx,cy,seed,seed)}});
+   if((x+r)%2===0&&!this.landmarkLots.has(x+','+r)){ops.push({depth:cx+cy+.04,fn:()=>this.drawTree(cx+.35,cy-.29,seed+12)})}
+  }
+  ops.sort((a,b)=>a.depth-b.depth);for(const op of ops)op.fn()
+ }
+ drawRoute(){const c=this.ctx;let r=this.route;if(r.length<2)return;let pts=r.map(id=>{let v=this.g.nodes[id];return this.P(v.px,v.py,1.5)});c.save();c.shadowColor='#12e1ff';c.shadowBlur=15;this.line(pts,'#004f84bb',13*this.scale);this.line(pts,'#48ecff',6*this.scale);c.shadowBlur=0;this.line(pts,'#e0fcff',1.8*this.scale,[7*this.scale,10*this.scale]);c.restore();let len=pts.length-1;for(let i=0;i<len;i++){let p=pts[i],q=pts[i+1],t=((this.t*.6+i*.21)%1),x=p.x+(q.x-p.x)*t,y=p.y+(q.y-p.y)*t;this.arrow(x,y,Math.atan2(q.y-p.y,q.x-p.x),'#ffffffae',4*this.scale)}}
+ arrow(x,y,a,color,size){const c=this.ctx;c.save();c.translate(x,y);c.rotate(a);c.fillStyle=color;c.beginPath();c.moveTo(5*size,0);c.lineTo(-size,-size);c.lineTo(-size,size);c.fill();c.restore()}
+ drawNodes(){let g=this.g,c=this.ctx;for(const n of g.nodes){const p=this.P(n.px,n.py,2);let special=n.id===g.start?'#ffb94c':n.id===g.goal?'#34c68e':n.id===g.via?'#f7a45e':'#278dc7';let pulse=1+Math.sin(this.t*3+n.id*.3)*.08;let rad=Math.max(5,8*this.scale)*pulse;c.save();c.shadowColor=special;c.shadowBlur=15;c.beginPath();c.arc(p.x,p.y,rad+3,0,Math.PI*2);c.fillStyle='#05243abf';c.fill();c.beginPath();c.arc(p.x,p.y,rad,0,Math.PI*2);c.fillStyle=special;c.fill();c.strokeStyle='#e6f8ff';c.lineWidth=2;c.stroke();c.shadowBlur=0;c.textAlign='center';c.font=`900 ${Math.max(9,11*this.scale)}px Segoe UI`;c.fillStyle='#fff';c.fillText(n.label,p.x,p.y+3*this.scale);if(n.id===g.start||n.id===g.goal||n.id===g.via){c.strokeStyle=special;c.lineWidth=3;c.beginPath();c.arc(p.x,p.y,rad+7+2*Math.sin(this.t*2),0,Math.PI*2);c.stroke()}if(this.highId===n.id&&performance.now()<this.highT){c.strokeStyle='#fff269';c.lineWidth=3;c.beginPath();c.arc(p.x,p.y,rad+11+5*Math.sin(this.t*7),0,Math.PI*2);c.stroke()}c.restore()}
+ // Show weighted labels only at zoom levels that can accommodate them.
+ if(this.highEdgeId&&performance.now()<this.highT){const e=g.edges.find(a=>a.id===this.highEdgeId);
+   if(e){const p=this.P(g.nodes[e.a].px,g.nodes[e.a].py),q=this.P(g.nodes[e.b].px,g.nodes[e.b].py);
+   this.line([p,q],e.blocked?'#ff7777':'#faffab',3.6*this.scale,[6,8]);
+   let label=e.blocked?'DITUTUP':`${fmt(e[g.level.mode==='distance'?'dist':g.level.mode],g.level.mode)} ${unit(g.level.mode)}`;
+   c.font='900 12px Arial';let w=c.measureText(label).width+16,x=(p.x+q.x)/2,y=(p.y+q.y)/2-13;
+   c.fillStyle='#07293cec';c.beginPath();c.roundRect(x-w/2,y-9,w,19,6);c.fill();c.fillStyle='#fff0b1';c.textAlign='center';c.fillText(label,x,y+5);}
+ }
+ if(this.scale>.53){for(let e of g.edges){if(e.blocked)continue;let a=g.nodes[e.a],b=g.nodes[e.b],p=this.P(a.px,a.py,0),q=this.P(b.px,b.py,0),x=(p.x+q.x)/2,y=(p.y+q.y)/2;let val=e[g.level.mode==='distance'?'dist':g.level.mode];let txt=fmt(val,g.level.mode);c.font=`900 ${Math.max(9,this.scale*10)}px Arial`;let ww=c.measureText(txt).width+10;c.fillStyle='#173957e8';c.beginPath();c.roundRect(x-ww/2,y-12*this.scale,ww,16*this.scale,4);c.fill();c.fillStyle=e.traffic&&g.level.mode==='time'?'#ffbe69':'#f5f6df';c.textAlign='center';c.fillText(txt,x,y+1.5*this.scale)}}}
+ drawCar(x,y,ang,kind=0,size=1){let c=this.ctx,s=Math.max(.58,this.scale)*size;c.save();c.translate(x,y-6*s);c.rotate(ang);c.fillStyle='#14202b42';c.beginPath();c.ellipse(0,12*s,22*s,8*s,0,0,Math.PI*2);c.fill();let col=kind?'#e9ad4c':'#2f9bdb';let dark=kind?'#996331':'#175681';c.fillStyle='#1d2428';for(let vx of [-11,11])for(let vy of [-10,10]){c.beginPath();c.roundRect(vx*s-4*s,vy*s-3*s,8*s,6*s,2*s);c.fill()}c.fillStyle=dark;c.beginPath();c.roundRect(-21*s,-11*s,43*s,24*s,5*s);c.fill();c.fillStyle=col;c.beginPath();c.roundRect(-20*s,-13*s,41*s,21*s,6*s);c.fill();c.fillStyle='#87dbe8';c.beginPath();c.moveTo(-7*s,-9*s);c.lineTo(10*s,-9*s);c.lineTo(15*s,0);c.lineTo(-10*s,0);c.closePath();c.fill();c.fillStyle='#fff1b2';c.fillRect(18*s,-7*s,3*s,5*s);c.fillRect(18*s,1*s,3*s,5*s);c.restore()}
+ drawTraffic(){const g=this.g;if(this.opts.hero===false&&this.sim)return;let roads=g.edges.filter(e=>!e.blocked);for(let i=0;i<Math.min(3,roads.length);i++){let e=roads[(i*7+2)%roads.length],a=g.nodes[e.a],b=g.nodes[e.b];let p=this.P(a.px,a.py),q=this.P(b.px,b.py);let u=(this.t*(.085+i*.03)+rand(i+4))%1;this.drawCar(p.x+(q.x-p.x)*u,p.y+(q.y-p.y)*u,Math.atan2(q.y-p.y,q.x-p.x),i%2,.60)}}
+ drawSimCar(){if(!this.sim||this.sim.route.length<2)return;let times=this.sim.route.slice(1).map((n,i)=>lookupEdge(this.g,this.sim.route[i],n).time),total=sum(times),cursor=this.sim.progress*total,seg=0;while(seg<times.length-1&&cursor>times[seg]){cursor-=times[seg];seg++}let u=Math.max(0,Math.min(1,cursor/Math.max(.0001,times[seg]))),easeu=u*u*(3-2*u);let a=this.g.nodes[this.sim.route[seg]],b=this.g.nodes[this.sim.route[seg+1]],worldX=a.px+(b.px-a.px)*easeu,worldY=a.py+(b.py-a.py)*easeu,pos=this.P(worldX,worldY,5),pa=this.P(a.px,a.py),pb=this.P(b.px,b.py);this.drawCar(pos.x,pos.y,Math.atan2(pb.y-pa.y,pb.x-pa.x),0,.82)}
+ drawScaleBar(){const c=this.ctx;const pixels=Math.hypot(102,53)*this.scale;
+  if(pixels<30)return;
+  let x=19,y=this.height-92;
+  c.save();c.shadowColor='#09294288';c.shadowBlur=5;c.fillStyle='#082d49d9';c.beginPath();c.roundRect(x-9,y-24,Math.max(125,pixels+26),36,8);c.fill();c.shadowBlur=0;
+  c.lineWidth=3;c.strokeStyle='#ffe1a0';c.beginPath();c.moveTo(x,y+1);c.lineTo(x+pixels,y+1);c.moveTo(x,y-4);c.lineTo(x,y+6);c.moveTo(x+pixels,y-4);c.lineTo(x+pixels,y+6);c.stroke();
+  c.fillStyle='#fff8e2';c.font='bold 11px Arial';c.fillText('1 km',x,y-10);c.restore();
+ }
+ draw(){let c=this.ctx;this.drawSky();this.drawGround();this.drawRoads();this.drawRoute();this.drawCityObjects();this.drawTraffic();this.drawNodes();this.drawSimCar();this.drawLandmarkLabels();this.drawScaleBar();if(this.opts.hero){let grad=c.createLinearGradient(0,0,this.width,0);grad.addColorStop(0,'#071d34b0');grad.addColorStop(.35,'#071d3459');grad.addColorStop(1,'transparent');c.fillStyle=grad;c.fillRect(0,0,this.width,this.height)}}
+}
+// Single event delegation, links and state machine.
+app.addEventListener('click',e=>{const btn=e.target.closest('[data-action]');if(!btn)return;let action=btn.dataset.action;switch(action){case'home':case'menu':case'lessons':case'levels':case'tutorial':case'report':navigate(action);break;case'sound':soundOn=!soundOn;btn.textContent=soundOn?'🔊':'🔇';break;case'help':help();break;case'lessonPrev':lessonIdx=Math.max(0,lessonIdx-1);showLesson();break;case'lessonNext':if(lessonIdx<LESSONS.length-1){lessonIdx++;showLesson()}else navigate('tutorial');break;case'level':selectLevel(Number(btn.dataset.level));break;case'undo':undo();break;case'reset':reset();break;case'hint':hint();break;case'testRoute':testRoute();break;case'zoomIn':renderer?.zoomBy(1.20);break;case'zoomOut':renderer?.zoomBy(.82);break;case'focus':renderer?.focus();break;case'scoreReason':scoreReason();break;case'retry':selectLevel(levelIdx);break;case'nextLevel':if(levelIdx<9)selectLevel(levelIdx+1);else navigate('report');break;case'csv':exportCsv();break;case'playTutorial':tone(720);makeTutorialCanvas();break;}});
+// Animate simulation from selected graph vertices, wait for last car to arrive before scoring.
+let previous=performance.now();function frameGlobal(now){let dt=Math.min(.05,(now-previous)/1000);previous=now;if(scene==='game'&&simState&&renderer){simState.t+=dt;const p=Math.min(1,simState.t/simState.duration);simState.progress=p;renderer.sim.progress=p;const meter=$('simProgress'),label=$('simPercent');if(meter)meter.style.width=(p*100).toFixed(1)+'%';if(label)label.textContent=Math.floor(p*100)+'%';if(p>=1){finishDriving()}}requestAnimationFrame(frameGlobal)}requestAnimationFrame(frameGlobal);
+// Begin with landing scene.
+navigate('home');
+})();
+</script></body></html>

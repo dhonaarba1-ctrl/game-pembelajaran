@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#163e5c"><title>Survival Camp 3D — Dunia 3D & Bangun Bebas</title>
+<style>
+:root{--glass:#163953d9;--line:#def4ffba;--gold:#ffc85c;--ink:#233947;--snow:#f6fbff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#183c59;color:white;font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;touch-action:none;user-select:none}button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}button:active{filter:brightness(.86);transform:translateY(2px)}#world{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;background:linear-gradient(#90bfdf,#e4f4fc)}#vignette{pointer-events:none;position:fixed;inset:0;box-shadow:inset 0 0 125px #284d7552}
+#ui{display:none;position:fixed;inset:0;pointer-events:none}#ui.show{display:block}.interactive{pointer-events:auto}
+#topLeft{position:absolute;left:max(10px,env(safe-area-inset-left));top:max(8px,env(safe-area-inset-top));display:flex;align-items:center;gap:8px}.portrait{background:#e9bb77;border:3px solid #fff3d1;color:#573d20;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:27px;box-shadow:0 3px 9px #182f4999}.vitals{display:grid;gap:5px}.bar{position:relative;width:145px;height:16px;background:#244358d9;border:2px solid #fff8;box-shadow:0 3px 5px #122a3269;border-radius:30px;overflow:hidden}.bar>i{display:block;height:100%;border-radius:20px;transition:width .15s}.bar.hp>i{background:linear-gradient(#fb9e98,#ed525f)}.bar.en>i{background:linear-gradient(#d1ec73,#6cca51)}.bar>b{position:absolute;inset:0;text-align:center;font-size:10px;line-height:12px;text-shadow:0 1px 3px #234;font-weight:900}
+#topRight{position:absolute;top:max(8px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));display:flex;gap:7px;align-items:start}.resources{display:flex;gap:5px}.resource{height:33px;min-width:69px;display:flex;align-items:center;gap:5px;justify-content:center;padding:3px 7px;border:1.5px solid #e9f9ff9c;border-radius:12px;background:#153954d9;box-shadow:0 4px 7px #142c426e;font-weight:850;font-size:13px}.resource span{font-size:20px}.roundSquare{background:linear-gradient(#f7fbff,#aed0e7);color:#285274;box-shadow:0 4px 0 #275f81,0 5px 9px #082b4577;border:2px solid white;border-radius:12px;min-width:38px;height:35px;font-weight:900;font-size:20px}
+#objectives{position:absolute;top:51px;left:50%;transform:translateX(-50%);background:#183b55ae;border:1px solid #dff0ff8c;padding:6px 14px;border-radius:20px;color:#ffefbb;font-size:11px;font-weight:800;white-space:nowrap;text-shadow:0 1px 3px #001b32}
+#mini{position:absolute;right:max(12px,env(safe-area-inset-right));top:51px;width:99px;height:99px;border-radius:50%;border:4px solid #f7f3d6;background:#a0c9d4aa;box-shadow:0 4px 1px #47718c,0 8px 15px #122e4385}
+#quickMenu{position:absolute;left:max(10px,env(safe-area-inset-left));top:69px;display:flex;gap:7px;pointer-events:auto}.quick{width:54px;height:49px;padding:1px;display:grid;place-content:center;gap:1px;text-align:center;border:2px solid #e7f6ffed;border-radius:13px;background:linear-gradient(#e8f5ff,#b9dced);color:#254f69;box-shadow:0 4px 0 #4a7899,0 7px 9px #1538565c;font-size:21px;font-weight:900}.quick small{font-size:9px;line-height:11px}
+#joy{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));width:112px;height:112px;border-radius:50%;background:#25445d6b;border:3px solid #e1f4ffb7;box-shadow:inset 0 2px 12px #06283f83;display:grid;place-items:center;pointer-events:auto;touch-action:none}#knob{width:58px;height:58px;border-radius:50%;background:linear-gradient(145deg,#e6f8ff,#88b3c8);border:3px solid #f6ffff;box-shadow:0 5px 8px #06243899;transform:translate(0,0);pointer-events:none}#actions{position:absolute;right:max(18px,env(safe-area-inset-right));bottom:max(15px,env(safe-area-inset-bottom));display:flex;align-items:end;gap:10px;pointer-events:auto}.action{width:69px;height:69px;border:3px solid #f9f6dd;border-radius:50%;background:linear-gradient(#86cddf,#3680ab);box-shadow:0 5px 0 #235577,0 9px 13px #1234;color:white;display:grid;align-content:center;justify-content:center;gap:0;text-align:center;font-weight:950;font-size:10px;text-shadow:0 1px 2px #184361}.action .em{font-size:29px}.action.main{width:87px;height:87px;background:linear-gradient(145deg,#ffde8a,#d8903e);box-shadow:0 5px 0 #855929,0 9px 13px #1234}.action.main .em{font-size:42px}#interact{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);max-width:70vw;display:none;align-items:center;gap:8px;border:1.5px solid #f2ffffd5;border-radius:17px;background:#163d5cc7;padding:5px 13px;box-shadow:0 5px 12px #1534;font-size:12px;font-weight:800;white-space:nowrap}#toast{position:absolute;left:50%;top:22%;transform:translate(-50%,-8px);padding:8px 14px;border:2px solid #e5f5ff;background:#1c4865e8;box-shadow:0 6px 14px #183a5f80;border-radius:14px;text-align:center;font-size:13px;font-weight:800;opacity:0;transition:.18s;max-width:80vw;pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,0)}
+#landing{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:linear-gradient(90deg,#0b2c54ba,#092e55ad 44%,#184d7160);padding:13px}#landing.hide{display:none}.intro{width:min(600px,92vw);border:3px solid #e8f7ffb8;border-radius:24px;padding:clamp(18px,3vw,30px);background:linear-gradient(130deg,#133952eb,#1c5d83dc);box-shadow:0 18px 65px #09263dbf;text-align:center;backdrop-filter:blur(8px)}.intro h1{margin:0;font-weight:1000;font-size:clamp(32px,5vw,57px);line-height:1;color:#fff;text-shadow:0 5px 0 #163e6b,0 8px 11px #062e4a;letter-spacing:2px}.intro h1 span{color:#ffd866}.subtitle{color:#d4edff;letter-spacing:3px;font-weight:850;font-size:12px;margin:9px 0 15px}.intro p{font-size:13px;line-height:1.55;color:#e6f5ff;margin:0 auto 15px;max-width:500px}.primary{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:2px solid #fff3d1;border-radius:14px;background:linear-gradient(#ffdf74,#eaa535);box-shadow:0 5px 0 #86531f,0 8px 13px #11364a65;font-weight:1000;color:#5c3917;font-size:18px;padding:10px 30px;min-width:190px}.secondary{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:2px solid #e3f8ff;border-radius:12px;background:linear-gradient(#e4f8ff,#9fc5e4);box-shadow:0 4px 0 #245579;color:#275071;font-weight:900;padding:8px 17px;margin:10px 3px 0;font-size:12px}.introFooter{font-size:10px;color:#cce0ec;margin-top:17px}
+#overlay{position:fixed;inset:0;background:#06263bb7;z-index:20;display:none;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(3px)}#overlay.show{display:flex}.panel{width:min(690px,94vw);max-height:91dvh;overflow:hidden;background:#fff6e8;color:#304756;border:4px solid #d8effd;border-radius:19px;box-shadow:0 10px 0 #295a80,0 20px 37px #081e3b77;display:flex;flex-direction:column}.panelHead{background:linear-gradient(#b4dcf5,#ebf8ff);padding:12px 16px;color:#294969;font-size:18px;font-weight:1000;border-bottom:2px solid #9cbed5;display:flex;justify-content:space-between;align-items:center}.close{background:#dc595b;color:white;border:2px solid #fff;border-radius:50%;height:33px;width:33px;font-size:22px;font-weight:950}.panelBody{padding:14px;overflow:auto;scrollbar-color:#abc5d5 #fff8ed}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.card{padding:12px 9px;border:2px solid #d5c7b5;border-radius:12px;background:#fffaf4;text-align:center;box-shadow:0 3px 0 #e5d9cb}.card .ico{font-size:31px}.card strong{display:block;font-size:14px;color:#284359}.card small{font-size:11px;color:#6a7480}.card button{border-radius:11px;margin-top:8px;background:linear-gradient(#a9e565,#6bb733);color:#234a13;border:2px solid white;padding:5px 9px;font-weight:900;box-shadow:0 3px 0 #4b8026}.card button:disabled{background:#bbc7c7;color:#677;box-shadow:none}.pill{padding:6px 9px;background:#ecf5ff;border-radius:10px;font-size:12px;font-weight:750}.mission{display:flex;gap:12px;align-items:center;padding:9px;border-bottom:1px solid #d6d5cd;font-size:12px}.mission .fill{height:10px;width:100%;border-radius:12px;background:#d0d7d6;overflow:hidden;margin:5px 0}.mission .fill i{display:block;height:100%;background:#78c74e;border-radius:12px}.mission button{background:#ffc960;border:2px solid #e2ae50;border-radius:9px;padding:7px;white-space:nowrap;font-size:11px;font-weight:950;color:#6d4a11}.mission button:disabled{background:#d4d5d6;color:#879399}.modalBtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}.modalBtns button{border:2px solid #eefaff;border-radius:12px;background:#3479ae;color:white;font-weight:900;padding:9px 17px;box-shadow:0 3px 0 #245478}.note{font-size:12px;line-height:1.5;color:#56707f}.help{line-height:1.65;font-size:13px}.help strong{color:#275a7c}
+#rotate{display:none;position:fixed;inset:0;z-index:99;align-items:center;justify-content:center;background:#143957f4;padding:24px;text-align:center}#rotate .msg{max-width:340px}#rotate .spin{font-size:69px;animation:tilt 2.2s ease-in-out infinite alternate}@keyframes tilt{0%{transform:rotate(-20deg)}100%{transform:rotate(65deg)}}#rotate h2{font-size:23px;margin:10px 0}#rotate p{font-size:13px;line-height:1.6;color:#d6e8f2}#rotate button{margin-top:10px;padding:9px 15px;border-radius:10px;background:#ffd66c;color:#5f431d;font-weight:900}
+#zoomTools{position:absolute;right:max(14px,env(safe-area-inset-right));top:43%;transform:translateY(-37%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:auto;z-index:1}#zoomTools button{height:36px;width:43px;font-size:25px;line-height:30px;border-radius:11px;border:2px solid #e4f5ff;background:linear-gradient(#ebf8ff,#9bc4df);color:#245477;font-weight:950;box-shadow:0 3px 0 #397097,0 4px 9px #19344a66}#zoomTxt{min-width:43px;padding:1px 2px;border:1px solid #d6efffa9;border-radius:6px;text-align:center;background:#193d58d6;color:#fff;font-size:10px;font-weight:900}#safeHint{display:inline-block;background:#2a754bc9;border:1px solid #d6ffcf9f;border-radius:12px;color:#f0fff3;font-size:10px;padding:2px 8px;margin-top:3px;font-weight:900}#glError{display:none;position:fixed;inset:0;z-index:100;background:#163c59;align-items:center;justify-content:center;padding:30px;text-align:center;font-size:18px}
+@media (orientation:portrait) and (max-width:700px){#rotate{display:flex}}@media (max-height:440px){#mini{width:72px;height:72px;top:48px}.quick{width:47px;height:42px;font-size:18px}.quick small{font-size:8px}#quickMenu{top:56px}#objectives{top:9px;font-size:10px}#joy{width:98px;height:98px}#knob{width:49px;height:49px}.action{width:61px;height:61px}.action.main{width:74px;height:74px}.action.main .em{font-size:35px}.resources .resource{min-width:55px;padding:2px 5px;font-size:11px}.resources .resource span{font-size:17px}#interact{bottom:9%;font-size:10px}}
+
+/* Overlay pemilihan lokasi pembangunan 3D */
+#placementBar{display:none;position:absolute;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(530px,61vw);padding:9px 12px;background:linear-gradient(#123957eb,#194c68e8);border:2px solid #dbf1ff;border-radius:16px;box-shadow:0 7px 17px #0824369f;text-align:center;pointer-events:auto;z-index:5}
+#ui.placing #placementBar{display:block}#ui.placing #actions,#ui.placing #quickMenu,#ui.placing #interact{display:none!important}
+.placeTitle{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 13px;font-size:12px;font-weight:900}.placeTitle span{color:#b8f49d}.placeTitle span.invalid{color:#ffb2a9}
+.placeTip{font-size:10px;color:#d6edf7;margin:3px 0 6px}.placeButtons{display:flex;gap:6px;justify-content:center}.placeButtons button{border:1px solid #e5f7ff;border-radius:10px;padding:7px 12px;font-size:12px;font-weight:850;background:#7db4d5;color:#173e5d}.placeButtons #placeCancel{background:#f0a3a4;color:#56232d}.placeButtons #placeConfirm{background:#a9e977;color:#24511d}.placeButtons button:disabled{filter:grayscale(.8);opacity:.6;cursor:default}
+@media(max-height:430px){#placementBar{padding:5px 8px}.placeTip{font-size:9px;margin:2px 0 4px}.placeButtons button{padding:5px 9px}#joy{height:97px;width:97px}}
+</style></head><body>
+<canvas id="world"></canvas><div id="vignette"></div>
+<div id="ui"><div id="topLeft"><div class="portrait">🧑🏻‍🚀</div><div class="vitals"><div class="bar hp"><i id="hpBar" style="width:100%"></i><b id="hpText">100 / 100</b></div><div class="bar en"><i id="enBar" style="width:100%"></i><b id="enText">100 / 100</b></div></div></div><div id="topRight"><div class="resources"><div class="resource"><span>🪵</span><b id="woodTxt">0</b></div><div class="resource"><span>🪨</span><b id="stoneTxt">0</b></div><div class="resource"><span>🥩</span><b id="meatTxt">0</b></div></div><button class="roundSquare interactive" id="pauseBtn" title="Jeda">Ⅱ</button></div><div id="objectives">🌲 Tebang pohon • Kumpulkan kayu • Bangun markas</div><canvas id="mini" width="144" height="144"></canvas><div id="quickMenu"><button class="quick" id="inventoryBtn">🎒<small>Tas</small></button><button class="quick" id="buildBtn">🔨<small>Bangun</small></button><button class="quick" id="missionBtn">📜<small>Misi</small></button><button class="quick" id="shopBtn">🏪<small>Toko</small></button></div><div id="interact">🌲 Dekati dan tebang pohon</div><div id="toast"></div><div id="zoomTools"><button class="interactive" id="zoomIn" title="Perbesar tampilan" aria-label="Zoom in">＋</button><span id="zoomTxt">100%</span><button class="interactive" id="zoomOut" title="Perkecil tampilan" aria-label="Zoom out">−</button></div><div id="joy"><div id="knob"></div></div><div id="actions"><button class="action" id="pickupBtn"><span class="em">✋</span>Ambil</button><button class="action main" id="axeBtn"><span class="em" id="axeIcon">🪓</span><span id="axeLabel">Tebang</span></button></div><div id="placementBar" class="interactive"><div class="placeTitle"><b id="placeName">🏗️ Atur posisi bangunan</b><span id="placeStatus">🟢 Area tersedia</span></div><div class="placeTip">👆 Sentuh / seret tanah untuk memilih lokasi · Joystick untuk geser kamera</div><div class="placeButtons"><button id="placeRotate">↻ Putar 90°</button><button id="placeCancel">✕ Batal</button><button id="placeConfirm">✓ Tempatkan</button></div></div></div>
+<div id="landing"><div class="intro"><h1>SURVIVAL<br><span>CAMP 3D</span></h1><div class="subtitle">❄ SNOW ADVENTURE ❄</div><p>Jelajahi hutan bersalju dalam dunia 3D. Tebang pohon, kumpulkan bahan, lawan beruang 3D, dan pilih sendiri lokasi pembangunan markasmu!</p><button class="primary" id="playBtn">▶ MULAI BERMAIN</button><div><button class="secondary" id="helpStart">📖 Cara Bermain</button><button class="secondary" id="resetBtn">🔄 Permainan Baru</button></div><div class="introFooter">Landscape 16:9 · Model 3D · Penempatan bebas · Offline</div></div></div>
+<div id="overlay"></div><div id="rotate"><div class="msg"><div class="spin">📱</div><h2>Putar HP ke posisi landscape</h2><p>Game ini dirancang untuk dimainkan dengan layar mendatar. Aktifkan rotasi otomatis jika layar tidak berputar.</p><button id="rotateFull">⛶ Layar Penuh</button></div></div><div id="glError"><div>Browser ini tidak berhasil mengaktifkan grafis 3D WebGL.<p>Silakan coba membuka game menggunakan Chrome dan aktifkan akselerasi grafis.</p></div></div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),canvas=$('world');
+const gl=canvas.getContext('webgl',{alpha:false,antialias:true,depth:true,powerPreference:'default'})||canvas.getContext('experimental-webgl');if(!gl){$('glError').style.display='flex';return;}
+const VS=`attribute vec3 p;attribute vec3 n;attribute vec3 c;uniform mat4 vp;uniform vec3 eye;varying vec3 col;varying float fog;void main(){vec4 pos=vp*vec4(p,1.0);gl_Position=pos;float light=clamp(dot(normalize(n),normalize(vec3(-0.55,1.0,0.7)))*0.55+0.60,0.32,1.13);float ambient=0.92+0.08*n.y;col=c*light*ambient;fog=clamp((length(p.xz-eye.xz)-13.0)/45.0,0.0,0.62);}`;
+const FS=`precision mediump float;varying vec3 col;varying float fog;uniform float opacity;void main(){vec3 tint=mix(col,vec3(0.81,0.91,0.97),fog);gl_FragColor=vec4(tint,opacity);}`;
+function compile(type,str){let s=gl.createShader(type);gl.shaderSource(s,str);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){throw new Error(gl.getShaderInfoLog(s))}return s}
+let prog=gl.createProgram();gl.attachShader(prog,compile(gl.VERTEX_SHADER,VS));gl.attachShader(prog,compile(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw Error('WebGL: '+gl.getProgramInfoLog(prog));gl.useProgram(prog);
+let pLoc=gl.getAttribLocation(prog,'p'),nLoc=gl.getAttribLocation(prog,'n'),cLoc=gl.getAttribLocation(prog,'c'),vpLoc=gl.getUniformLocation(prog,'vp'),eyeLoc=gl.getUniformLocation(prog,'eye'),opacityLoc=gl.getUniformLocation(prog,'opacity');gl.uniform1f(opacityLoc,1);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.clearColor(.68,.82,.92,1);gl.disable(gl.CULL_FACE);
+const TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+const C={snow:'#e8f4f9',snow2:'#dbeefa',snow3:'#c7e0ed',pine:'#244f77',pine2:'#35668d',pine3:'#437b9e',ice:'#badcea',wood:'#966039',woodLight:'#b8814e',woodDark:'#5a3b2a',rock:'#8faab9',fence:'#a77750',skin:'#f4bc86',coat:'#6f503a',trouser:'#364e65',bear:'#ecf0ef'};
+function color(h){if(Array.isArray(h))return h;h=(C[h]||h).replace('#','');return [parseInt(h.slice(0,2),16)/255,parseInt(h.slice(2,4),16)/255,parseInt(h.slice(4,6),16)/255]}
+function shade(h,t){let v=color(h);return v.map(q=>clamp(q*t,0,1))}
+class Builder{constructor(){this.a=[]}tri(A,B,C,col){let v=this.a,u=[B[0]-A[0],B[1]-A[1],B[2]-A[2]],w=[C[0]-A[0],C[1]-A[1],C[2]-A[2]],n=[u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0]],d=Math.hypot(...n)||1;n=n.map(x=>x/d);for(const q of [A,B,C])v.push(...q,...n,...col)}quad(A,B,C,D,col){this.tri(A,B,C,col);this.tri(A,C,D,col)}add(type,x,y,z,sx,sy,sz,col,ry=0,rz=0,rx=0){let base=shapes[type];if(!base)return;let cc=color(col);let cy=Math.cos(ry),si=Math.sin(ry),cz=Math.cos(rz),szr=Math.sin(rz),cx=Math.cos(rx),sxr=Math.sin(rx);for(let i=0;i<base.length;i+=9){let pts=[];for(let j=0;j<9;j+=3){let px=base[i+j]*sx,py=base[i+j+1]*sy,pz=base[i+j+2]*sz;let ty=py*cx-pz*sxr,tz=py*sxr+pz*cx;py=ty;pz=tz;let tx=px*cz-py*szr;ty=px*szr+py*cz;px=tx;py=ty;tx=px*cy+pz*si;tz=-px*si+pz*cy;pts.push([x+tx,y+py,z+tz])}this.tri(pts[0],pts[1],pts[2],cc)}}upload(buffer,usage){gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(this.a),usage);return this.a.length/9}}
+const shapes={};function shape(name,fn){let b=new Builder();fn(b);let a=[];for(let i=0;i<b.a.length;i+=9)a.push(b.a[i],b.a[i+1],b.a[i+2]);shapes[name]=a}
+shape('box',b=>{let s=.5,q=[[-s,-s,-s],[s,-s,-s],[s,s,-s],[-s,s,-s],[-s,-s,s],[s,-s,s],[s,s,s],[-s,s,s]];for(let f of [[0,3,2,1],[4,5,6,7],[3,7,6,2],[0,1,5,4],[1,2,6,5],[0,4,7,3]])b.quad(...f.map(i=>q[i]),[1,1,1])});
+shape('plane',b=>b.quad([-.5,0,-.5],[-.5,0,.5],[.5,0,.5],[.5,0,-.5],[1,1,1]));
+shape('cone',b=>{let n=10;for(let i=0;i<n;i++){let a=i/n*TAU,t=(i+1)/n*TAU,P=[Math.cos(a)*.5,0,Math.sin(a)*.5],Q=[Math.cos(t)*.5,0,Math.sin(t)*.5];b.tri(Q,P,[0,1,0],[1,1,1]);b.tri([0,0,0],Q,P,[1,1,1])}});
+shape('cyl',b=>{let n=10;for(let i=0;i<n;i++){let a=i/n*TAU,t=(i+1)/n*TAU,A=[Math.cos(a)*.5,0,Math.sin(a)*.5],B=[Math.cos(t)*.5,0,Math.sin(t)*.5],D=[A[0],1,A[2]],E=[B[0],1,B[2]];b.quad(A,D,E,B,[1,1,1]);b.tri([0,1,0],E,D,[1,1,1]);b.tri([0,0,0],A,B,[1,1,1])}});
+shape('sphere',b=>{let m=6,n=10;for(let v=0;v<m;v++){let a=Math.PI*v/m,aa=Math.PI*(v+1)/m;for(let h=0;h<n;h++){let t=TAU*h/n,tt=TAU*(h+1)/n;function p(theta,phi){return [Math.sin(theta)*Math.cos(phi)*.5,Math.cos(theta)*.5,Math.sin(theta)*Math.sin(phi)*.5]}let A=p(a,t),B=p(aa,t),D=p(a,tt),E=p(aa,tt);b.tri(A,E,B,[1,1,1]);b.tri(A,D,E,[1,1,1])}}});
+// Model 3D low-poly: batu berbidang (faceted), atap dua kemiringan
+shape('boulder',b=>{
+ const t=(1+Math.sqrt(5))/2;
+ let verts=[[-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],[0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],[t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]].map((v,i)=>{let d=Math.hypot(...v);return [v[0]/d*(.94+.08*Math.sin(i*2.7)),v[1]/d*(.94+.06*Math.cos(i*3.1)),v[2]/d*(.94+.09*Math.sin(i*4.6))]});
+ let f=[[0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],[1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],[3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],[4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]];
+ f.forEach(a=>b.tri(verts[a[0]].map(v=>v*.5),verts[a[1]].map(v=>v*.5),verts[a[2]].map(v=>v*.5),[1,1,1]));
+});
+shape('roof',b=>{
+ // triangular prism: x: -0.5..0.5, z:-0.5..0.5, y 0..1
+ let a=[-.5,0,-.5],c=[.5,0,-.5],d=[0,1,-.5],e=[-.5,0,.5],f=[.5,0,.5],g=[0,1,.5];
+ b.quad(a,e,g,d,[1,1,1]);b.quad(d,g,f,c,[1,1,1]);b.tri(a,d,c,[1,1,1]);b.tri(e,f,g,[1,1,1]);b.quad(a,c,f,e,[1,1,1]);
+});
+const geo=gl.createBuffer(),moving=gl.createBuffer(),ghostGeo=gl.createBuffer(),markerGeo=gl.createBuffer();let staticN=0,dynamicN=0;
+function renderBuffer(buf,n){if(!n)return;gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.enableVertexAttribArray(pLoc);gl.enableVertexAttribArray(nLoc);gl.enableVertexAttribArray(cLoc);gl.vertexAttribPointer(pLoc,3,gl.FLOAT,false,36,0);gl.vertexAttribPointer(nLoc,3,gl.FLOAT,false,36,12);gl.vertexAttribPointer(cLoc,3,gl.FLOAT,false,36,24);gl.drawArrays(gl.TRIANGLES,0,n)}
+function perspective(fovy,aspect,near,far){let f=1/Math.tan(fovy/2);return [f/aspect,0,0,0,0,f,0,0,0,0,(far+near)/(near-far),-1,0,0,2*far*near/(near-far),0]}
+function lookAt(eye,center){let z=normalize(sub(eye,center)),x=normalize(cross([0,1,0],z)),y=cross(z,x);return [x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]}
+const sub=(a,b)=>a.map((v,i)=>v-b[i]),dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],normalize=a=>{let d=Math.hypot(...a)||1;return a.map(v=>v/d)};
+function matmul(a,b){let out=Array(16).fill(0);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let k=0;k<4;k++)out[c*4+r]+=a[k*4+r]*b[c*4+k];return out}
+let zoomStored=1;try{zoomStored=Number(localStorage.getItem('survival_camp_camera_zoom')||1)}catch(e){}if(!Number.isFinite(zoomStored))zoomStored=1;let cameraZoom=clamp(zoomStored,.62,1.55),visualZoom=cameraZoom;
+let camera={x:0,z:0},vp,eye=[14,19,17],last=0,clock=0,mode='home',modal='',soundOn=true,joy={x:0,y:0,id:null},keys={},held=false,axeCooldown=0,swing=0,toastTime=0,notice='',dirty=true,moveSpeed=0;let state,placement=null,placementValid=false;
+let R=(()=>{let seed=73471;return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}})();function rand(a,b){return mix(a,b,R())}
+function startState(){R=(()=>{let seed=73471;return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}})();let trees=[];for(let i=0;i<65;i++){let x=rand(-25,25),z=rand(-25,25);if(Math.hypot(x,z)<5||Math.hypot(x+6,z+4)<4)continue;trees.push({x,z,size:rand(.85,1.3),hp:3,down:0,fall:0,yaw:rand(0,TAU)})}for(let [x,z] of [[2.5,-4],[-4,3],[-3.5,-2.5],[6,3],[0,-7],[8,0]])trees.push({x,z,size:rand(.91,1.1),hp:3,down:0,fall:0,yaw:rand(0,TAU)});
+let rocks=[];for(let i=0;i<25;i++){let x=rand(-24,24),z=rand(-24,24);if(Math.hypot(x,z)<4)continue;rocks.push({x,z,size:rand(.5,1),yaw:rand(0,TAU),hp:3,down:0})}
+let bears=[[13,-9],[-16,10],[15,14],[-12,-16]].map(([x,z],i)=>({x,z,hx:x,hz:z,hp:4,yaw:rand(0,TAU),walk:0,moveTime:rand(2,7),attackCd:0,alive:true,alert:false,phase:i}));
+return {x:0,z:2,yaw:Math.PI,walk:0,hp:100,en:100,maxHp:100,maxEn:100,safeBears:true,wood:24,stone:12,meat:0,coin:35,xp:0,lvl:1,axe:1,day:1,time:0,trees,rocks,bears,loot:[],buildings:[{type:'hut',x:-6,z:-4},{type:'fire',x:-3.2,z:-4.2},{type:'fence',x:-9,z:-6},{type:'fence',x:-7.2,z:-6}],cut:0,mined:0,built:0,claimed:[],foot:0}}
+const saveKey='survival_camp_3d_landscape_v1';function save(){if(!state)return;try{localStorage.setItem(saveKey,JSON.stringify(state))}catch(e){}}function load(){try{let raw=JSON.parse(localStorage.getItem(saveKey));if(raw&&Number.isFinite(raw.x)&&Array.isArray(raw.trees)&&Array.isArray(raw.bears)){if(typeof raw.safeBears!=="boolean")raw.safeBears=true;return raw}}catch(e){}return null}
+state=load()||startState();camera.x=state.x;camera.z=state.z;
+function shadow(b,x,z,rx,rz){b.add('sphere',x,.045,z,rx,.055,rz,'#bbd5e3')}
+function drawTree(b,t,fallAngle=0){if(t.down>0&&t.fall<=0)return;let s=t.size,xx=t.x,zz=t.z;shadow(b,xx,zz,1.4*s,1.2*s);let lean=Math.min(fallAngle,1.35);function part(type,dx,dy,dz,sx,sy,sz,col,rot=0){let py=dy,px=dx*Math.cos(lean)+dy*Math.sin(lean);py=dy*Math.cos(lean)-dx*Math.sin(lean);b.add(type,xx+px*s,.13+py*s,zz+dz*s,sx*s,sy*s,sz*s,col,t.yaw,0,lean+rot)}part('cyl',0,.35,0,.35,1.35,.35,'woodDark');part('cone',0,.85,0,2.45,1.3,2.45,'pine');part('cone',0,1.34,0,2.05,1.37,2.05,'pine2');part('cone',0,1.87,0,1.6,1.27,1.6,'pine3');part('cone',0,2.37,0,1.10,.97,1.10,'snow2');part('cone',0,2.11,0,1.48,.33,1.48,'snow3');}
+function drawRock(b,r){
+ if(r.down>0)return;let {x,z,size:k}=r;
+ shadow(b,x,z,1.6*k,1.28*k);
+ b.add('boulder',x,.53*k,z,2.45*k,1.35*k,1.95*k,'#7f95a5',r.yaw||.35);
+ b.add('boulder',x-.40*k,.38*k,z+.24*k,1.40*k,.94*k,1.04*k,'#a3b7bf',(r.yaw||0)+.52);
+ b.add('boulder',x+.54*k,.28*k,z-.22*k,1.0*k,.78*k,.97*k,'#6e8797',(r.yaw||0)+1.7);
+ b.add('boulder',x-.1*k,.98*k,z-.18*k,1.61*k,.34*k,1.42*k,'#f1f9fb',(r.yaw||0)+.23);
+ b.add('boulder',x-.46*k,.72*k,z+.44*k,.63*k,.23*k,.71*k,'#e5f3fa');
+}
+function drawLog(b,x,y,z,s=1,rot=0){b.add('cyl',x,y,z,.44*s,.9*s,.44*s,'wood',rot,Math.PI/2);b.add('cyl',x-.45*s,y,z,.45*s,.065*s,.45*s,'#e3b87a',rot,Math.PI/2)}
+function drawBuilding(b,o){
+ let {x,z,type}=o,rot=o.yaw||0;
+ const p=(tp,dx,y,dz,sx,sy,sz,c,ry=0,rz=0,rx=0)=>{let [xx,zz]=rotate2(dx,dz,rot);b.add(tp,x+xx,y,z+zz,sx,sy,sz,c,rot+ry,rz,rx)};
+ shadow(b,x,z,type==='hut'?5:type==='storage'?3.5:2.1,type==='hut'?4:type==='storage'?2.8:1.6);
+ if(type==='hut'||type==='storage'){
+   let big=type==='hut',w=big?3.8:2.7,d=big?3.2:2.35,h=big?2.2:1.5;
+   p('box',0,h/2,0,w,h,d,'#9b683e');
+   for(let xx=-w/2+.27;xx<w/2;xx+=.55){p('box',xx,h/2,d/2+.045,.055,h,.07,'#71482c');p('box',xx,h/2,-d/2-.045,.055,h,.07,'#71482c')}
+   p('box',0,h+.05,0,w+.22,.20,d+.22,'#634638');
+   p('roof',0,h-.04,0,w+1.05,1.72,d+.9,'#d9ecf4');
+   p('roof',0,h+.16,0,w+.66,1.43,d+.68,'#ecf7fc');
+   p('box',0,.73,d/2+.075,.90,1.43,.14,'#4c3027');
+   p('sphere',.31,1.01,d/2+.16,.10,.1,.10,'#f9d05b');
+   for(let side of [-1,1]){
+     p('box',side*(w*.34),1.30,d/2+.084,.64,.66,.17,'#5c4530');
+     p('box',side*(w*.34),1.31,d/2+.18,.50,.53,.08,'#ffda8c');
+     p('box',side*(w*.34),1.31,d/2+.235,.09,.58,.07,'#5e4633');
+     p('box',side*(w*.34),1.31,d/2+.235,.56,.08,.07,'#5e4633');
+   }
+   if(big){p('box',1.16,h+.80,-.79,.39,1.48,.39,'#715044');p('box',1.16,h+1.54,-.79,.54,.16,.54,'#e8f3f8')}
+ } else if(type==='fence'){
+   for(let dx of [-.7,0,.7]){p('cyl',dx,.02,0,.23,1.50,.23,'#8c5a34');p('cone',dx,1.48,0,.28,.36,.28,'#ecf7fb')}
+   p('box',0,.66,0,2.1,.18,.2,'#bd8c55');p('box',0,1.10,0,2.1,.19,.20,'#bd8c55');
+ } else if(type==='fire'){
+   for(let i=0;i<10;i++){let a=i*TAU/10;p('boulder',Math.sin(a)*.68,.19,Math.cos(a)*.68,.6,.52,.53,i%2?'#7e95a2':'#a1b4c0')}
+   for(let i=0;i<3;i++)p('cyl',0,.13,0,.20,1.55,.20,'#87502e',i*TAU/3,Math.PI/2);
+   p('cone',0,.25,0,1.04,1.40,1.04,'#f46c2e');p('cone',0,.57,0,.62,.96,.62,'#ffe087');
+ } else if(type==='tower'){
+   for(let dx of [-.86,.86])for(let dz of [-.86,.86])p('cyl',dx,.12,dz,.23,3.2,.23,'#885533');
+   for(let h of [1.0,2.3]){p('box',0,h,0,2.26,.17,2.25,'#aa7a48')}
+   p('box',0,3.05,0,2.85,.21,2.85,'#ad7845');p('roof',0,3.10,0,3.35,1.46,3.22,'#dceefa');
+   for(let t of [-1,1])p('box',t*.85,3.52,1.00,.18,.80,.16,'#8e5f36');
+ }
+}
+function drawGround(b){b.add('box',0,-.7,0,56,1.4,56,'#c6e3ef');for(let ix=-7;ix<7;ix++)for(let iz=-7;iz<7;iz++){let x=ix*4+2,z=iz*4+2,shadeId=Math.abs((ix*13+iz*19)%7);b.add('plane',x,.006+(shadeId%3)*.003,z,3.98,1,3.98,[C.snow,C.snow2,'#dceef6','#e1f2f9','#e9f6fb','#d4e9f4','#eaf5fa'][shadeId])}
+// Path, glacial patches and detail
+for(let i=0;i<35;i++){let x=rand(-25,25),z=rand(-25,25);if(Math.hypot(x,z)<4)continue;b.add('sphere',x,.08,z,rand(.45,2),.13,rand(.4,1.6),i%3===0?'snow3':'snow2')}
+for(let i=0;i<32;i++){let a=i*TAU/32;let rr=22+Math.sin(i*3)*1.8;b.add('sphere',Math.cos(a)*rr,.17,Math.sin(a)*rr,rand(.8,2),.37,rand(.8,1.4),'snow3')}
+}
+function rebuild(){R=(()=>{let seed=38117;return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}})();let b=new Builder();drawGround(b);for(let t of state.trees)if(!(t.down>0)||t.fall>0)if(!t.fall)drawTree(b,t);for(let r of state.rocks)drawRock(b,r);for(let i=0;i<state.buildings.length;i++)if(!(mode==='placing'&&placement?.editIndex===i))drawBuilding(b,state.buildings[i]);staticN=b.upload(geo,gl.STATIC_DRAW);dirty=false}
+function rotate2(dx,dz,yaw){return [dx*Math.cos(yaw)+dz*Math.sin(yaw),dz*Math.cos(yaw)-dx*Math.sin(yaw)]}
+function drawPlayer(b,p){let x=p.x,z=p.z,yaw=p.yaw,step=Math.sin(p.walk)*Math.min(1,moveSpeed/3),armSwing=Math.sin(p.walk)*.6*Math.min(1,moveSpeed/3);shadow(b,x,z,1.07,.76);function piece(type,dx,dy,dz,sx,sy,sz,col,ry=0,rz=0,rx=0){let [xx,zz]=rotate2(dx,dz,yaw);b.add(type,x+xx,dy,z+zz,sx,sy,sz,col,yaw+ry,rz,rx)}
+// torso moves with footsteps and idle breathing
+let bob=Math.abs(step)*.095+Math.sin(clock*2)*.025;
+piece('box',0,1.18+bob,0,.76,.94,.52,'coat');piece('sphere',0,1.76+bob,0,.59,.62,.59,'skin');piece('sphere',0,2.04+bob,-.08,.72,.34,.69,'#b9a18a');piece('box',0,1.86+bob,-.33,.72,.12,.29,'#b39a86');piece('sphere',-.19,1.8+bob,.286,.085,.095,.08,'#333842');piece('sphere',.19,1.8+bob,.286,.085,.095,.08,'#333842');piece('box',0,1.56+bob,.3,.25,.07,.09,'#ad6657');
+for(let s of [-1,1]){let a=step*.65*s;piece('box',s*.21,.51+bob+.06*Math.max(0,a),-.02+Math.sin(a)*.15,.28,.81,.30,'trouser',0,a);piece('box',s*.21,.16+bob+.11*Math.max(0,a),.13+Math.sin(a)*.25,.37,.27,.48,'#2b3546')}
+for(let s of [-1,1]){let a= -armSwing*s+(s===1?Math.max(0,swing)*1.2:0);piece('box',s*.55,1.23+bob,.05+Math.sin(a)*.2,.25,.71,.30,'coat',0,a*.8);piece('sphere',s*.57, .83+bob+Math.abs(Math.sin(a))*.08,.05+Math.sin(a)*.27,.31,.31,.33,'#dbc9aa')}
+// Backpack
+piece('box',0,1.24+bob,-.35,.71,.8,.28,'#55634a');piece('box',0,1.0+bob,-.53,.5,.35,.11,'#ad855b');
+// Axe follows chopping motion; tip moves forward during swing
+let ch=Math.max(0,swing),ax=.73+ch*.12,az=.18+ch*.47,ay=1.13+bob+ch*.45;
+piece('cyl',ax,ay,az,.11,.93,.11,'woodLight',0,-.35-ch*.55);piece('box',ax+.12,ay+.47,az,.54,.30,.17,'#b3c7d1',0,-.28-ch*.48)
+}
+function drawBear(b,q){
+ if(!q.alive)return;
+ let x=q.x,z=q.z,yaw=q.yaw, gait=q.walk||0;
+ const speed=clamp(q.speed||0,0,1.3),motion=clamp(speed/.8,0,1);
+ const bob=Math.abs(Math.sin(gait*1.15))*.060*motion;
+ const sniff=Math.sin(clock*2+(q.phase||0))*.025;
+ const hit=q.hit>0,fur=hit?'#f8b5ab':'#e7e7df',belly=hit?'#f2c6c0':'#d7dfdd';
+ shadow(b,x,z,2.26,1.70);
+ function part(type,dx,dy,dz,sx,sy,sz,col,ry=0,rz=0,rx=0){let [xx,zz]=rotate2(dx,dz,yaw);b.add(type,x+xx,dy,z+zz,sx,sy,sz,col,yaw+ry,rz,rx)}
+ // full-volume, rounded shoulders, rump and tapering chest
+ part('sphere',0,1.16+bob,-.18,1.83,1.54,2.55,fur);
+ part('sphere',0,1.37+bob,-.77,1.60,1.28,1.18,'#e3e5df');
+ part('sphere',0,1.32+bob,.48,1.80,1.64,1.50,fur);
+ part('sphere',0,.87+bob,.37,1.28,.91,1.48,belly);
+ // Four animated legs, paws lift, sway, alternate naturally
+ for(let side of [-1,1])for(let front of [false,true]){
+   let phase=gait+(side===1?Math.PI:0)+(front?0:Math.PI);
+   let swing=Math.sin(phase)*.30*motion;
+   let lift=Math.max(0,Math.cos(phase))*.19*motion;
+   let lx=side*(front?.68:.65),lz=front?.65:-.94;
+   part('sphere',lx,.72+bob+lift*.45,lz+swing*.45,.62,1.0,.68,fur,0,0,swing*.33);
+   part('sphere',lx,.28+lift,lz+.18+swing,.68,.45,.82,'#d6ddda');
+   for(let j=-1;j<=1;j++)part('cone',lx+j*.145,.13+lift,lz+.52+swing,.10,.31,.20,'#3b4850',0,.0,Math.PI/2);
+ }
+ // Ears, large sculpted head, cheeks, muzzle and mouth
+ part('sphere',0,1.65+bob+sniff,1.05,1.40,1.27,1.32,fur);
+ part('sphere',0,1.43+bob+sniff,1.54,1.10,.78,.94,'#f0f0eb');
+ for(let side of [-1,1]){
+   part('sphere',side*.49,2.23+bob+sniff,.95,.40,.44,.34,'#d9e2df');
+   part('sphere',side*.49,2.24+bob+sniff,1.12,.20,.21,.11,'#b4bcc1');
+   part('sphere',side*.32,1.82+bob+sniff,1.64,.13,.13,.12,'#2e3940');
+   part('sphere',side*.315,1.85+bob+sniff,1.735,.045,.05,.04,'#fcffff');
+   part('sphere',side*.30,1.48+bob+sniff,1.83,.42,.38,.59,'#f3eee5');
+ }
+ part('sphere',0,1.55+bob+sniff,2.02,.40,.25,.29,'#343b43');
+ part('sphere',0,1.31+bob+sniff,2.035,.54,.105,.12,'#5c6165');
+ part('sphere',0,1.0+bob,-1.47,.29,.34,.32,'#e2e6e0');
+}
+function drawLoot(b,o,i){let float=Math.sin(clock*2.6+i)*.08;shadow(b,o.x,o.z,.57,.4);if(o.type==='wood'){drawLog(b,o.x,.47+float,o.z,.68,(i*1.9)%TAU)}else if(o.type==='stone'){b.add('boulder',o.x,.36+float,o.z,.88,.78,.85,'rock',i*.65)}else{b.add('sphere',o.x,.42+float,o.z,.68,.35,.49,'#dc6f59');b.add('sphere',o.x+.2,.44+float,o.z,.17,.25,.14,'#f7dfce')}}
+function drawDynamic(){let b=new Builder();drawPlayer(b,state);for(let q of state.bears)if(q.alive&&dist(camera,q)<27)drawBear(b,q);state.loot.forEach((o,i)=>drawLoot(b,o,i));for(let t of state.trees)if(t.fall>0)drawTree(b,t,Math.max(0,(1-t.fall/1)*1.3));if(clock%1<1){for(let i=0;i<18;i++){let angle=i*2.37,z=Math.sin(clock*.38+i*7.1)*15+state.z,x=Math.cos(i*19.4+clock*.08)*15+state.x,y=2+((i*.71-clock*.7)%7+7)%7;b.add('box',x,y,z,.045,.045,.045,'#ffffff')}}dynamicN=b.upload(moving,gl.DYNAMIC_DRAW)}
+function resize(){let w=canvas.clientWidth,h=canvas.clientHeight,d=Math.min(devicePixelRatio||1,1.75),ww=Math.floor(w*d),hh=Math.floor(h*d);if(canvas.width!==ww||canvas.height!==hh){canvas.width=ww;canvas.height=hh;gl.viewport(0,0,ww,hh)}}
+function render(){resize();let aspect=canvas.width/canvas.height;let zoom=(aspect<1.65?1.12:1)*visualZoom;eye=[camera.x+13*zoom,18.5*zoom,camera.z+19*zoom];let view=lookAt(eye,[camera.x,1,camera.z]),projection=perspective(43*Math.PI/180,aspect,.1,120);vp=matmul(projection,view);gl.uniformMatrix4fv(vpLoc,false,new Float32Array(vp));gl.uniform3fv(eyeLoc,new Float32Array(eye));gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(dirty)rebuild();renderBuffer(geo,staticN);drawDynamic();renderBuffer(moving,dynamicN);if(mode==='placing')drawPlacement()}
+function target(){let threat=state.bears.filter(b=>b.alive&&dist(state,b)<4.25).sort((a,b)=>dist(state,a)-dist(state,b))[0];if(threat)return {obj:threat,kind:'bear',d:dist(state,threat)};let candidates=[];for(let t of state.trees){if(t.down>0)continue;let d=dist(state,t);if(d<2.85)candidates.push({obj:t,kind:'tree',d})}for(let r of state.rocks){if(r.down>0)continue;let d=dist(state,r);if(d<2.7)candidates.push({obj:r,kind:'rock',d})}for(let bear of state.bears){if(!bear.alive)continue;let d=dist(state,bear);if(d<2.65)candidates.push({obj:bear,kind:'bear',d})}candidates.sort((a,b)=>a.d-b.d);return candidates[0]||null}
+let ac;function beep(freq=480,duration=.08,type='sine'){if(!soundOn)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();let osc=ac.createOscillator(),gain=ac.createGain();osc.frequency.setValueAtTime(freq,ac.currentTime);osc.type=type;gain.gain.setValueAtTime(.045,ac.currentTime);gain.gain.exponentialRampToValueAtTime(.0005,ac.currentTime+duration);osc.connect(gain);gain.connect(ac.destination);osc.start();osc.stop(ac.currentTime+duration+.01)}catch(e){}}
+function noticeToast(str){notice=str;toastTime=2.0;$('toast').textContent=str;$('toast').classList.add('show')}
+function spawn(type,x,z,n){for(let i=0;i<n;i++){let a=rand(0,TAU),r=rand(.45,1.5);state.loot.push({x:clamp(x+Math.cos(a)*r,-25,25),z:clamp(z+Math.sin(a)*r,-25,25),type})}}
+function attack(){
+if(mode!=='playing'||modal||axeCooldown>0)return;
+const t=target();const againstBear=t?.kind==='bear';
+const cost=againstBear?0:1;
+if(state.en<cost){noticeToast('⚡ Energi kurang! Istirahat sebentar.');return}
+axeCooldown=(againstBear?.19:.245)/Math.min(1.45,1+(state.axe-1)*.07);
+swing=1;state.en=Math.max(0,state.en-cost);
+if(!t){beep(235,.05);return}
+state.yaw=Math.atan2(t.obj.x-state.x,t.obj.z-state.z);
+const q=t.obj;
+q.hp-=againstBear?(2+Math.max(0,state.axe-1)):1;
+beep(againstBear?430:t.kind==='rock'?340:180,againstBear?.075:.09,'triangle');
+if(t.kind==='tree'){
+  state.cut++;
+  if(q.hp<=0){q.down=48;q.fall=1;spawn('wood',q.x,q.z,4+state.axe);state.xp+=18;dirty=true;noticeToast('🪵 Pohon tumbang! Ambil kayunya.');beep(640,.19)}
+}else if(t.kind==='rock'){
+  state.mined++;
+  if(q.hp<=0){q.down=36;spawn('stone',q.x,q.z,3);state.xp+=12;dirty=true;noticeToast('🪨 Batu pecah! Ambil batunya.')}
+}else{
+  q.alert=true;q.stagger=.65;q.hit=.24;
+  const d=dist(state,q)||1;
+  q.x=clamp(q.x+(q.x-state.x)/d*.25,-24,24);
+  q.z=clamp(q.z+(q.z-state.z)/d*.25,-24,24);
+  if(q.hp<=0){q.alive=false;spawn('meat',q.x,q.z,2);state.xp+=30;noticeToast('🐻 Beruang dikalahkan! HP aman 🛡️');beep(850,.20)}
+}
+updateLevel();updateHUD();if(q.hp<=0)save();
+}
+function gather(manual=false){let n=0;for(let i=state.loot.length-1;i>=0;i--){let o=state.loot[i];if(dist(state,o)<(manual?2.5:1.07)){if(o.type==='wood')state.wood++;if(o.type==='stone')state.stone++;if(o.type==='meat')state.meat++;state.loot.splice(i,1);n++}}if(n){beep(750,.08,'triangle');if(manual)noticeToast('🎒 +'+n+' bahan berhasil diambil');updateHUD();save()}else if(manual)noticeToast('Dekati bahan yang tergeletak dahulu.')}
+function updateLevel(){let need=state.lvl*75;while(state.xp>=need){state.xp-=need;state.lvl++;state.maxHp+=8;state.maxEn+=5;state.hp=state.maxHp;state.en=state.maxEn;state.coin+=25;noticeToast('⭐ Naik level '+state.lvl+'! +25 koin');need=state.lvl*75}}
+const defs=[{type:'fence',icon:'🪵',name:'Pagar Kayu',wood:10,stone:0},{type:'fire',icon:'🔥',name:'Api Unggun',wood:13,stone:4},{type:'hut',icon:'🏠',name:'Rumah Kayu',wood:35,stone:15},{type:'storage',icon:'🏚️',name:'Gudang Kayu',wood:25,stone:8},{type:'tower',icon:'🗼',name:'Menara Pantau',wood:26,stone:11}];const tasks=[{icon:'🌲',name:'Tebang 5 pohon',key:'cut',goal:5,reward:60},{icon:'🪵',name:'Kumpulkan 20 kayu',key:'wood',goal:20,reward:75},{icon:'🪨',name:'Tambang batu 6 kali',key:'mined',goal:6,reward:55},{icon:'🔨',name:'Bangun 2 bangunan',key:'built',goal:2,reward:100},{icon:'🥩',name:'Kumpulkan 2 daging',key:'meat',goal:2,reward:90}];
+function updateHUD(){$('hpBar').style.width=100*state.hp/state.maxHp+'%';$('enBar').style.width=100*state.en/state.maxEn+'%';$('hpText').textContent='❤️ '+Math.ceil(state.hp)+' / '+state.maxHp;$('enText').textContent='⚡ '+Math.ceil(state.en)+' / '+state.maxEn;$('woodTxt').textContent=state.wood;$('stoneTxt').textContent=state.stone;$('meatTxt').textContent=state.meat;let t=target();$('axeIcon').textContent=t?.kind==='bear'?'⚔️':'🪓';$('axeLabel').textContent=t?.kind==='bear'?'SERANG':'Tebang';$('axeBtn').setAttribute('aria-label',t?.kind==='bear'?'Serang beruang cepat':'Tebang atau tambang');let msg=t?.kind==='tree'?'🌲 Pohon · Tekan TEBANG':t?.kind==='rock'?'🪨 Batu · Gunakan kapak':t?.kind==='bear'?'🐻 Beruang · Hati-hati!':state.loot.some(o=>dist(state,o)<3)?'✋ Bahan di tanah · Tekan AMBIL':'';$('interact').style.display=msg?'flex':'none';$('interact').textContent=msg;$('objectives').textContent='⭐ Lv '+state.lvl+'  ·  🪙 '+state.coin+'  ·  ❄️ Hari '+state.day+'   ·   '+(state.buildings.length-4)+' bangunan baru'+(state.safeBears!==false?'   ·   🛡️ HP aman':'')}
+function drawMini(){let ctx=$('mini').getContext('2d'),w=144;ctx.clearRect(0,0,w,w);ctx.save();ctx.beginPath();ctx.arc(72,72,72,0,TAU);ctx.clip();ctx.fillStyle='#c9e2e9';ctx.fillRect(0,0,w,w);ctx.strokeStyle='#eaf8fc';ctx.lineWidth=2;for(let i=-5;i<=5;i++){let p=72+i*16;ctx.beginPath();ctx.moveTo(0,p);ctx.lineTo(w,p);ctx.moveTo(p,0);ctx.lineTo(p,w);ctx.stroke()}const dot=(x,z,col,r)=>{let px=72+(x-state.x)*3.1,pz=72+(z-state.z)*3.1;ctx.beginPath();ctx.arc(px,pz,r,0,TAU);ctx.fillStyle=col;ctx.fill()};state.trees.forEach(t=>{if(!t.down)dot(t.x,t.z,'#285d85',3.2)});state.rocks.forEach(r=>{if(!r.down)dot(r.x,r.z,'#96a9ad',2)});state.bears.forEach(b=>{if(b.alive)dot(b.x,b.z,'#d06b66',4)});state.buildings.forEach(o=>dot(o.x,o.z,'#b97d41',3.5));dot(state.x,state.z,'#ffcf4e',5.5);ctx.strokeStyle='#173e65';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(72,72);ctx.lineTo(72+Math.sin(state.yaw)*9,72+Math.cos(state.yaw)*9);ctx.stroke();ctx.restore()}
+function walkInput(){let x=joy.x,y=-joy.y;if(keys['arrowleft']||keys['a'])x-=1;if(keys['arrowright']||keys['d'])x+=1;if(keys['arrowup']||keys['w'])y+=1;if(keys['arrowdown']||keys['s'])y-=1;let len=Math.hypot(x,y);return len>1?[x/len,y/len]:[x,y]}
+let vx=0,vz=0;function simulation(dt){let [right,up]=walkInput(),camx=13,camz=19,rlen=Math.hypot(camx,camz);let dx=right*camz/rlen-up*camx/rlen,dz=-right*camx/rlen-up*camz/rlen;let targetVx=dx*4.55,targetVz=dz*4.55;let ease=1-Math.exp(-11*dt);vx=mix(vx,targetVx,ease);vz=mix(vz,targetVz,ease);moveSpeed=Math.hypot(vx,vz);let nx=clamp(state.x+vx*dt,-26,26),nz=clamp(state.z+vz*dt,-26,26);let block=false;for(let t of state.trees){if(t.down>0)continue;let d=Math.hypot(nx-t.x,nz-t.z);if(d<.68*t.size+.27){let ax=nx-t.x,az=nz-t.z,k=(.68*t.size+.27)/(d||.01);nx=t.x+ax*k;nz=t.z+az*k;block=true}}for(let b of state.buildings){if(b.type!=='hut'&&b.type!=='storage')continue;let d=Math.hypot(nx-b.x,nz-b.z);if(d<(b.type==='hut'?2:1.3)){let k=(b.type==='hut'?2:1.3)/(d||.01);nx=b.x+(nx-b.x)*k;nz=b.z+(nz-b.z)*k;block=true}}state.x=nx;state.z=nz;if(moveSpeed>.24){let desired=Math.atan2(vx,vz),delta=Math.atan2(Math.sin(desired-state.yaw),Math.cos(desired-state.yaw));state.yaw+=delta*Math.min(1,dt*11);state.walk+=dt*(5+moveSpeed*2)}else state.walk+=dt*.3;
+camera.x=mix(camera.x,state.x,1-Math.exp(-4.3*dt));camera.z=mix(camera.z,state.z,1-Math.exp(-4.3*dt));
+state.en=Math.min(state.maxEn,state.en+dt*2.15);if(state.hp<state.maxHp&&state.bears.every(b=>!b.alive||dist(state,b)>7))state.hp=Math.min(state.maxHp,state.hp+dt*.2);
+state.time+=dt;if(state.time>110){state.time=0;state.day++;state.coin+=5;noticeToast('🌤️ Hari '+state.day+' dimulai! +5 koin');save()}
+for(let q of state.bears){
+ if(!q.alive)continue;
+ let d=dist(state,q),chase=d<6.4||(q.alert&&d<10),desired=q.yaw;
+ q.attackCd=Math.max(0,(q.attackCd||0)-dt);
+ q.stagger=Math.max(0,(q.stagger||0)-dt);
+ q.hit=Math.max(0,(q.hit||0)-dt);
+ let walking=.38;
+ if(chase){q.alert=true;desired=Math.atan2(state.x-q.x,state.z-q.z);walking=d>1.6?1.62:0;
+  if(q.stagger>0)walking=0;
+  if(d<1.65&&q.attackCd<=0&&q.stagger<=0){
+    q.attackCd=2.4;
+    if(state.safeBears===false){state.hp=Math.max(0,state.hp-8);beep(160,.16,'sawtooth');noticeToast('🐻 Beruang menyerang! -8 HP');if(state.hp<=0){mode='dead';showModal('dead')}}
+  }
+ }else{
+  q.moveTime-=dt;if(q.moveTime<0){q.moveTime=rand(1.5,5.5);q.heading=Math.atan2(q.hx-q.x+rand(-3,3),q.hz-q.z+rand(-3,3));}
+  desired=q.heading??q.yaw;walking=.43;
+ }
+ let diff=Math.atan2(Math.sin(desired-q.yaw),Math.cos(desired-q.yaw));
+ q.yaw+=diff*(1-Math.exp(-4.2*dt));
+ q.speed=mix(q.speed||0,walking,1-Math.exp(-3.8*dt));
+ q.x=clamp(q.x+Math.sin(q.yaw)*q.speed*dt,-24,24);q.z=clamp(q.z+Math.cos(q.yaw)*q.speed*dt,-24,24);
+ q.walk+=dt*q.speed*5.6;
+ if(d>15)q.alert=false;
+}
+for(let t of state.trees)if(t.down>0){t.down-=dt;if(t.fall>0)t.fall=Math.max(0,t.fall-dt*1.1);if(t.down<=0){t.down=0;t.hp=3;t.fall=0;dirty=true}}for(let r of state.rocks)if(r.down>0){r.down-=dt;if(r.down<=0){r.down=0;r.hp=3;dirty=true}}swing=Math.max(0,swing-dt*5.6);axeCooldown=Math.max(0,axeCooldown-dt);if(held&&axeCooldown<=0)attack();gather(false)}
+
+// PENEMPATAN BEBAS: raycast layar ke permukaan tanah dan footprint validasi.
+function placeRadius(type){return ({hut:2.65,storage:1.95,tower:1.72,fence:1.12,fire:1.06})[type]||1.5}
+function checkPlacement(o){
+ if(!o||Math.abs(o.x)>25||Math.abs(o.z)>25)return false;
+ let rad=placeRadius(o.type);
+ if(Math.hypot(o.x-state.x,o.z-state.z)<rad+.7)return false;
+ for(const t of state.trees)if(t.down<=0&&Math.hypot(o.x-t.x,o.z-t.z)<rad+.60*t.size)return false;
+ for(const r of state.rocks)if(r.down<=0&&Math.hypot(o.x-r.x,o.z-r.z)<rad+.48*r.size)return false;
+ for(const b of state.buildings)if(state.buildings.indexOf(b)!==o.editIndex&&Math.hypot(o.x-b.x,o.z-b.z)<rad+placeRadius(b.type)-.20)return false;
+ return true;
+}
+function placementUI(){
+ if(!placement)return;
+ let d=defs.find(v=>v.type===placement.type),editing=Number.isInteger(placement.editIndex),available=editing||(state.wood>=d.wood&&state.stone>=d.stone);
+ placementValid=checkPlacement(placement);
+ $('placeName').textContent=d.icon+' '+d.name+(editing?' · Pindahkan (gratis)':' · 🪵 '+d.wood+' 🪨 '+d.stone);
+ $('placeStatus').textContent=!placementValid?'🔴 Lokasi terhalang':!available?'🟡 Bahan belum cukup':'🟢 Area tersedia';
+ $('placeStatus').classList.toggle('invalid',!placementValid||!available);
+ $('placeConfirm').disabled=!placementValid||!available;$('placeConfirm').textContent=editing?'✓ Simpan posisi':'✓ Tempatkan';
+}
+function startPlacement(type,editIndex=null){
+ let d=defs.find(o=>o.type===type);if(!d)return;
+ modal='';mode='placing';$('overlay').classList.remove('show');$('ui').classList.add('placing');
+ let yaw=state.yaw||0;
+ // Cari tempat kosong di wilayah terdekat; pengguna tetap menentukan posisi akhirnya
+ let candidates=[];for(let radius of [4,6,8,10])for(let i=0;i<16;i++){let a=i*TAU/16;candidates.push({type,x:clamp(state.x+Math.sin(a)*radius,-24,24),z:clamp(state.z+Math.cos(a)*radius,-24,24),yaw})}
+ placement=editIndex===null?(candidates.find(checkPlacement)||{type,x:clamp(state.x+5,-24,24),z:clamp(state.z+4,-24,24),yaw}):{...state.buildings[editIndex],yaw:state.buildings[editIndex].yaw||0,editIndex};dirty=true;
+ placementUI();noticeToast('👆 Sentuh tanah lalu geser pratinjau bangunan');
+}
+function cancelPlacement(){placement=null;placementValid=false;mode='playing';dirty=true;$('ui').classList.remove('placing');$('placeStatus').textContent='';updateHUD()}
+function confirmPlacement(){
+ if(!placement||!checkPlacement(placement)){noticeToast('🔴 Lokasi tidak tersedia, pilih area kosong.');placementUI();return}
+ let d=defs.find(v=>v.type===placement.type);
+ if(Number.isInteger(placement.editIndex)){let idx=placement.editIndex;state.buildings[idx]={type:placement.type,x:placement.x,z:placement.z,yaw:placement.yaw};dirty=true;cancelPlacement();save();beep(735,.14);noticeToast('✅ Posisi '+d.name+' berhasil diperbarui!');return;}
+ if(state.wood<d.wood||state.stone<d.stone){noticeToast('🪵 Bahan bangunan belum cukup.');return}
+ state.wood-=d.wood;state.stone-=d.stone;
+ state.buildings.push({...placement});state.built++;state.xp+=15;dirty=true;
+ if(d.type==='fire')state.hp=Math.min(state.maxHp,state.hp+30);
+ updateLevel();cancelPlacement();save();beep(750,.18);noticeToast('🏠 '+d.name+' berhasil ditempatkan!');updateHUD();
+}
+function groundPointAt(cx,cy){
+ let rect=canvas.getBoundingClientRect(),aspect=rect.width/rect.height;
+ let u=((cx-rect.left)/rect.width*2-1)*aspect*Math.tan(43*Math.PI/360);
+ let v=(1-(cy-rect.top)/rect.height*2)*Math.tan(43*Math.PI/360);
+ // Uses the same perspective and eye as render().
+ let zoom=(aspect<1.65?1.12:1)*visualZoom;
+ let e=[camera.x+13*zoom,18.5*zoom,camera.z+19*zoom],center=[camera.x,1,camera.z];
+ let forward=normalize(sub(center,e)),right=normalize(cross(forward,[0,1,0]));
+ let up=cross(right,normalize(sub(e,center)));
+ let dir=normalize([forward[0]+right[0]*u+up[0]*v,forward[1]+right[1]*u+up[1]*v,forward[2]+right[2]*u+up[2]*v]);
+ if(dir[1]>=-.003)return null;
+ let t=(0.02-e[1])/dir[1];if(t<0)return null;
+ return {x:clamp(e[0]+t*dir[0],-26,26),z:clamp(e[2]+t*dir[2],-26,26)};
+}
+$('placeRotate').onclick=()=>{if(!placement)return;placement.yaw=(placement.yaw+Math.PI/2)%TAU;placementUI();beep(520,.06)};
+$('placeCancel').onclick=cancelPlacement;
+$('placeConfirm').onclick=confirmPlacement;
+let selectingPointer=null;
+canvas.addEventListener('pointerdown',e=>{if(mode!=='placing'||!placement||e.pointerType==='touch'&&pinchPoints.size>=2)return;selectingPointer=e.pointerId;let p=groundPointAt(e.clientX,e.clientY);if(p){placement.x=p.x;placement.z=p.z;placementUI()}try{canvas.setPointerCapture(e.pointerId)}catch(_){}});
+canvas.addEventListener('pointermove',e=>{if(mode!=='placing'||e.pointerId!==selectingPointer||!placement)return;let p=groundPointAt(e.clientX,e.clientY);if(p){placement.x=p.x;placement.z=p.z;placementUI()}});
+for(const k of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(k,e=>{if(selectingPointer===e.pointerId)selectingPointer=null});
+function placementFrame(dt){
+ // During building, joystick/WASD pans the camera for placement in more distant parts of the map.
+ const [r,u]=walkInput(),len=Math.hypot(13,19),dx=r*19/len-u*13/len,dz=-r*13/len-u*19/len;
+ camera.x=clamp(camera.x+dx*dt*8,-24,24);camera.z=clamp(camera.z+dz*dt*8,-24,24);
+}
+function drawPlacement(){
+ if(!placement)return;
+ let b=new Builder(),m=new Builder(),o=placement,rad=placeRadius(o.type);
+ const c=placementValid?'#74efa4':'#fd847d';
+ const wide=o.type==='hut'?4.75:o.type==='storage'?3.4:o.type==='tower'?3.1:o.type==='fence'?2.2:2.1;
+ const depth=o.type==='hut'?4.1:o.type==='storage'?3.1:o.type==='tower'?3.1:o.type==='fence'?.9:2.1;
+ let w=wide/2,d=depth/2,rotation=o.yaw||0;
+ function part(dx,dz,sx,sz){let [x,z]=rotate2(dx,dz,rotation);m.add('box',o.x+x,.1,o.z+z,sx,.13,sz,c,rotation)}
+ part(0,-d,wide,.12);part(0,d,wide,.12);part(-w,0,.12,depth);part(w,0,.12,depth);
+ m.add('cyl',o.x,.027,o.z,rad*2,.055,rad*2,placementValid?'#55bfa7':'#ef7974');
+ drawBuilding(b,o);
+ let n1=m.upload(markerGeo,gl.DYNAMIC_DRAW);
+ gl.uniform1f(opacityLoc,.68);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);renderBuffer(markerGeo,n1);
+ let n2=b.upload(ghostGeo,gl.DYNAMIC_DRAW);
+ gl.uniform1f(opacityLoc,.60);renderBuffer(ghostGeo,n2);
+ gl.depthMask(true);gl.disable(gl.BLEND);gl.uniform1f(opacityLoc,1);
+}
+
+function showPanel(title,body){$('overlay').innerHTML=`<div class="panel"><div class="panelHead">${title}<button class="close" id="exitModal">×</button></div><div class="panelBody">${body}</div></div>`;$('overlay').classList.add('show');$('exitModal').onclick=()=>{if(mode==='dead'){save();mode='home';$('ui').classList.remove('show');$('landing').classList.remove('hide')}else if(mode==='pause')mode='playing';modal='';$('overlay').classList.remove('show');updateHUD()}}
+function showModal(name){modal=name;let html='';if(name==='inventory'){html=`<p class="note">Seluruh sumber daya tersimpan dalam tas. Hasil tebangan muncul sebagai benda 3D di tanah — dekati untuk mengambil.</p><div class="cards">${[['🪵','Kayu',state.wood],['🪨','Batu',state.stone],['🥩','Daging',state.meat],['🪙','Koin',state.coin],['🪓','Kapak Level',state.axe],['⭐','Level',state.lvl]].map(([i,n,v])=>`<div class="card"><div class="ico">${i}</div><strong>${n}</strong><small>${v}</small></div>`).join('')}</div>`}
+else if(name==='build'){html=`<p class="note">Pilih bangunan, lalu tentukan sendiri lokasinya langsung di tanah 3D. Geser pratinjau, putar, lalu konfirmasi. Stok: 🪵 ${state.wood} · 🪨 ${state.stone}</p><div class="cards">${defs.map(d=>`<div class="card"><div class="ico">${d.icon}</div><strong>${d.name}</strong><small>🪵 ${d.wood}  🪨 ${d.stone}</small><br><button data-build="${d.type}">Pilih lokasi</button></div>`).join('')}</div><h3 style="font-size:14px;margin:18px 0 8px">🔁 Pindahkan bangunan yang sudah ada</h3><div class="cards">${state.buildings.map((b,i)=>`<div class="card"><div class="ico">${(defs.find(d=>d.type===b.type)||{}).icon||'🏡'}</div><strong>${(defs.find(d=>d.type===b.type)||{}).name||'Bangunan'} ${i+1}</strong><button data-relocate="${i}">Atur posisi</button></div>`).join('')}</div>`}
+else if(name==='missions'){html=`<p class="note">Selesaikan misi untuk mendapatkan koin dan meningkatkan perlengkapan.</p>${tasks.map((q,i)=>{let v=state[q.key],ok=v>=q.goal;return `<div class="mission"><div style="font-size:27px">${q.icon}</div><div style="flex:1"><strong>${q.name}</strong><div class="fill"><i style="width:${Math.min(100,v/q.goal*100)}%"></i></div><small>${Math.min(v,q.goal)}/${q.goal} · Hadiah 🪙${q.reward}</small></div><button data-claim="${i}" ${!ok||state.claimed.includes(i)?'disabled':''}>${state.claimed.includes(i)?'Selesai':'Klaim'}</button></div>`}).join('')}`}
+else if(name==='shop'){let levelCost=state.axe*85;html=`<p class="note">Tukarkan koin dari misi untuk memperkuat karakter. Saldo: 🪙 ${state.coin}</p><div class="cards">${[['axe','🪓','Upgrade Kapak',levelCost,'Serangan lebih kuat'],['heal','❤️','Pulihkan HP',35,'+50 HP'],['energy','⚡','Isi Energi',25,'Energi penuh']].map(([id,ico,label,price,detail])=>`<div class="card"><div class="ico">${ico}</div><strong>${label}</strong><small>${detail}<br>🪙 ${price}</small><br><button data-buy="${id}" ${state.coin<price?'disabled':''}>Beli</button></div>`).join('')}</div>`}
+else if(name==='help'){html=`<div class="help"><p><strong>🎮 Kontrol HP:</strong> Gunakan joystick kiri untuk berjalan. Karakter berbelok perlahan mengikuti arah gerak. Tekan dan tahan tombol <b>TEBANG / SERANG</b>. Ketika beruang mendekat, tombol berubah menjadi SERANG dan pukulan berlangsung cepat.</p><p><strong>💻 Kontrol laptop:</strong> W/A/S/D atau tombol panah untuk bergerak. Tahan <b>Spasi</b> untuk menyerang cepat, <b>+</b>/<b>-</b> untuk zoom, <b>E</b> mengambil bahan, <b>B</b> membangun, <b>I</b> tas, dan <b>Esc</b> jeda.</p><p><strong>🔎 Zoom:</strong> Tekan tombol + dan − di kanan layar, cubit layar dengan dua jari di area permainan, atau gunakan roda mouse.</p><p><strong>🛡️ Mode Aman:</strong> Aktif secara default sehingga beruang tidak mengurangi HP pemain. Bisa dimatikan melalui Pengaturan untuk mode tantangan.</p><p><strong>🌲 Sumber daya:</strong> Tebang pohon beberapa kali sampai tumbang, lalu kumpulkan potongan kayu yang jatuh. Batu dapat ditambang. Hewan liar akan mengejar jika kamu terlalu dekat.</p><p><strong>🔨 Bangun:</strong> Buka Bangun → pilih jenis bangunan → <b>sentuh atau seret tanah</b> untuk menentukan sendiri lokasinya → Putar jika perlu → <b>Tempatkan</b>. Joystick menggeser kamera ketika dalam mode Bangun. Posisi harus kosong, dan bahan hanya dipotong saat kamu mengonfirmasi. Kamu juga dapat memilih <b>Atur posisi</b> untuk memindahkan bangunan yang sudah jadi secara gratis.</p><p><strong>🖥️ Layar:</strong> Putar HP ke posisi landscape. Gunakan layar penuh agar game lebih nyaman dimainkan.</p></div>`}
+else if(name==='settings'){html=`<p class="note">Progres tersimpan otomatis di perangkat/browser ini. Game menggunakan 3D WebGL tanpa dependensi internet.</p><div class="modalBtns"><button id="toggleSafe">${state.safeBears!==false?'🛡️ Mode Aman: AKTIF':'⚔️ Mode Tantangan: AKTIF'}</button><button id="toggleSound">${soundOn?'🔊 Matikan suara':'🔇 Aktifkan suara'}</button><button id="saveBtn">💾 Simpan progres</button><button id="fullBtn">⛶ Layar penuh</button></div>`}
+else if(name==='pause'){html=`<div style="text-align:center"><p class="note">Game dijeda. Progres terakhir sudah disimpan.</p><div class="modalBtns"><button id="resumeBtn">▶ Lanjut</button><button id="settingsBtn">⚙️ Pengaturan</button><button id="homeBtn">🏠 Menu utama</button></div></div>`}
+else if(name==='dead'){html=`<div style="text-align:center"><h2>🐻 Kamu kehabisan HP!</h2><p class="note">Kamu bisa kembali ke markas dan melanjutkan petualangan dengan kehilangan 15 koin (jika ada).</p><div class="modalBtns"><button id="reviveBtn">❤️ Bangkit di markas</button><button id="homeBtn">🏠 Menu utama</button></div></div>`}
+showPanel(({inventory:'🎒 Inventaris',build:'🔨 Bangun Markas',missions:'📜 Misi Petualangan',shop:'🏪 Toko Perlengkapan',help:'📖 Cara Bermain',settings:'⚙️ Pengaturan',pause:'⏸️ Jeda',dead:'💔 Game Over'})[name],html);
+$('overlay').querySelectorAll('[data-build]').forEach(btn=>btn.onclick=()=>startPlacement(btn.dataset.build));
+$('overlay').querySelectorAll('[data-relocate]').forEach(btn=>btn.onclick=()=>{let i=+btn.dataset.relocate;startPlacement(state.buildings[i].type,i)});
+$('overlay').querySelectorAll('[data-claim]').forEach(btn=>btn.onclick=()=>{let i=+btn.dataset.claim;if(state.claimed.includes(i)||state[tasks[i].key]<tasks[i].goal)return;state.claimed.push(i);state.coin+=tasks[i].reward;state.xp+=25;updateLevel();save();beep(840,.23);noticeToast('⭐ Misi selesai! +'+tasks[i].reward+' koin');showModal('missions');updateHUD()});
+$('overlay').querySelectorAll('[data-buy]').forEach(btn=>btn.onclick=()=>{let id=btn.dataset.buy,cost=id==='axe'?state.axe*85:id==='heal'?35:25;if(state.coin<cost)return;state.coin-=cost;if(id==='axe')state.axe++;else if(id==='heal')state.hp=Math.min(state.maxHp,state.hp+50);else state.en=state.maxEn;save();noticeToast('✅ Pembelian berhasil!');beep(940,.12);showModal('shop');updateHUD()});
+if($('resumeBtn'))$('resumeBtn').onclick=()=>{modal='';mode='playing';$('overlay').classList.remove('show')};if($('settingsBtn'))$('settingsBtn').onclick=()=>showModal('settings');if($('homeBtn'))$('homeBtn').onclick=()=>{placement=null;$('ui').classList.remove('placing');save();mode='home';modal='';$('overlay').classList.remove('show');$('ui').classList.remove('show');$('landing').classList.remove('hide')};if($('reviveBtn'))$('reviveBtn').onclick=()=>{state.x=0;state.z=2;state.hp=Math.ceil(state.maxHp*.75);state.en=state.maxEn;state.coin=Math.max(0,state.coin-15);for(let q of state.bears){if(q.alive&&dist(state,q)<7){q.x=q.hx;q.z=q.hz;q.alert=false}}mode='playing';modal='';$('overlay').classList.remove('show');updateHUD();save()};if($('toggleSafe'))$('toggleSafe').onclick=()=>{state.safeBears=state.safeBears===false;save();showModal('settings');updateHUD()};if($('toggleSound'))$('toggleSound').onclick=()=>{soundOn=!soundOn;showModal('settings')};if($('saveBtn'))$('saveBtn').onclick=()=>{save();noticeToast('💾 Progres tersimpan!')};if($('fullBtn'))$('fullBtn').onclick=fullscreen;
+}
+function fullscreen(){try{let e=document.documentElement;if(e.requestFullscreen)e.requestFullscreen().catch(()=>{});if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(err){}}
+function begin(reset=false){placement=null;$('ui').classList.remove('placing');if(reset){state=startState();dirty=true;save()}else{state=load()||state;dirty=true}mode='playing';modal='';vx=vz=0;camera.x=state.x;camera.z=state.z;$('landing').classList.add('hide');$('overlay').classList.remove('show');$('ui').classList.add('show');updateHUD();noticeToast('🎮 Dekati pohon, tekan dan tahan TEBANG!');fullscreen()}
+$('playBtn').onclick=()=>begin(false);$('resetBtn').onclick=()=>{if(confirm('Mulai permainan baru? Progres lama akan diganti.'))begin(true)};$('helpStart').onclick=()=>showModal('help');$('inventoryBtn').onclick=()=>showModal('inventory');$('buildBtn').onclick=()=>showModal('build');$('missionBtn').onclick=()=>showModal('missions');$('shopBtn').onclick=()=>showModal('shop');$('pauseBtn').onclick=()=>{save();mode='pause';showModal('pause')};$('pickupBtn').onclick=()=>gather(true);$('rotateFull').onclick=fullscreen;
+
+function setZoom(next){
+ cameraZoom=clamp(next,.62,1.55);
+ $('zoomTxt').textContent=Math.round(100/cameraZoom)+'%';
+ try{localStorage.setItem('survival_camp_camera_zoom',String(cameraZoom))}catch(e){}
+}
+setZoom(cameraZoom);
+$('zoomIn').onclick=()=>setZoom(cameraZoom*.83);
+$('zoomOut').onclick=()=>setZoom(cameraZoom*1.20);
+canvas.addEventListener('wheel',e=>{if(mode!=='playing'||modal)return;e.preventDefault();setZoom(cameraZoom*(e.deltaY<0?.9:1.1))},{passive:false});
+const pinchPoints=new Map();let pinchDist=0;
+function pinchDistance(){let p=[...pinchPoints.values()];return p.length===2?Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]):0}
+canvas.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;pinchPoints.set(e.pointerId,[e.clientX,e.clientY]);try{canvas.setPointerCapture(e.pointerId)}catch(_){}pinchDist=pinchDistance()});
+canvas.addEventListener('pointermove',e=>{if(!pinchPoints.has(e.pointerId))return;pinchPoints.set(e.pointerId,[e.clientX,e.clientY]);let next=pinchDistance();if(next>15&&pinchDist>15)setZoom(cameraZoom*pinchDist/next);pinchDist=next});
+for(let type of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(type,e=>{pinchPoints.delete(e.pointerId);pinchDist=pinchDistance()});
+
+$('axeBtn').addEventListener('pointerdown',e=>{e.preventDefault();held=true;$('axeBtn').setPointerCapture(e.pointerId);attack()});for(let t of ['pointerup','pointercancel','lostpointercapture'])$('axeBtn').addEventListener(t,()=>held=false);
+const j=$('joy'),kn=$('knob');function jUpdate(e){let r=j.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,d=Math.hypot(x,y),rad=r.width*.29,v=Math.min(d,rad);joy.x=d?x/d*v/rad:0;joy.y=d?y/d*v/rad:0;kn.style.transform=`translate(${joy.x*rad}px,${joy.y*rad}px)`}j.addEventListener('pointerdown',e=>{e.preventDefault();joy.id=e.pointerId;j.setPointerCapture(e.pointerId);jUpdate(e)});j.addEventListener('pointermove',e=>{if(e.pointerId===joy.id)jUpdate(e)});function endJoy(e){if(e.pointerId===joy.id){joy.id=null;joy.x=joy.y=0;kn.style.transform='translate(0,0)'}}for(let t of ['pointerup','pointercancel','lostpointercapture'])j.addEventListener(t,endJoy);
+addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown',' '].includes(k))e.preventDefault();keys[k]=true;if(e.repeat)return;if(modal){if(k==='escape'&&modal!=='dead'){modal='';$('overlay').classList.remove('show');if(mode==='pause')mode='playing'}return}if(mode==='placing'){if(k==='escape')cancelPlacement();else if(k==='enter'||k==='e')confirmPlacement();else if(k==='r')$('placeRotate').click();return}if(mode==='playing'){if(k===' '||k==='f'){held=true;attack()}else if(k==='+'||k==='='){setZoom(cameraZoom*.88)}else if(k==='-'||k==='_'){setZoom(cameraZoom*1.12)}else if(k==='e')gather(true);else if(k==='b')showModal('build');else if(k==='i')showModal('inventory');else if(k==='m')showModal('missions');else if(k==='escape'){$('pauseBtn').click()}}});addEventListener('keyup',e=>{let k=e.key.toLowerCase();keys[k]=false;if(k===' '||k==='f')held=false});addEventListener('blur',()=>{keys={};held=false;joy.x=joy.y=0;kn.style.transform='translate(0,0)';if(mode==='playing'){mode='pause';save();showModal('pause')}});document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='playing'){mode='pause';save();showModal('pause')}});
+let hudTick=0,saveTick=0;function frame(now){let dt=last?clamp((now-last)/1000,0,.044):.016;last=now;clock+=dt;if(mode==='placing'&&placement){placementFrame(dt)}if(mode==='playing'&&!modal){simulation(dt);hudTick+=dt;saveTick+=dt;if(hudTick>.14){hudTick=0;updateHUD();drawMini()}if(saveTick>12){saveTick=0;save()}}else if(mode==='home'){camera.x=mix(camera.x,state.x,dt*.5);camera.z=mix(camera.z,state.z,dt*.5)}visualZoom=mix(visualZoom,cameraZoom,1-Math.exp(-10*dt));if(toastTime>0){toastTime-=dt;if(toastTime<=0)$('toast').classList.remove('show')}render();requestAnimationFrame(frame)}
+try{requestAnimationFrame(frame)}catch(e){$('glError').style.display='flex'}
+})();
+</script></body></html>

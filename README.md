@@ -1,4 +1,4 @@
-# Nurul Ilmi ABAB — Education Game Center
+# Ibu Dhona Arba — Education Game Center
 
 Paket portal berisi 21 game, simulasi dan kuis HTML yang diambil dari Library. File asli disalin tanpa perubahan. JumpQuest menggunakan versi Landing Final karena beberapa versi lebih baru tidak dapat diekspor.
 

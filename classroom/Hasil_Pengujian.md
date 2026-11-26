@@ -16,7 +16,7 @@ Audit dimulai dari `main` pada revisi `5e370174b89467ba813eabdb29d226d7c4b48589`
 
 ## Regresi akhir
 
-**Lulus 128 · Gagal 0** pada Chromium headless melalui Playwright. Kedua aplikasi dimuat dari HTML lokal dengan jaringan dinonaktifkan. Tangkapan layar diperiksa pada desktop 1366×768 dan 1920×1080, HP 390×844 dan 844×390, serta tablet 820×1180. Viewport dan input sentuh diemulasikan.
+**Lulus 135 · Gagal 0** pada Chromium headless melalui Playwright. Kedua aplikasi dimuat dari HTML lokal dengan jaringan dinonaktifkan. Tangkapan layar diperiksa pada desktop 1366×768 dan 1920×1080, HP 390×844 dan 844×390, serta tablet 820×1180. Viewport dan input sentuh diemulasikan.
 
 | Area | Cakupan |
 | --- | --- |
@@ -34,6 +34,22 @@ Undo dan Redo sebelumnya disembunyikan oleh aturan tampilan saat layar selebar 5
 Enter membuat paragraf pada halaman tempat kursor berada. Pengujian mencakup sampul dengan pemisah halaman, sebuah paragraf dengan kursor di tengah, Shift+Enter, Ctrl+Enter, serta pemindahan otomatis ketika kertas penuh. Uji sentuh juga memeriksa Undo dan Redo dan navigasi grup Home.
 
 Home menyediakan pintasan ke Clipboard, Font, Paragraph, Styles, dan Editing. Di dalamnya tersedia atur besar huruf, Change Case, Multilevel List, tanda paragraf, jarak baris, batas dan warna paragraf, serta gaya Title dan Subtitle.
+
+## Pembandingan tab Home dengan Word untuk Windows
+
+| Grup | Alur Word untuk Windows yang dijadikan acuan | Penambahan di Classroom |
+| --- | --- | --- |
+| Clipboard | Opsi mempertahankan format, menggabungkan format, dan teks saja. Clipboard Office menyimpan beberapa salinan lintas aplikasi. | Paste Special dengan tiga mode teks, dan riwayat sampai 24 salinan selama sesi Classroom. |
+| Font | Dialog Font, spasi karakter lanjutan, Change Case, dan efek teks. | Dialog dengan gaya, warna, garis bawah, small caps, spasi dan posisi karakter, serta pilihan bayangan, cahaya, dan outline. Change Case mencakup Sentence case. |
+| Paragraph | Galeri bullet dan penomoran, indentasi, spasi, serta Sort. | Bullet standar atau simbol khusus, tipe dan angka awal penomoran, hanging indent, tab leader, serta Sort teks/angka pada paragraf berurutan, daftar satu tingkat, dan tabel. |
+| Styles | Galeri, buat gaya dari format contoh, dan ubah gaya dokumen. | Gaya buatan bisa disimpan per dokumen, diterapkan ulang, dan diperbarui pada paragraf yang memakainya. |
+| Editing | Find, Replace, Go To, serta Select dan Selection Pane. | Find Next, Replace dan Replace All dengan opsi kapitalisasi dan kata utuh, Go To untuk halaman dan objek tertentu, serta panel untuk memilih gambar, bentuk, dan tabel. |
+
+Tes tambahan mencakup penempelan berformat dan teks saja, Font Settings dan undo efek teks, pengurutan, penomoran, bullet, indentasi gantung, ubah gaya, pencarian yang melintasi format inline, serta navigasi ke halaman dan objek.
+
+Clipboard Classroom bekerja di dalam simulator. Pemilihan objek di Selection Pane dilakukan satu per satu. Varian perintah Word yang bergantung pada akun, perangkat, dan layanan Microsoft 365 seperti Dictate serta pemeriksaan tata bahasa Microsoft Editor memerlukan layanan Microsoft. Dukungan dasar spellcheck pada simulator tetap mengikuti browser.
+
+Rujukan Microsoft untuk Home tersedia pada [Pintasan Word](https://support.microsoft.com/en-us/accessibility/word/keyboard-shortcuts-in-word), [Opsi Paste](https://support.microsoft.com/id-id/word/control-the-formatting-when-you-paste-text), [Office Clipboard](https://support.microsoft.com/id-id/word/copy-and-paste-using-the-office-clipboard), [Spasi karakter](https://support.microsoft.com/id-id/word/change-the-spaces-between-text-in-word), [Format daftar](https://support.microsoft.com/id-id/word/define-new-bullets-numbers-and-multilevel-lists), [Sort](https://support.microsoft.com/en-us/word/sort-a-list-alphabetically-in-word), [Styles](https://support.microsoft.com/en-us/word/customize-or-create-new-styles), dan [Select Objects](https://support.microsoft.com/en-us/word/select-a-shape-or-other-object-in-word).
 
 ## Batasan yang masih berlaku
 

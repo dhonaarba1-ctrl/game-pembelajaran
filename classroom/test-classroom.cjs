@@ -305,6 +305,157 @@ async function wordMobileEditingTests(){
   }finally{await page.context().close()}
 }
 
+async function wordHomeControlsTests(){
+ const page=await load('Word',{width:390,height:844},true);
+ const ribbon=page.locator('#ribbon');
+ const modal=page.locator('#modalPanel');
+ async function open(group,label){
+  if(await page.locator('#wordHomeNav').isHidden()){
+   await page.locator('#tabs').getByRole('button',{name:'Home',exact:true}).tap();
+  }
+  await page.locator('#wordHomeNav').getByRole('button',{name:group,exact:true}).tap();
+  await ribbon.getByRole('button',{name:label,exact:true}).tap();
+ }
+ async function content(html){await page.evaluate(html=>{editor.innerHTML=html;clearWordHistory()},html)}
+ try{
+  await test('Word Home Paste Special preserves source formatting and can paste plain text',async()=>{
+   await content('<p><strong style="color:#ba213d">Penting</strong></p><p><br></p><p><br></p>');
+   await wordPosition(page,[0,0],[0,7]);
+   await open('Clipboard','Copy');
+   await wordPosition(page,[1,0]);
+   await open('Clipboard','Paste Special');
+   await modal.getByRole('button',{name:'Keep Source Formatting',exact:true}).tap();
+   assert.match(await page.locator('#pageBody1 p').nth(1).innerText(),/Penting/);
+   assert.match(await page.locator('#pageBody1 p').nth(1).innerHTML(),/rgb\(186, 33, 61\)|#ba213d/);
+   await wordPosition(page,[2,0]);
+   await open('Clipboard','Paste Special');
+   await modal.getByRole('button',{name:'Keep Text Only',exact:true}).tap();
+   assert.equal(await page.locator('#pageBody1 p').nth(2).innerText(),'Penting');
+   assert.equal(await page.locator('#pageBody1 p').nth(2).locator('strong,[style*="color"]').count(),0);
+   await open('Clipboard','Clipboard Pane');
+   assert.equal(await modal.getByRole('button',{name:'Penting',exact:true}).count(),1);
+   await modal.getByRole('button',{name:'Clear All',exact:true}).tap();
+   assert.match(await modal.innerText(),/Clipboard kosong/);
+   await modal.getByRole('button',{name:'Tutup',exact:true}).tap();
+  });
+
+  await test('Word Home Font Settings and text effects change selected text and are undoable',async()=>{
+   await content('<p>Huruf biasa</p>');
+   await wordPosition(page,[0,0],[0,5]);
+   await open('Font','Font Settings');
+   await page.locator('#wordFDName').selectOption('Georgia');
+   await page.locator('#wordFDSize').fill('18');
+   await page.locator('#wordFDKind').selectOption('bi');
+   await page.locator('#wordFDUnder').selectOption('double');
+   await modal.getByText('Advanced — Character Spacing').tap();
+   await page.locator('#wordFDSpace').fill('2');
+   await modal.getByRole('button',{name:'Apply',exact:true}).tap();
+   const selection=page.locator('#pageBody1 p [data-word-font=Georgia]');
+   const style=await selection.getAttribute('style');
+   assert.match(style,/font-size: 18pt/);
+   assert.match(style,/font-style: italic/);
+   assert.match(style,/letter-spacing: 2pt/);
+   assert.match(style,/double/);
+   assert.equal(await selection.innerText(),'Huruf');
+   await wordPosition(page,[0,0],[0,5]);
+   await open('Font','Text Effects and Typography');
+   await page.locator('#choiceValue').selectOption('shadow');
+   await modal.getByRole('button',{name:'Terapkan',exact:true}).tap();
+   assert.match(await selection.innerHTML(),/text-shadow/);
+   await page.getByRole('button',{name:'Undo',exact:true}).tap();
+   assert.doesNotMatch(await selection.innerHTML(),/text-shadow/);
+  });
+
+  await test('Word Home Sort, Numbering Library, and custom bullets update actual list content',async()=>{
+   await content('<p>Ceri</p><p>Apel</p><p>Belimbing</p>');
+   await wordPosition(page,[0,0],[2,9]);
+   await open('Paragraph','Sort');
+   await modal.getByRole('button',{name:'Sort',exact:true}).tap();
+   assert.deepEqual(await page.locator('#pageBody1 p').allTextContents(),['Apel','Belimbing','Ceri']);
+   await wordPosition(page,[0,0],[2,4]);
+   await open('Paragraph','Numbering Library');
+   await page.locator('#wordListStyle').selectOption('upper-roman');
+   await page.locator('#wordListStart').fill('4');
+   await modal.getByRole('button',{name:'Apply',exact:true}).tap();
+   assert.equal(await page.locator('#pageBody1 ol').getAttribute('start'),'4');
+   assert.match(await page.locator('#pageBody1 ol').getAttribute('style'),/upper-roman/);
+   assert.deepEqual(await page.locator('#pageBody1 ol li').allTextContents(),['Apel','Belimbing','Ceri']);
+   await content('<p>Item</p>');
+   await wordPosition(page,[0,0],[0,4]);
+   await open('Paragraph','Bullet Library');
+   await page.locator('#wordListStyle').selectOption('custom');
+   await page.locator('#wordListSymbol').fill('◆');
+   await modal.getByRole('button',{name:'Apply',exact:true}).tap();
+   assert.equal(await page.locator('#pageBody1 ul').getAttribute('data-word-custom-bullet'),'');
+   assert.match(await page.locator('#pageBody1 ul').getAttribute('style'),/◆/);
+  });
+
+  await test('Word Home Paragraph Settings apply hanging indent and spacing to multiple paragraphs',async()=>{
+   await content('<p>Baris satu</p><p>Baris dua</p>');
+   await wordPosition(page,[0,0],[1,9]);
+   await open('Paragraph','Paragraph Settings');
+   await page.locator('#paAlign').selectOption('justify');
+   await page.locator('#paIndent').selectOption('hanging');
+   await page.locator('#paFirst').fill('0.5');
+   await page.locator('#paAfter').fill('6');
+   await modal.getByRole('button',{name:'Apply',exact:true}).tap();
+   for(const paragraph of await page.locator('#pageBody1 p').all()){
+    const style=await paragraph.getAttribute('style');
+    assert.match(style,/text-indent: -0.5cm/);
+    assert.equal(await paragraph.evaluate(node=>node.style.marginBottom),'6pt');
+    assert.match(style,/text-align: justify/);
+   }
+  });
+
+  await test('Word Home Styles Gallery creates and reapplies a named document style',async()=>{
+   await content('<p style="color:#21699a;font-size:17pt">Contoh</p><p>Baris berikutnya</p>');
+   await wordPosition(page,[0,1]);
+   await open('Styles','Styles Gallery');
+   await modal.getByRole('button',{name:'Create a Style',exact:true}).tap();
+   await page.locator('#dialogInput').fill('Judul Kelas');
+   await modal.getByRole('button',{name:'OK',exact:true}).tap();
+   await wordPosition(page,[1,2]);
+   await open('Styles','Styles Gallery');
+   await modal.getByRole('button',{name:/Judul Kelas/}).tap();
+   assert.equal(await page.locator('#pageBody1 p').nth(1).getAttribute('data-word-custom-style'),'Judul Kelas');
+   assert.match(await page.locator('#pageBody1 p').nth(1).getAttribute('style'),/rgb\(33, 105, 154\)/);
+   await open('Styles','Styles Gallery');
+   await modal.getByRole('button',{name:'Modify Style',exact:true}).tap();
+   await page.locator('#wordStyleSize').fill('21');
+   await modal.getByRole('button',{name:'Apply to Document',exact:true}).tap();
+   assert.deepEqual(await page.locator('#pageBody1 p').evaluateAll(nodes=>nodes.map(node=>node.style.fontSize)),['21pt','21pt']);
+  });
+
+  await test('Word Home Find and Replace supports case and whole-word options across inline formatting',async()=>{
+   await content('<p>bu<strong>ku</strong> BUKU bukunya buku.</p>');
+   await wordPosition(page,[0,0]);
+   await open('Editing','Replace');
+   await page.locator('#wordFindTerm').fill('buku');
+   await page.locator('#wordFindReplacement').fill('arsip');
+   await page.locator('#wordFindCase').check();
+   await page.locator('#wordFindWhole').check();
+   await modal.getByRole('button',{name:'Find Next',exact:true}).tap();
+   assert.equal(await page.locator('#wordFindStatus').innerText(),'Hasil 1 dari 2');
+   await modal.getByRole('button',{name:'Replace All',exact:true}).tap();
+   assert.equal(await page.locator('#wordFindStatus').innerText(),'2 hasil diganti.');
+   assert.equal(await page.locator('#pageBody1 p').innerText(),'arsip BUKU bukunya arsip.');
+   await modal.getByRole('button',{name:'Tutup',exact:true}).tap();
+  });
+
+  await test('Word Home Go To and Selection Pane locate actual pages and tables',async()=>{
+   await content('<p>Awal</p><div class="pagebreak" data-hardbreak="true"></div><h1>Bab Kedua</h1><table><tbody><tr><td>Contoh</td></tr></tbody></table>');
+   await wordPosition(page,[0,1]);
+   await open('Editing','Go To');
+   await page.locator('#wordGotoType').selectOption('Heading');
+   await modal.getByRole('button',{name:'Go To',exact:true}).tap();
+   assert.equal(await page.evaluate(()=>currentPageFromSelection()),2);
+   await open('Editing','Selection Pane');
+   await modal.getByRole('button',{name:'table 1',exact:true}).tap();
+   assert.equal(await page.locator('#editor table.ws-table-selected').count(),1);
+  });
+ }finally{await page.context().close()}
+}
+
 const formulaCases = [
   ['SUM', '=SUM(B1:B4)', 20], ['SUMIF','=SUMIF(A1:A3,"p*",B1:B3)',15], ['SUMIFS','=SUMIFS(B1:B3,A1:A3,"p*",C1:C3,">1")',10], ['nested', '=ROUND(SUM(B1:B3)/3,2)', 6.67], ['PRODUCT', '=PRODUCT(B1:B3)', 250],
   ['ABS', '=ABS(-15)', 15], ['ROUNDUP','=ROUNDUP(2.01,1)',2.1], ['ROUNDDOWN','=ROUNDDOWN(-2.19,1)',-2.1],
@@ -628,6 +779,7 @@ async function layoutTests() {
   try {
     await wordTests();
     await wordMobileEditingTests();
+    await wordHomeControlsTests();
     await excelTests();
     await syncTests();
     await layoutTests();

@@ -292,6 +292,10 @@ dialog p { margin-bottom: 1rem; line-height: 1.45; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; }
 }
+
+/* The projection uses a common origin to keep the world and character aligned. */
+.rock, .character, .spark { top: 0; left: 0; transform-origin: top left; transform: none; }
+.stones { isolation: isolate; }
 </style>
 </head>
 <body>
@@ -927,7 +931,7 @@ const GAME_LENGTH = 10;
 const DURATION = 20;
 const POINT_CORRECT = 100;
 const POINT_PENALTY = 50;
-const PLATFORM_STEP = 25;
+const PLATFORM_SURFACE = '-22%';
 const HEIGHTS = [17, 22, 18, 26, 22, 16, 24, 19, 25, 20, 25, 19, 23, 18];
 const SAVE_KEY = 'lompatBukitNegeriDongeng.v1';
 const ROUND_KEY = SAVE_KEY + '.previous';
@@ -1013,57 +1017,102 @@ function showHud() {
   $('progress').textContent = state.index === GAME_LENGTH ? 'Istana' : 'Pulau ' + (state.index + 1) + '/' + GAME_LENGTH;
 }
 
-function point(relative) {
-  return { x: 15 + PLATFORM_STEP * relative, height: HEIGHTS[state.index + relative] };
+// Every platform has a permanent location along the route. Only the camera
+// and the character travel along it. All scene objects use the same projection.
+let viewport = { width: 0, height: 0 };
+let platforms = [];
+let cameraDepth = 0;
+let traveler = { depth: 0, lift: 0, tilt: 0 };
+let markedPlatform = -1;
+let markerOffset = 0;
+
+function measureStage() {
+  viewport = { width: stage.clientWidth, height: stage.clientHeight };
 }
 
-function floorOffset(relative) {
-  const rock = stones.children[relative];
-  return rock.offsetTop + rock.offsetHeight * .22;
+function mix(start, end, t) {
+  return start + (end - start) * t;
+}
+
+function groundHeight(depth) {
+  const start = Math.floor(depth);
+  return mix(HEIGHTS[start], HEIGHTS[start + 1], depth - start) - 20;
+}
+
+function project(depth, lift = 0) {
+  const distance = depth - cameraDepth;
+  const scale = 1 / (1 + .38 * Math.max(-.58, distance));
+  const along = 1 - scale;
+  return {
+    x: viewport.width * (.20 + .77 * along),
+    y: viewport.height * (.74 - .50 * along - (groundHeight(depth) / 145 + lift) * scale),
+    scale
+  };
+}
+
+function inView(distance) {
+  // Fade at the edge and in the distance, while keeping the next step solid.
+  return Math.min(1, Math.max(0, (distance + .61) * 5), Math.max(0, (5.05 - distance) * 1.8));
+}
+
+function sceneTransform(point, anchor, tilt = 0) {
+  return 'translate3d(' + point.x + 'px,' + point.y + 'px,0) ' +
+    'scale(' + point.scale + ') translate(-50%,' + anchor + ') rotate(' + tilt + 'deg)';
+}
+
+function drawScene() {
+  for (const [index, island] of platforms.entries()) {
+    const opacity = inView(index - cameraDepth);
+    island.hidden = opacity === 0;
+    if (island.hidden) continue;
+    island.style.transform = sceneTransform(project(index), PLATFORM_SURFACE);
+    island.style.opacity = opacity;
+  }
+  const characterPoint = project(traveler.depth, traveler.lift);
+  character.style.transform = sceneTransform(characterPoint, '-100%', traveler.tilt);
+  backdrop.style.transform = 'translateX(' + (-.29 * cameraDepth) + '%) scale(' + (1 + .008 * cameraDepth) + ')';
+  if (!spark.hidden) {
+    const marker = project(markedPlatform);
+    marker.y -= markerOffset * marker.scale;
+    spark.style.transform = sceneTransform(marker, '-100%');
+  }
 }
 
 function setPose(pose) {
   character.dataset.pose = pose;
 }
 
-function positionCharacter(x, y) {
-  character.style.left = x + '%';
-  character.style.top = y + 'px';
-  character.style.transform = 'translate(-50%, -100%)';
-}
-
-function parallax(index) {
-  return 'translateX(' + (-.7 * index) + '%)';
+function setDestination(index) {
+  platforms[markedPlatform]?.classList.remove('next');
+  markedPlatform = index;
+  spark.hidden = !platforms[index];
+  markerOffset = spark.offsetHeight * .28 + 10;
+  platforms[index]?.classList.add('next');
 }
 
 function renderStage() {
-  const count = Math.min(5, GAME_LENGTH - state.index + 1);
-  stones.style.transform = '';
-  const platforms = Array.from({ length: count }, (_, relative) => {
-    const island = document.createElement('div');
-    const number = document.createElement('span');
-    const location = point(relative);
-    const goal = state.index + relative === GAME_LENGTH;
-    island.className = 'rock';
-    island.classList.toggle('next', relative === 1);
-    island.classList.toggle('goal', goal);
-    island.style.left = location.x + '%';
-    island.style.bottom = location.height + '%';
-    number.className = 'rock-number';
-    number.textContent = goal ? '⚑' : state.index + relative + 1;
-    island.append(number);
-    return island;
-  });
-  stones.replaceChildren(...platforms);
-  backdrop.style.transform = parallax(state.index);
-  spark.hidden = count < 2;
-  if (count > 1) {
-    spark.style.left = point(1).x + '%';
-    spark.style.top = floorOffset(1) - spark.offsetHeight - 9 + 'px';
+  if (!platforms.length) {
+    platforms = Array.from({ length: GAME_LENGTH + 1 }, (_, index) => {
+      const island = document.createElement('div');
+      const number = document.createElement('span');
+      const goal = index === GAME_LENGTH;
+      island.className = 'rock';
+      island.classList.toggle('goal', goal);
+      island.style.zIndex = GAME_LENGTH - index;
+      number.className = 'rock-number';
+      number.textContent = goal ? '⚑' : index + 1;
+      island.append(number);
+      return island;
+    });
+    stones.replaceChildren(...platforms);
   }
+  measureStage();
+  cameraDepth = state.index;
+  traveler = { depth: state.index, lift: 0, tilt: 0 };
   character.style.opacity = '';
-  positionCharacter(point(0).x, floorOffset(0));
   setPose('stand');
+  setDestination(state.index + 1);
+  drawScene();
 }
 
 function questionData() {
@@ -1146,60 +1195,60 @@ function animate(element, keyframes, duration, easing = 'linear') {
   return { done, release: () => motion.cancel() };
 }
 
-async function jump() {
-  const start = point(0);
-  const target = point(1);
-  const startY = floorOffset(0);
-  const targetY = floorOffset(1);
-  setPose('ready');
-  const preparation = animate(character, [
-    { transform: 'translate(-50%, -100%) rotate(0deg)' },
-    { transform: 'translate(-53%, -100%) rotate(5deg)' }
-  ], 160, 'ease-out');
-  await preparation.done;
-  preparation.release();
-
-  const characterHeight = character.offsetHeight;
-  const available = (startY + targetY) / 2 - characterHeight - 47;
-  const lift = Math.max(23, Math.min(128, stage.clientHeight * .3, available));
-  setPose('air');
-  const arc = Array.from({ length: 17 }, (_, frameIndex) => {
-    const t = frameIndex / 16;
-    return {
-      left: start.x + (target.x - start.x) * t + '%',
-      top: startY + (targetY - startY) * t - lift * 4 * t * (1 - t) + 'px',
-      transform: 'translate(-50%, -100%) rotate(' + (-9 + 18 * t) + 'deg)'
-    };
+function animateJump(step) {
+  if (reducedMotion.matches) {
+    step(1);
+    return Promise.resolve();
+  }
+  return new Promise(resolve => {
+    const duration = 1060;
+    const start = performance.now();
+    function schedule() {
+      let frameId;
+      let watchdog;
+      function move(now) {
+        cancelAnimationFrame(frameId);
+        clearTimeout(watchdog);
+        const t = Math.min(1, Math.max(0, (now - start) / duration));
+        step(t);
+        if (t < 1) schedule();
+        else resolve();
+      }
+      frameId = requestAnimationFrame(move);
+      // Some embedded previews repaint less often than their active timers.
+      watchdog = setTimeout(() => move(performance.now()), 32);
+    }
+    schedule();
   });
-  const flight = animate(character, arc, 670);
-  await flight.done;
-  positionCharacter(target.x, targetY);
-  setPose('land');
-  flight.release();
+}
 
-  const landing = animate(character, [
-    { transform: 'translate(-50%, -100%) scale(1)' },
-    { transform: 'translate(-50%, -100%) scale(1.035, .95)', offset: .35 },
-    { transform: 'translate(-50%, -100%) scale(1)' }
-  ], 175, 'ease-out');
-  await landing.done;
-  landing.release();
-  setPose('stand');
+function smoothStep(t) {
+  const p = Math.max(0, Math.min(1, t));
+  return p * p * (3 - 2 * p);
+}
 
-  const distance = -stage.clientWidth * PLATFORM_STEP / 100;
-  const ease = 'cubic-bezier(.22,.61,.24,1)';
-  const pans = [
-    animate(stones, [{ transform: 'translateX(0)' }, { transform: 'translateX(' + distance + 'px)' }], 570, ease),
-    animate(backdrop, [{ transform: parallax(state.index) }, { transform: parallax(state.index + 1) }], 570, ease),
-    animate(character, [{ left: target.x + '%' }, { left: start.x + '%' }], 570, ease),
-    animate(spark, [{ transform: 'translateX(-50%)', opacity: 1 },
-      { transform: 'translateX(-50%) translateX(' + distance + 'px)', opacity: 0 }], 570, ease)
-  ];
-  await Promise.all(pans.map(pan => pan.done));
-  state.index++;
+async function jump() {
+  const start = state.index;
+  const target = start + 1;
+  const maxLift = viewport.width < 540 ? .14 : .19;
+  setPose('ready');
+  await animateJump(t => {
+    const flight = Math.max(0, Math.min(1, (t - .135) / .71));
+    const moving = smoothStep((t - .18) / .685);
+    // The viewpoint catches up while the character is in the air.
+    // Both arrive at their final positions before the landing pose ends.
+    cameraDepth = mix(start, target, moving);
+    traveler.depth = mix(start, target, smoothStep(flight));
+    traveler.lift = maxLift * 4 * flight * (1 - flight);
+    traveler.tilt = flight > 0 && flight < 1 ? -9 * Math.sin(Math.PI * flight) * (1 - 1.6 * flight) : 0;
+    const pose = t < .135 ? 'ready' : t < .845 ? 'air' : t < .97 ? 'land' : 'stand';
+    if (character.dataset.pose !== pose) setPose(pose);
+    drawScene();
+  });
+  state.index = target;
   writeSaved(SAVE_KEY, state);
-  renderStage();
-  pans.forEach(pan => pan.release());
+  setDestination(target + 1);
+  drawScene();
   showHud();
   if (state.index === GAME_LENGTH) finishRound();
   else showQuestion();
@@ -1256,10 +1305,13 @@ async function lose(reason, explanation) {
   $('feedback').textContent = reason + ' −50 poin.';
   audioSignal(false);
   setPose('air');
+  const position = project(traveler.depth);
+  const slipping = { ...position, x: position.x + viewport.width * .025, y: position.y - 7 };
+  const below = { ...position, x: position.x + viewport.width * .05, y: viewport.height * 1.32 };
   const fall = animate(character, [
-    { transform: 'translate(-50%, -100%) rotate(0deg)', opacity: 1 },
-    { transform: 'translate(-11%, -106%) rotate(14deg)', opacity: 1, offset: .25 },
-    { transform: 'translate(19%, 150%) rotate(36deg)', opacity: .15 }
+    { transform: sceneTransform(position, '-100%'), opacity: 1 },
+    { transform: sceneTransform(slipping, '-100%', 14), opacity: 1, offset: .25 },
+    { transform: sceneTransform(below, '-100%', 36), opacity: .15 }
   ], 650, 'ease-in');
   await fall.done;
   character.style.opacity = '0';
@@ -1367,7 +1419,10 @@ document.addEventListener('keydown', event => {
   }
 });
 window.addEventListener('resize', () => {
-  if (phase === 'answer' || phase === 'paused') renderStage();
+  if (!platforms.length) return;
+  measureStage();
+  markerOffset = spark.offsetHeight * .28 + 10;
+  drawScene();
 });
 if (state) {
   $('playerName').value = state.name;

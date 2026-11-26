@@ -1,6 +1,6 @@
 # Ibu Dhona Arba — Education Game Center
 
-Paket portal berisi 21 game, simulasi dan kuis HTML yang diambil dari Library. File asli disalin tanpa perubahan. JumpQuest menggunakan versi Landing Final karena beberapa versi lebih baru tidak dapat diekspor.
+Paket portal berisi 21 game, simulasi dan kuis HTML yang diambil dari Library. File asli disalin tanpa perubahan. JumpQuest memuat 50 soal tingkat menengah. Tautan portal tetap dapat diakses menggunakan nama file semula.
 
 ## Publikasi
 1. Buat repository `game-pembelajaran` dengan README di GitHub.

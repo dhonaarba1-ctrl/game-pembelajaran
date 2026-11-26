@@ -44,7 +44,7 @@
 #docMissionFab,#docMissionExampleFab{display:none;position:fixed;left:10px;z-index:64;border:1px solid #abd0fb;border-radius:20px;background:#185abd;color:#fff;font-weight:700;padding:9px 12px;box-shadow:0 3px 14px #183a6c4d}
 #docMissionFab{bottom:39px}#docMissionExampleFab{bottom:81px;background:#f2f7ff;color:#1b5393}
 @media(max-width:800px){.docmission-panel{position:fixed;left:0;top:75px;bottom:30px;width:min(385px,96vw);max-width:96vw;box-shadow:4px 0 22px #122d5460;z-index:70}.docmission-picker{top:39px}.docmission-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}.topbar #docMissionBtn{display:none}#docMissionFab{display:block}.topbar #docMissionToggle{display:none}#docMissionExampleFab.active{display:block}}
-@media(max-width:520px){.topbar #quickUndo,.topbar #quickRedo{display:none}.docmission-picker header{padding:11px}.docmission-grid{grid-template-columns:1fr;padding:12px}.docmission-tools{padding:9px}.docmission-tools select{max-width:100%}}
+@media(max-width:520px){.docmission-picker header{padding:11px}.docmission-grid{grid-template-columns:1fr;padding:12px}.docmission-tools{padding:9px}.docmission-tools select{max-width:100%}}
 
 /* Mode HP landscape: lebih banyak area kerja tanpa menutup tab ribbon. */
 @media(max-height:480px) and (min-width:501px){
@@ -228,10 +228,50 @@
  transform:rotate(-30deg);pointer-events:none;overflow-wrap:anywhere
 }
 </style>
+<style>
+body {display:flex;flex-direction:column}
+.topbar,#tabs,#ribbon,#wordHomeNav,.statusbar {flex-shrink:0}
+.workarea,.workarea.ribbon-hidden {flex:1 1 0;min-height:0;height:auto}
+.word-quick-actions {display:flex;align-items:center;gap:4px;flex:none;position:sticky;left:0;z-index:2;background:#1b2e48}
+.word-quick-actions .logo {flex:none}
+.topbar .word-quick-actions button {display:grid;place-items:center;min-width:38px;min-height:32px;padding:0;font-size:22px;line-height:1}
+.topbar .word-quick-actions button {align-content:center;gap:1px}
+.topbar .word-quick-actions button:disabled {opacity:.52}
+.word-quick-label {font-size:9px;line-height:10px}
+@media (max-height:480px) { .word-quick-label {font-size:8px;line-height:8px} }
+#wordHomeNav {display:flex;align-items:center;gap:5px;padding:4px 8px;background:#eef3f9;border-bottom:1px solid #d7e4f1;overflow-x:auto;scrollbar-width:thin}
+#wordHomeNav[hidden] {display:none}
+#wordHomeNav button {display:inline-flex;align-items:center;flex:none;border:1px solid #c6d7e6;border-radius:7px;background:#fff;color:#23486e;padding:3px 9px;min-height:28px;font-weight:650;font-size:11px;white-space:nowrap}
+#wordHomeNav button[aria-pressed="true"] {background:#dcecff;border-color:#94b8df;color:#163f71}
+#ribbon .home-paragraph-tools {display:grid;grid-template-rows:repeat(2,1fr);grid-auto-flow:column;gap:2px;align-items:center}
+#ribbon .home-paragraph-tools .tool {height:34px;min-width:34px}
+#ribbon .home-paragraph-tools .tool:not(.compact) {height:36px}
+#ribbon .toolrow.font-formats .tool {min-width:34px}
+#editor[data-formatting-marks] :is(p,h1,h2,h3,h4,h5,h6,li)::after {content:'¶';color:#386388;pointer-events:none}
+#editor[data-formatting-marks] .word-tab::after {content:'→';color:#386388;pointer-events:none}
+.page-body ol.word-outline-list,.page-body ol.word-outline-list ol {counter-reset:word-level;list-style:none;padding-inline-start:2em}
+.page-body ol.word-outline-list li {counter-increment:word-level}
+.page-body ol.word-outline-list li::before {content:counters(word-level,'.') '. ';font-variant-numeric:tabular-nums}
+#editor [data-word-style="title"], .wp-sheet-holder [data-word-style="title"], #wpMeasureStage [data-word-style="title"] {font-size:26pt;font-weight:700;line-height:1.15}
+#editor [data-word-style="subtitle"], .wp-sheet-holder [data-word-style="subtitle"], #wpMeasureStage [data-word-style="subtitle"] {font-size:16pt;color:#425f76;line-height:1.25}
+@media (pointer:coarse) and (min-height:500px) {
+ .topbar {min-height:46px}
+ .topbar .word-quick-actions button {min-width:44px;min-height:40px}
+ #wordHomeNav button {min-height:34px}
+}
+@media (max-height:480px) and (min-width:501px) {
+ #ribbon .home-paragraph-tools .tool,#ribbon .home-paragraph-tools .tool:not(.compact) {height:27px}
+ #ribbon .home-paragraph-tools .tool .lab {font-size:8px}
+}
+</style>
 </head>
 <body>
-<div class="topbar"><div class="logo">W</div><input id="docName" class="docname" value="Document1" aria-label="Document name" title="Document name"><button id="quickSave" title="Save (virtual)">💾</button><button id="quickUndo" title="Undo">↶</button><button id="quickRedo" title="Redo">↷</button><span class="muted">Word Classroom · Offline Practice</span><div class="gap"></div><span id="studentBadge" class="chip" style="background:#ffffff24;color:#fff;border-color:#ffffff35;cursor:pointer" title="Ganti siswa">👤 Masuk</span><button id="syncBtn" title="Kirim laporan saat internet tersedia">☁︎ Sync</button><button id="docMissionBtn" title="Pilih tugas dokumen mandiri">📄 Misi Dokumen</button><button id="docMissionToggle" class="hidden" title="Tampilkan/sembunyikan contoh dokumen">👁 Contoh</button><button id="practiceBtn">🎓 Latihan</button><button id="teacherBtn" class="teach">⚙ Guru</button><button id="fullScreenBtn" title="Enter Full Screen / Layar Penuh">⛶ Full Screen</button><button id="ribbonBtn" title="Show/hide ribbon">▤</button></div>
-<div id="tabs" class="tabbar"></div><div id="ribbon" class="ribbon"></div>
+<div class="topbar"><div class="word-quick-actions" role="group" aria-label="Aksi dokumen">
+  <div class="logo" aria-hidden="true">W</div>
+  <button id="quickUndo" type="button" title="Undo · Ctrl+Z" aria-label="Undo" disabled><span aria-hidden="true">↶</span><span class="word-quick-label" aria-hidden="true">Undo</span></button>
+  <button id="quickRedo" type="button" title="Redo · Ctrl+Y" aria-label="Redo" disabled><span aria-hidden="true">↷</span><span class="word-quick-label" aria-hidden="true">Redo</span></button>
+</div><input id="docName" class="docname" value="Document1" aria-label="Document name" title="Document name"><button id="quickSave" title="Save (virtual)">💾</button><span class="muted">Word Classroom · Offline Practice</span><div class="gap"></div><span id="studentBadge" class="chip" style="background:#ffffff24;color:#fff;border-color:#ffffff35;cursor:pointer" title="Ganti siswa">👤 Masuk</span><button id="syncBtn" title="Kirim laporan saat internet tersedia">☁︎ Sync</button><button id="docMissionBtn" title="Pilih tugas dokumen mandiri">📄 Misi Dokumen</button><button id="docMissionToggle" class="hidden" title="Tampilkan/sembunyikan contoh dokumen">👁 Contoh</button><button id="practiceBtn">🎓 Latihan</button><button id="teacherBtn" class="teach">⚙ Guru</button><button id="fullScreenBtn" title="Enter Full Screen / Layar Penuh">⛶ Full Screen</button><button id="ribbonBtn" title="Show/hide ribbon">▤</button></div>
+<div id="tabs" class="tabbar"></div><nav id="wordHomeNav" aria-label="Grup perintah Home" hidden></nav><div id="ribbon" class="ribbon"></div>
 <div id="workarea" class="workarea"><div id="navPane" class="navpane hidden"><h3>Navigation</h3><input id="navSearch" placeholder="Search document"><div id="navMatches"></div></div><aside id="docMissionPanel" class="docmission-panel hidden"><div class="docmission-head"><b id="docMissionCurrentName">Misi Dokumen</b><span class="grow"></span><button id="docMissionAll" title="Pilih misi lain">Semua Misi</button><button id="docMissionClose" title="Tutup contoh">✕</button></div><div class="docmission-body" id="docMissionBody"></div></aside><main class="editor-scroll" id="editScroll"><div class="page-wrap" id="pageWrap"><div class="ruler-wrap" id="rulerWrap"><div class="corner-ruler" id="cornerRuler"></div><div class="top-ruler" id="topRuler"><div class="ticks" id="topTicks"></div><div class="margin-guide top" id="topMarginLeft"></div><div class="margin-guide top" id="topMarginRight"></div></div><div class="left-ruler" id="leftRuler"><div class="ticks" id="leftTicks"></div><div class="margin-guide left" id="leftMarginTop"></div><div class="margin-guide left" id="leftMarginBottom"></div></div><article id="editor" class="pages-editor" contenteditable="true" spellcheck="true" role="textbox" aria-label="Area dokumen Word yang dapat diedit; otomatis membuat halaman berikutnya" aria-multiline="true"><section class="page" id="page" data-orient="portrait" data-size="A4" data-margins="Normal"><div class="page-header" id="pageHeader" contenteditable="false"></div><div class="page-content page-body" id="pageBody1"><p><br></p></div><div class="page-footer" id="pageFooter" contenteditable="false"></div></section></article></div></div></main></div>
 <div class="word-keyboard-hint" id="wordKeyboardHint">Enter = paragraf &nbsp;·&nbsp; Shift+Enter = baris &nbsp;·&nbsp; Ctrl+Enter = halaman</div>
 <div class="statusbar"><div class="page-nav-controls" title="Navigasi halaman"><button id="pagePrevBtn" aria-label="Halaman sebelumnya">‹</button><button id="pageJump" title="Pilih nomor halaman">1 / 1</button><button id="pageNextBtn" aria-label="Halaman berikutnya">›</button></div><span id="pageStatus">Page 1 of 1</span><span id="wordCount">0 words</span><span class="hide-sm" id="saveStatus">Saved locally</span><span class="grow"></span><span class="statusInfo" id="monitorInfo">Belum terhubung</span><button id="layoutBtn">Print Layout</button><button id="zoomOut" title="Zoom Out">−</button><input id="zoomSlider" type="range" min="25" max="200" step="5" value="100" aria-label="Zoom"><button id="zoomIn" title="Zoom In">+</button><button id="zoomPct" class="zoomNumber" title="Reset to 100%">100%</button><button id="mobileFullScreenBtn" title="Layar penuh / Full Screen" aria-label="Layar penuh">⛶</button></div>
@@ -407,7 +447,10 @@ function repaginate(){
  }catch(e){console.warn('Pagination:',e)}
  finally{if(marker)restoreCaretMarkers(marker);reflowActive=false;pageObserver.takeRecords()}
 }
-function currentPageFromSelection(){const sel=window.getSelection();const p=sel?.anchorNode?.parentElement?.closest('.page');return Math.max(1,pages().indexOf(p)+1)}
+function currentPageFromSelection(){
+ const sel=window.getSelection(),body=pageBodyAt(sel?.anchorNode)||pageBodyAt(savedRange?.startContainer);
+ return Math.max(1,pages().indexOf(body?.closest('.page'))+1);
+}
 let wordLastParagraphAt=0,wordIsComposing=false;
 function queuePagination(immediate=false){
  if(reflowActive)return;
@@ -422,7 +465,7 @@ function queuePagination(immediate=false){
  }
  reflowTimer=setTimeout(repaginate,260);
 }
-editor.addEventListener('compositionstart',()=>{wordIsComposing=true},true);
+editor.addEventListener('compositionstart',()=>{if(!documentState.restricted)captureDoc();wordIsComposing=true},true);
 editor.addEventListener('compositionend',()=>{wordIsComposing=false;queuePagination()},true);
 editor.addEventListener('beforeinput',e=>{
  if(e.inputType==='insertParagraph'){
@@ -439,7 +482,7 @@ $('pageJump').onclick=()=>{showModal('Go To Page',`<p>Masukkan nomor halaman (1�
 editor.addEventListener('mouseup',()=>setTimeout(updatePageNavigator,0));
 editor.addEventListener('keyup',()=>setTimeout(updatePageNavigator,0));
 editor.addEventListener('keydown',e=>{
- if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&!e.isComposing){
    e.preventDefault();insertWordPageBreak('page');return;
  }
  if(e.key==='Enter'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
@@ -587,19 +630,190 @@ $('selectionColor').onchange=e=>{applyInlineColor(e.target.value,false);refreshS
 $('selectionHighlight').onpointerdown=saveSelection;
 $('selectionHighlight').onchange=e=>{applyInlineColor(e.target.value,true);refreshSelectionToolbar()};
 
-function captureDoc(){
- const snapshot=editor.innerHTML;
- if(documentState.track&&typeof documentState.reviewBaseline!=='string')documentState.reviewBaseline=snapshot;
- if(history.at(-1)!==snapshot){history.push(snapshot);if(history.length>50)history.shift()}redoHistory=[]}
-let classroomLastInputSnapshot=0;
-editor.addEventListener('beforeinput',e=>{
- if(wordIsComposing)return;
- if((e.inputType||'').startsWith('insert')||(e.inputType||'').startsWith('delete')){
-   const now=Date.now();if(e.inputType==='insertParagraph'||now-classroomLastInputSnapshot>850){captureDoc();classroomLastInputSnapshot=now}
+function pageBodyAt(node){
+ return (node?.nodeType===1?node:node?.parentElement)?.closest('.page-body');
+}
+function replaceAcrossPages(text='', paragraph=false){
+ const sel=window.getSelection();
+ if(!sel?.rangeCount||sel.isCollapsed)return false;
+ const range=sel.getRangeAt(0);
+ const start=pageBodyAt(range.startContainer),end=pageBodyAt(range.endContainer);
+ if(!start||!end||start===end)return false;
+ const all=bodies(),first=all.indexOf(start),last=all.indexOf(end);
+ const leading=range.cloneRange(),trailing=range.cloneRange(),caret=range.cloneRange();
+ caret.collapse(true);
+ leading.setEnd(start,start.childNodes.length);
+ trailing.setStart(end,0);
+ captureDoc();
+ trailing.deleteContents();
+ leading.deleteContents();
+ const before=pageBodyAt(caret.startContainer)===start
+   ? (caret.startContainer.nodeType===1?caret.startContainer:caret.startContainer.parentElement).closest('p,h1,h2,h3,blockquote')
+   : null;
+ const after=end.firstElementChild;
+ if(before&&after?.tagName===before.tagName&&before.parentElement===start){
+   before.append(...after.childNodes);
+   after.remove();
  }
-},true);
-function classroomUndo(){if(!history.length){document.execCommand('undo');return}redoHistory.push(editor.innerHTML);editor.innerHTML=history.pop();afterEdit();toast('Undo selesai')}
-function classroomRedo(){if(!redoHistory.length){document.execCommand('redo');return}history.push(editor.innerHTML);editor.innerHTML=redoHistory.pop();afterEdit();toast('Redo selesai')}
+ start.append(...end.childNodes);
+ all.slice(first+1,last+1).forEach(body=>body.closest('.page').remove());
+ if(!start.childNodes.length){start.innerHTML='<p><br></p>';caret.setStart(start.firstElementChild,0);caret.collapse(true)}
+ editor.focus({preventScroll:true});
+ sel.removeAllRanges();
+ sel.addRange(caret);
+ if(paragraph&&!enterWordParagraph(caret,false))document.execCommand('insertParagraph');
+ else if(text)document.execCommand('insertText',false,text);
+ saveSelection();
+ queuePagination(true);
+ afterEdit();
+ return true;
+}
+function wordPositionInBody(node,offset){
+ const body=pageBodyAt(node);
+ if(!body||!editor.contains(body))return null;
+ const path=[];
+ for(let child=node;child!==body;child=child.parentNode){
+   path.unshift(Array.prototype.indexOf.call(child.parentNode.childNodes,child));
+ }
+ return {page:bodies().indexOf(body),path,offset};
+}
+function snapshotWord(){
+ const selection=window.getSelection();
+ const range=selection?.rangeCount&&pageBodyAt(selection.anchorNode)?selection.getRangeAt(0):savedRange;
+ return {
+   html:editor.innerHTML,state:{...documentState},fallback:saveCaretSnapshot(),
+   start:range&&wordPositionInBody(range.startContainer,range.startOffset),
+   end:range&&wordPositionInBody(range.endContainer,range.endOffset),
+ };
+}
+let lastWordEdit=null;
+function refreshWordHistory(){
+ $('quickUndo').disabled=!history.length||documentState.restricted;
+ $('quickRedo').disabled=!redoHistory.length||documentState.restricted;
+}
+function clearWordHistory(){
+ history=[];redoHistory=[];lastWordEdit=null;
+ refreshWordHistory();
+}
+function captureDoc(){
+ const snapshot=snapshotWord();
+ if(documentState.track&&typeof documentState.reviewBaseline!=='string')documentState.reviewBaseline=snapshot.html;
+ const previous=history.at(-1);
+ if(!previous||previous.html!==snapshot.html||JSON.stringify(previous.state)!==JSON.stringify(snapshot.state)){
+   history.push(snapshot);
+   if(history.length>70)history.shift();
+ }
+ redoHistory=[];lastWordEdit=null;refreshWordHistory();
+}
+function restoreWordSnapshot(snapshot){
+ const clipboard=documentState.localClipboard;
+ documentState={...freshDocState(),...snapshot.state,localClipboard:clipboard};
+ editor.innerHTML=snapshot.html;
+ editor.contentEditable=String(!documentState.restricted);
+ editor.focus({preventScroll:true});
+ function resolve(point){
+   let node=point&&bodies()[point.page];
+   for(const index of point?.path||[])node=node?.childNodes[index];
+   const limit=node?.nodeType===3?node.length:node?.childNodes.length;
+   return node&&point.offset<=limit?{node,offset:point.offset}:null;
+ }
+ const start=resolve(snapshot.start),end=resolve(snapshot.end);
+ if(start&&end){
+   const selection=window.getSelection();
+   selection.setBaseAndExtent(start.node,start.offset,end.node,end.offset);
+   saveSelection();
+ }else if(snapshot.fallback)restoreCaretSnapshot(snapshot.fallback);
+ renderRulers();updatePageNavigator();afterEdit();refreshWordHistory();
+}
+function classroomUndo(){
+ if(documentState.restricted||!history.length)return;
+ redoHistory.push(snapshotWord());
+ lastWordEdit=null;
+ restoreWordSnapshot(history.pop());
+ toast('Undo: perubahan dibatalkan');
+}
+function classroomRedo(){
+ if(documentState.restricted||!redoHistory.length)return;
+ history.push(snapshotWord());
+ lastWordEdit=null;
+ restoreWordSnapshot(redoHistory.pop());
+ toast('Redo: perubahan dikembalikan');
+}
+
+function wordParagraphAt(node){
+ const element=node?.nodeType===1?node:node?.parentElement;
+ const block=element?.closest('p,h1,h2,h3,h4,h5,h6,li,td,th,blockquote,div');
+ return block&&!block.matches('.page-body,.word-cover,[contenteditable="false"]')?block:null;
+}
+const wordVisibleContent='img,svg,table,hr,.ws-object,br';
+function keepEditableLine(block){
+ if(!block.textContent&&!block.querySelector(wordVisibleContent))block.replaceChildren(document.createElement('br'));
+}
+function enterWordParagraph(range,saveHistory=true){
+ const body=pageBodyAt(range.startContainer);
+ if(!body||body!==pageBodyAt(range.endContainer)||!editor.contains(body))return false;
+ const target=wordParagraphAt(range.startContainer);
+ // Native list editing preserves the list type and exits the list on an empty item.
+ if(target?.matches('li'))return false;
+ if((range.startContainer.nodeType===1?range.startContainer:range.startContainer.parentElement)?.closest('[contenteditable="false"]'))return false;
+ if(saveHistory)captureDoc();
+ const point=range.cloneRange();
+ point.collapse(true);
+ if(!range.collapsed)range.deleteContents();
+ let block=wordParagraphAt(point.startContainer);
+ if(!block||block.matches('td,th')||block.firstElementChild?.matches('p,h1,h2,h3,ul,ol,table')){
+   const element=point.startContainer.nodeType===1?point.startContainer:point.startContainer.parentElement;
+   const container=element.closest('td,th,.word-cover')||body;
+   block=document.createElement('p');
+   if(point.startContainer===container){
+     container.insertBefore(block,container.childNodes[point.startOffset]||null);
+     if(container===body&&block.previousElementSibling?.matches('[data-hardbreak]'))block.previousElementSibling.before(block);
+   }else{
+     let sibling=element;
+     while(sibling.parentElement&&sibling.parentElement!==container)sibling=sibling.parentElement;
+     if(sibling===container)container.append(block);else sibling.after(block);
+   }
+   keepEditableLine(block);
+   placeWordCaret(block,0);
+   revealWordCaret(block);
+   return true;
+ }
+ const split=document.createRange();
+ split.setStart(point.startContainer,point.startOffset);
+ split.setEnd(block,block.childNodes.length);
+ const paragraph=document.createElement('p');
+ if(block.tagName==='P'){
+   for(const property of ['text-align','text-indent','margin-left','margin-right','line-height','direction']){
+     const value=block.style.getPropertyValue(property);
+     if(value)paragraph.style.setProperty(property,value);
+   }
+ }
+ paragraph.append(split.extractContents());
+ keepEditableLine(block);
+ keepEditableLine(paragraph);
+ block.after(paragraph);
+ placeWordCaret(paragraph,0);
+ revealWordCaret(paragraph);
+ return true;
+}
+function placeWordCaret(node,offset){
+ const selection=window.getSelection();
+ selection.setBaseAndExtent(node,offset,node,offset);
+ saveSelection();
+}
+function revealWordCaret(paragraph){
+ const scroll=$('editScroll'),rect=paragraph.getBoundingClientRect(),view=scroll.getBoundingClientRect();
+ const viewport=window.visualViewport,bottom=Math.min(view.bottom,viewport?viewport.height+viewport.offsetTop:view.bottom);
+ if(rect.bottom>bottom-16)scroll.scrollTop+=rect.bottom-bottom+16;
+}
+function handleWordHistoryInput(e){
+ if(e.inputType!=='historyUndo'&&e.inputType!=='historyRedo')return false;
+ if(!e.cancelable)return false;
+ e.preventDefault();
+ if(e.inputType==='historyUndo')classroomUndo();else classroomRedo();
+ return true;
+}
+
 
 function normalizeHardBreaks(){for(const n of editor.querySelectorAll('.pagebreak[data-hardbreak="true"]')){n.textContent='';n.setAttribute('contenteditable','false')}}
 function insertWordPageBreak(kind='page'){
@@ -674,7 +888,7 @@ function removeWordPageBreak(){
 }
 
 function mutateHtml(html){if(documentState.restricted)return;captureDoc();restoreSelection();try{document.execCommand('insertHTML',false,html)}catch(e){bodies().at(-1).insertAdjacentHTML('beforeend',html)}afterEdit();saveSelection()}
-function afterEdit(){queuePagination();updateWordCount();saveStudentState();$('saveStatus').textContent='Saved locally'}
+function afterEdit(){queuePagination();updateWordCount();saveStudentState();refreshWordHistory();$('saveStatus').textContent='Saved locally'}
 function wordText(){return pageOnlyText()}
 function words(){return (wordText().trim().match(/\S+/g)||[]).length}
 function updateWordCount(){const n=words();$('wordCount').textContent=n+' words';$('pageStatus').textContent='Page '+currentPageFromSelection()+' of '+renderedPages}
@@ -689,67 +903,62 @@ function selectDocumentContents(){
 function isEditorBodySelection(sel){return !!sel?.rangeCount&&!!(sel.anchorNode?.nodeType===1?sel.anchorNode:sel.anchorNode?.parentElement)?.closest?.('.page-body')}
 editor.addEventListener('keydown',e=>{
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='a'){e.preventDefault();selectDocumentContents();return}
- if(e.key==='Tab'&&!e.ctrlKey&&!e.metaKey){e.preventDefault();addParagraphTab();return}
+ if(e.key==='Tab'&&!e.ctrlKey&&!e.metaKey){
+  e.preventDefault();
+  if(currentSelectedElement()?.closest('li'))exec(e.shiftKey?'outdent':'indent');
+  else addParagraphTab();
+  return;
+ }
 });
 // Clicking a blank area on a page must place the caret INSIDE editable text,
 // not on the outer page element (which otherwise swallows the next keystroke).
 editor.addEventListener('pointerup',e=>{
- const target=e.target,sh=target?.closest?.('.page');if(!sh)return;
- if(target.closest('.page-header,.page-footer'))return;
- const body=sh.querySelector('.page-body');if(!body)return;
- const inBody=target.closest?.('.page-body');
- if(inBody && target!==body)return; // preserve normal word/character caret positioning
- let tail=[...body.children].reverse().find(n=>!n.matches('[data-hardbreak="true"],.word-section-break'));
- if(!tail){tail=document.createElement('p');tail.innerHTML='<br>';body.appendChild(tail)}
- if(['P','DIV','H1','H2','H3'].includes(tail.tagName)&&!tail.textContent.trim()&&!tail.querySelector('br'))tail.innerHTML='<br>';
- const r=document.createRange();r.selectNodeContents(tail);r.collapse(false);
- const sel=window.getSelection();sel.removeAllRanges();sel.addRange(r);
- editor.focus({preventScroll:true});saveSelection();updatePageNavigator();
-});
-function pageBodyAt(node){
- return (node?.nodeType===1?node:node?.parentElement)?.closest('.page-body');
-}
-function replaceAcrossPages(text='', paragraph=false){
- const sel=window.getSelection();
- if(!sel?.rangeCount||sel.isCollapsed)return false;
- const range=sel.getRangeAt(0);
- const start=pageBodyAt(range.startContainer),end=pageBodyAt(range.endContainer);
- if(!start||!end||start===end)return false;
- const all=bodies(),first=all.indexOf(start),last=all.indexOf(end);
- const leading=range.cloneRange(),trailing=range.cloneRange(),caret=range.cloneRange();
- caret.collapse(true);
- leading.setEnd(start,start.childNodes.length);
- trailing.setStart(end,0);
- captureDoc();
- trailing.deleteContents();
- leading.deleteContents();
- const before=pageBodyAt(caret.startContainer)===start
-   ? (caret.startContainer.nodeType===1?caret.startContainer:caret.startContainer.parentElement).closest('p,h1,h2,h3,blockquote')
-   : null;
- const after=end.firstElementChild;
- if(before&&after?.tagName===before.tagName&&before.parentElement===start){
-   before.append(...after.childNodes);
-   after.remove();
+ const target=e.target,sheet=target?.closest?.('.page');
+ if(!sheet||target.closest('.page-header,.page-footer,.ws-object,[contenteditable="false"]'))return;
+ const body=sheet.querySelector('.page-body');
+ const selection=window.getSelection();
+ if(!selection?.isCollapsed)return;
+ if(target.closest('p,h1,h2,h3,h4,h5,h6,li,td,th,blockquote')&&pageBodyAt(selection.anchorNode)===body)return;
+ const candidates=[...body.querySelectorAll('p,h1,h2,h3,h4,h5,h6')].filter(node=>!node.closest('td,th,[contenteditable="false"]'));
+ let nearest=null,distance=Infinity;
+ for(const block of candidates){
+   const bounds=block.getBoundingClientRect();
+   const gap=Math.max(0,bounds.top-e.clientY,e.clientY-bounds.bottom);
+   if(gap<distance){nearest=block;distance=gap}
  }
- start.append(...end.childNodes);
- all.slice(first+1,last+1).forEach(body=>body.closest('.page').remove());
- if(!start.childNodes.length){start.innerHTML='<p><br></p>';caret.setStart(start.firstElementChild,0);caret.collapse(true)}
+ if(!nearest){
+   nearest=document.createElement('p');nearest.append(document.createElement('br'));
+   body.insertBefore(nearest,body.querySelector(':scope > [data-hardbreak]'));
+ }
  editor.focus({preventScroll:true});
- sel.removeAllRanges();
- sel.addRange(caret);
- if(paragraph)document.execCommand('insertParagraph');
- else if(text)document.execCommand('insertText',false,text);
- saveSelection();
- queuePagination(true);
- afterEdit();
- return true;
-}
-editor.addEventListener('beforeinput',e=>{
- if(documentState.restricted||e.isComposing)return;
- const types=['insertText','insertParagraph','insertLineBreak','insertReplacementText','deleteContentBackward','deleteContentForward','deleteByCut'];
- if(!types.includes(e.inputType))return;
- if(replaceAcrossPages(e.inputType==='insertLineBreak'?'\n':e.data||'',e.inputType==='insertParagraph'))e.preventDefault();
+ placeWordCaret(nearest,nearest.lastChild?.nodeName==='BR'?Math.max(0,nearest.childNodes.length-1):nearest.childNodes.length);
+ updatePageNavigator();
 });
+editor.addEventListener('beforeinput',e=>{
+ if(e.defaultPrevented||documentState.restricted||e.isComposing||wordIsComposing)return;
+ if(handleWordHistoryInput(e))return;
+ const type=e.inputType||'';
+ if(!type.startsWith('insert')&&!type.startsWith('delete'))return;
+ if(['insertText','insertParagraph','insertLineBreak','insertReplacementText','deleteContentBackward','deleteContentForward','deleteByCut'].includes(type)
+    &&replaceAcrossPages(type==='insertLineBreak'?'\n':e.data||'',type==='insertParagraph')){
+   e.preventDefault();return;
+ }
+ const sel=window.getSelection();
+ if(type==='insertParagraph'&&e.cancelable&&sel?.rangeCount&&enterWordParagraph(sel.getRangeAt(0))){
+   e.preventDefault();
+   wordLastParagraphAt=Date.now();
+   afterEdit();
+   return;
+ }
+ const continuous=type==='insertText'||type==='deleteContentBackward'||type==='deleteContentForward';
+ const now=Date.now();
+ if(!continuous||!sel?.isCollapsed||!lastWordEdit||lastWordEdit.type!==type||lastWordEdit.node!==sel.anchorNode||
+    lastWordEdit.offset!==sel.anchorOffset||now-lastWordEdit.time>500){
+   captureDoc();
+ }
+ lastWordEdit=continuous?{type,time:now}:null;
+});
+
 editor.addEventListener('paste',e=>{
  if(e.defaultPrevented||documentState.restricted||!e.clipboardData)return;
  const text=e.clipboardData.getData('text/plain');
@@ -765,7 +974,11 @@ editor.addEventListener('cut',e=>{
 });
 // Standard rich-text paragraphs, not naked DIVs or content in the paper container.
 editor.addEventListener('focus',()=>{try{document.execCommand('defaultParagraphSeparator',false,'p')}catch(e){}});
-editor.addEventListener('keyup',saveSelection);editor.addEventListener('mouseup',saveSelection);editor.addEventListener('touchend',()=>setTimeout(saveSelection,60));editor.addEventListener('input',()=>{afterEdit();lastTyped=Date.now()});
+editor.addEventListener('keyup',saveSelection);editor.addEventListener('mouseup',saveSelection);editor.addEventListener('touchend',()=>setTimeout(saveSelection,60));editor.addEventListener('input',()=>{
+ const selection=window.getSelection();
+ if(lastWordEdit){lastWordEdit.node=selection?.anchorNode;lastWordEdit.offset=selection?.anchorOffset}
+ afterEdit();saveSelection();lastTyped=Date.now();
+});
 function selectTarget(text){if(!text)return false;const w=document.createTreeWalker(editor,NodeFilter.SHOW_TEXT);while(w.nextNode()){const n=w.currentNode,pos=n.textContent.toLowerCase().indexOf(text.toLowerCase());if(pos>=0){const range=document.createRange();range.setStart(n,pos);range.setEnd(n,pos+text.length);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);savedRange=range.cloneRange();n.parentElement.scrollIntoView({block:'nearest'});editor.focus({preventScroll:true});return true}}return false}
 function exec(cmd,value){if(documentState.restricted)return;restoreSelection();captureDoc();try{document.execCommand(cmd,false,value||null)}catch(e){toast('Perintah tidak didukung oleh browser ini')};afterEdit();saveSelection()}
 function applyInlineColor(color,highlight){
@@ -798,16 +1011,30 @@ function updateFullscreenButton(){const b=$('fullScreenBtn');b.textContent=docum
 async function toggleFullScreen(){try{if(document.fullscreenElement){await document.exitFullscreen();return}if(document.documentElement.requestFullscreen){await document.documentElement.requestFullscreen();return}}catch(e){}document.body.classList.toggle('fullscreen-fallback');toast(document.body.classList.contains('fullscreen-fallback')?'Tampilan aplikasi diperluas. Gunakan menu browser untuk fullscreen.':'Tampilan normal');updateFullscreenButton()}
 $('fullScreenBtn').onclick=toggleFullScreen;$('mobileFullScreenBtn').onclick=toggleFullScreen;document.addEventListener('fullscreenchange',updateFullscreenButton);
 
-$('zoomOut').onclick=()=>setZoom(zoom-10);$('zoomIn').onclick=()=>setZoom(zoom+10);$('zoomSlider').oninput=e=>setZoom(+e.target.value);$('zoomPct').onclick=()=>setZoom(100);$('ribbonBtn').onclick=()=>{$('ribbon').classList.toggle('hidden');$('workarea').classList.toggle('ribbon-hidden')};
+$('zoomOut').onclick=()=>setZoom(zoom-10);$('zoomIn').onclick=()=>setZoom(zoom+10);$('zoomSlider').oninput=e=>setZoom(+e.target.value);$('zoomPct').onclick=()=>setZoom(100);$('ribbonBtn').onclick=()=>{$('ribbon').classList.toggle('hidden');$('workarea').classList.toggle('ribbon-hidden');renderHomeGroupNavigation()};
 const tabs=['File','Home','Insert','Draw','Design','Layout','References','Mailings','Review','View','Table Layout','Help'];
 const B=(label,icon,cmd,value='',options={})=>({label,icon,cmd,value,...options});
 const G=(name,...buttons)=>({name,buttons});
 const RIBBONS={
 Home:[
 G('Clipboard',B('Paste','📋','paste'),B('Cut','✂','cut'),B('Copy','▣','copy'),B('Format Painter','🖌','formatPainter')),
-G('Font',B('Bold','𝐁','bold',null,{compact:true}),B('Italic','𝑰','italic',null,{compact:true}),B('Underline','U̲','underline',null,{compact:true}),B('Strikethrough','S̶','strikeThrough',null,{compact:true}),B('Text Highlight Color','🖍','hiliteColor',null,{compact:true}),B('Font Color','A̲','foreColor',null,{compact:true}),B('Clear All Formatting','⌫','removeFormat',null,{compact:true}),B('Superscript','x²','superscript',null,{compact:true}),B('Subscript','x₂','subscript',null,{compact:true})),
-G('Paragraph',B('Bullets','•≡','insertUnorderedList'),B('Numbering','1≡','insertOrderedList'),B('Align Left','☰','justifyLeft',null,{compact:true}),B('Center','≡','justifyCenter',null,{compact:true}),B('Align Right','☷','justifyRight',null,{compact:true}),B('Justify','▤','justifyFull',null,{compact:true}),B('Increase Indent','⇥','indent',null,{compact:true}),B('Decrease Indent','⇤','outdent',null,{compact:true}),B('Line Spacing','↕','lineSpacing',null,{compact:true}),B('Shading','▧','shading',null,{compact:true}),B('Borders','▦','paragraphBorder',null,{compact:true})),
-G('Styles',B('Normal','Aa','style','P'),B('Heading 1','H₁','style','H1'),B('Heading 2','H₂','style','H2'),B('Heading 3','H₃','style','H3')),
+G('Font',
+ B('Bold','B','bold',null,{compact:true}),B('Italic','I','italic',null,{compact:true}),B('Underline','U','underline',null,{compact:true}),
+ B('Strikethrough','ab','strikeThrough',null,{compact:true}),B('Text Highlight Color','A','hiliteColor',null,{compact:true}),B('Font Color','A','foreColor',null,{compact:true}),
+ B('Superscript','x²','superscript',null,{compact:true}),B('Subscript','x₂','subscript',null,{compact:true}),
+ B('Increase Font Size','A⁺','growFont',null,{compact:true}),B('Decrease Font Size','A⁻','shrinkFont',null,{compact:true}),
+ B('Change Case','Aa','changeCase',null,{compact:true}),B('Clear All Formatting','Az','removeFormat',null,{compact:true})),
+G('Paragraph',
+ B('Bullets','•≡','insertUnorderedList',null,{compact:true}),B('Numbering','1≡','insertOrderedList',null,{compact:true}),
+ B('Multilevel List','1.1','multilevelList',null,{compact:true}),B('Show/Hide ¶','¶','formattingMarks',null,{compact:true}),
+ B('Decrease Indent','⇤','outdent',null,{compact:true}),B('Increase Indent','⇥','indent',null,{compact:true}),
+ B('Align Left','☰','justifyLeft',null,{compact:true}),B('Center','≡','justifyCenter',null,{compact:true}),
+ B('Align Right','☷','justifyRight',null,{compact:true}),B('Justify','▤','justifyFull',null,{compact:true}),
+ B('Line and Paragraph Spacing','↕','lineSpacing'),B('Paragraph Settings','☷','paragraphSettings'),
+ B('Shading','▣','shading'),B('Borders','▤','paragraphBorder')),
+G('Styles',
+ B('Normal','Aa','style','P'),B('Title','T','paragraphStyle','title'),B('Subtitle','S','paragraphStyle','subtitle'),
+ B('Heading 1','H₁','style','H1'),B('Heading 2','H₂','style','H2'),B('Heading 3','H₃','style','H3')),
 G('Editing',B('Find','🔎','find'),B('Replace','⇄','replace'),B('Select All','☑','selectAll'))],
 Insert:[G('Pages',B('Cover Page','▤','coverPage'),B('Blank Page','📄','blankPage'),B('Page Break','↵','pageBreak')),
 G('Tables',B('Table','▦','table')),
@@ -843,7 +1070,31 @@ G('Window',B('New Window','▣','newWindow'),B('Split','▤','split'))],
 'Table Layout':[G('Table',B('Insert Table','▦','table'),B('Column Width (cm)','↔','tableColumnWidth'),B('Row Height (cm)','↕','tableRowHeight'),B('Table Position','▣','tablePosition'),B('Cell Padding','☷','cellPadding'))],
 Help:[G('Help',B('Word Help','❔','help'),B('Keyboard Shortcuts','⌨','shortcuts'),B('About','ⓘ','about'))]
 };
-function renderRibbon(){ $('tabs').innerHTML=tabs.map(t=>`<button data-tab="${t}" class="${t===uiTab?'active':''} ${t==='File'?'fileTab':''}">${t}</button>`).join('');$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(b.dataset.tab==='File'){openFile('Home');return}uiTab=b.dataset.tab;renderRibbon()});const groups=RIBBONS[uiTab]||[];$('ribbon').innerHTML=groups.map(g=>`<div class="group"><div class="group-inner">${g.name==='Font'?`<div class="toolcol"><div class="toolrow"><select class="font-field" id="fontPicker" title="Font Family"><option>Calibri</option><option>Aptos</option><option>Arial</option><option>Times New Roman</option><option>Verdana</option><option>Georgia</option><option>Tahoma</option><option>Courier New</option><option>Cambria</option><option>Garamond</option><option>Trebuchet MS</option><option>Segoe UI</option><option>Comic Sans MS</option><option>Book Antiqua</option><option>Bookman Old Style</option><option>Century Gothic</option><option>Consolas</option><option>Franklin Gothic Medium</option><option>Impact</option><option>Lucida Sans</option><option>Palatino Linotype</option><option>Roboto</option><option>Noto Sans</option><option>Liberation Sans</option><option>Liberation Serif</option><option>DejaVu Sans</option></select><button class="font-other-btn" id="fontCustomBtn" type="button" title="Jenis font lainnya">Lain…</button><select class="font-field font-size" id="fontSizePicker" title="Font Size">${[6,7,8,9,10,11,12,14,16,18,20,22,24,28,32,36,48,72,96].map(x=>`<option value="${x}" ${x===11?'selected':''}>${x}</option>`).join('')}</select><input class="font-field font-size" id="fontSizeDirect" type="number" min="6" max="96" value="11" title="Ukuran huruf khusus (pt)" style="width:53px"></div><div class="toolrow">${g.buttons.map(renderTool).join('')}</div></div>`:g.buttons.map(renderTool).join('')}</div><span class="group-title">${esc(g.name)}</span></div>`).join('');$('ribbon').querySelectorAll('[data-cmd]').forEach(b=>{b.onpointerdown=()=>saveSelection();b.onclick=()=>command(b.dataset.cmd,b.dataset.value||'')});const ff=$('fontPicker');if(ff){ff.querySelectorAll('option').forEach(o=>o.style.fontFamily=fontStack(o.value));ff.onpointerdown=saveSelection;ff.onchange=e=>applyFont(e.target.value)};const fontOther=$('fontCustomBtn');if(fontOther){fontOther.onpointerdown=saveSelection;fontOther.onclick=showCustomFontDialog;}const fs=$('fontSizePicker');if(fs){fs.onpointerdown=saveSelection;fs.onchange=e=>applySize(+e.target.value)}const direct=$('fontSizeDirect');if(direct){direct.onpointerdown=saveSelection;direct.onchange=e=>applySize(+e.target.value)}}
+function renderRibbon(){ $('tabs').innerHTML=tabs.map(t=>`<button data-tab="${t}" class="${t===uiTab?'active':''} ${t==='File'?'fileTab':''}">${t}</button>`).join('');$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(b.dataset.tab==='File'){openFile('Home');return}uiTab=b.dataset.tab;renderRibbon()});const groups=RIBBONS[uiTab]||[];$('ribbon').innerHTML=groups.map(g=>`<div class="group" data-word-group="${esc(g.name)}"><div class="group-inner${uiTab==='Home'&&g.name==='Paragraph'?' home-paragraph-tools':''}">${g.name==='Font'?`<div class="toolcol"><div class="toolrow"><select class="font-field" id="fontPicker" title="Font Family"><option>Calibri</option><option>Aptos</option><option>Arial</option><option>Times New Roman</option><option>Verdana</option><option>Georgia</option><option>Tahoma</option><option>Courier New</option><option>Cambria</option><option>Garamond</option><option>Trebuchet MS</option><option>Segoe UI</option><option>Comic Sans MS</option><option>Book Antiqua</option><option>Bookman Old Style</option><option>Century Gothic</option><option>Consolas</option><option>Franklin Gothic Medium</option><option>Impact</option><option>Lucida Sans</option><option>Palatino Linotype</option><option>Roboto</option><option>Noto Sans</option><option>Liberation Sans</option><option>Liberation Serif</option><option>DejaVu Sans</option></select><button class="font-other-btn" id="fontCustomBtn" type="button" title="Jenis font lainnya">Lain…</button><select class="font-field font-size" id="fontSizePicker" title="Font Size">${[6,7,8,9,10,11,12,14,16,18,20,22,24,28,32,36,48,72,96].map(x=>`<option value="${x}" ${x===11?'selected':''}>${x}</option>`).join('')}</select><input class="font-field font-size" id="fontSizeDirect" type="number" min="6" max="96" value="11" title="Ukuran huruf khusus (pt)" style="width:53px"></div><div class="toolrow font-formats">${g.buttons.map(renderTool).join('')}</div></div>`:g.buttons.map(renderTool).join('')}</div><span class="group-title">${esc(g.name)}</span></div>`).join('');$('ribbon').querySelectorAll('[data-cmd]').forEach(b=>{b.onpointerdown=()=>saveSelection();b.onclick=()=>command(b.dataset.cmd,b.dataset.value||'')});const ff=$('fontPicker');if(ff){ff.querySelectorAll('option').forEach(o=>o.style.fontFamily=fontStack(o.value));ff.onpointerdown=saveSelection;ff.onchange=e=>applyFont(e.target.value)};const fontOther=$('fontCustomBtn');if(fontOther){fontOther.onpointerdown=saveSelection;fontOther.onclick=showCustomFontDialog;}const fs=$('fontSizePicker');if(fs){fs.onpointerdown=saveSelection;fs.onchange=e=>applySize(+e.target.value)}const direct=$('fontSizeDirect');if(direct){direct.onpointerdown=saveSelection;direct.onchange=e=>applySize(+e.target.value)}
+ renderHomeGroupNavigation();
+}
+function renderHomeGroupNavigation(){
+ const nav=$('wordHomeNav'),ribbon=$('ribbon'),groups=[...ribbon.querySelectorAll('[data-word-group]')];
+ const show=uiTab==='Home'&&!ribbon.classList.contains('hidden');
+ nav.hidden=!show;
+ if(!show){nav.replaceChildren();ribbon.onscroll=null;return}
+ nav.innerHTML=groups.map(group=>`<button type="button" data-jump-group="${esc(group.dataset.wordGroup)}" aria-pressed="false">${esc(group.dataset.wordGroup)}</button>`).join('');
+ const buttons=[...nav.querySelectorAll('button')];
+ ribbon.scrollLeft=0;
+ const left=group=>group.offsetLeft-ribbon.offsetLeft;
+ function selectGroup(){
+   let selected=0;
+   for(let index=1;index<groups.length;index++)if(left(groups[index])<=ribbon.scrollLeft+12)selected=index;
+   if(ribbon.scrollLeft>1&&ribbon.scrollLeft+ribbon.clientWidth>=ribbon.scrollWidth-2)selected=groups.length-1;
+   buttons.forEach((button,index)=>button.setAttribute('aria-pressed',String(index===selected)));
+ }
+ ribbon.onscroll=selectGroup;
+ buttons.forEach((button,index)=>{
+   button.addEventListener('pointerdown',saveSelection);
+   button.onclick=()=>{ribbon.scrollLeft=left(groups[index]);selectGroup()};
+ });
+ selectGroup();
+}
 function iconMarkup(b){return svgIcon(b.cmd,b.label,b.icon)}
 function svgBase(inner){return `<svg viewBox="0 0 24 24" aria-hidden="true">${inner}</svg>`}
 
@@ -992,7 +1243,7 @@ function svgIcon(cmd,label,fallback){const map=_wordSvgBaseMap||(_wordSvgBaseMap
  const txt=(fallback||label||'?').replace(/<[^>]+>/g,'').trim().slice(0,2).toUpperCase();
  return svgBase(`<rect class="s" x="4" y="4" width="16" height="16" rx="2"/><text class="t" x="6" y="15" font-size="8">${txt}</text>`)
 }
-function renderTool(b){return `<button class="tool ${b.compact?'compact':''}" data-cmd="${esc(b.cmd)}" data-value="${esc(b.value||'')}" title="${esc(b.label)}"><span class="ico word-ico">${iconMarkup(b)}</span><span class="lab">${esc(b.label)}</span></button>`}
+function renderTool(b){return `<button class="tool ${b.compact?'compact':''}" data-cmd="${esc(b.cmd)}" data-value="${esc(b.value||'')}" aria-label="${esc(b.label)}" title="${esc(b.label)}"><span class="ico word-ico">${iconMarkup(b)}</span><span class="lab">${esc(b.label)}</span></button>`}
 function fontStack(name){const stacks={'Aptos':'Aptos,Calibri,Arial,sans-serif','Calibri':'Calibri,Carlito,Arial,sans-serif','Arial':'Arial,Helvetica,sans-serif','Times New Roman':'"Times New Roman",Times,serif','Georgia':'Georgia,serif','Verdana':'Verdana,Geneva,sans-serif','Tahoma':'Tahoma,Arial,sans-serif','Courier New':'"Courier New",monospace','Consolas':'Consolas,"Courier New",monospace','Cambria':'Cambria,Georgia,serif','Garamond':'Garamond,Georgia,serif','Segoe UI':'"Segoe UI",Arial,sans-serif','Trebuchet MS':'"Trebuchet MS",Arial,sans-serif','Comic Sans MS':'"Comic Sans MS",cursive'};return stacks[name]||('\"'+String(name).replace(/[\"\\]/g,'')+'\",Arial,sans-serif')}
 // Mengubah font HANYA pada range yang diblok; format kata lain tidak ditimpa.
 function selectionForFont(){
@@ -1031,8 +1282,8 @@ function applyFont(name){
  const valid=targetSelectionMatches();
  restoreSelection();
  const range=selectionForFont();
+ captureDoc();
  if(range){
-   captureDoc();
    if(!formatTextRuns(range,'font-family',fontStack(name),name))return;
    if(!valid)toast('Gunakan teks target dalam latihan');
  }else{
@@ -1071,8 +1322,8 @@ function applySize(sz){
  const valid=targetSelectionMatches();
  restoreSelection();
  const range=selectionForFont();
+ captureDoc();
  if(range){
-   captureDoc();
    if(!formatTextRuns(range,'font-size',sz+'pt'))return;
  }else{
    documentState.fontSize=sz;
@@ -1086,7 +1337,7 @@ function setPageState(){
   editor.className='pages-editor';editor.contentEditable=String(!documentState.restricted);
   pages().forEach((sheet,i)=>styleSheetNode(sheet,i));
   $('layoutBtn').textContent=documentState.mode;
-  renderRulers();queuePagination(true);
+  renderRulers();queuePagination(true);refreshWordHistory();
 }
 function pick(title,desc,options,cb){showModal(title,`<p>${desc}</p><label>Pilih pengaturan</label><select id="choiceValue">${options.map(o=>`<option value="${esc(o.value||o)}">${esc(o.label||o)}</option>`).join('')}</select>`,[{label:'Terapkan',primary:true,onClick:()=>{cb($('choiceValue').value);closeModal()}}])}
 function askText(title,label,initial,cb,placeholder=''){showModal(title,`<label>${esc(label)}</label><input id="dialogInput" placeholder="${esc(placeholder)}" value="${esc(initial)}">`,[{label:'OK',primary:true,onClick:()=>{const v=$('dialogInput').value;closeModal();cb(v)}}],()=>{$('dialogInput').focus();$('dialogInput').select()})}
@@ -1117,12 +1368,134 @@ function reviewPending(accept){
   }
  }]);
 }
+function wordSelectedBlocks(){
+ const selection=window.getSelection();
+ if(selection?.rangeCount&&!selection.isCollapsed){
+   const range=selection.getRangeAt(0);
+   return [...editor.querySelectorAll('.page-body :is(p,h1,h2,h3,h4,h5,h6,li,blockquote)')]
+     .filter(block=>range.intersectsNode(block)&&!block.closest('[contenteditable="false"]')&&!block.querySelector('p,h1,h2,h3,h4,h5,h6,li'));
+ }
+ const block=wordParagraphAt(selection?.anchorNode)||activeParagraph();
+ return block&&!block.matches('.page-body,.word-cover')?[block]:[];
+}
+function updateWordBlocks(flag,callback){
+ if(documentState.restricted)return;
+ restoreSelection();
+ const blocks=wordSelectedBlocks();
+ if(!blocks.length)return;
+ captureDoc();
+ for(const block of blocks)callback(block);
+ recordAction(flag);afterEdit();
+}
+function adjustWordFont(direction){
+ const element=currentSelectedElement();
+ const size=element&&editor.contains(element)?parseFloat(getComputedStyle(element).fontSize)*.75:documentState.fontSize;
+ const steps=[6,7,8,9,10,11,12,14,16,18,20,22,24,26,28,32,36,40,48,56,64,72,96];
+ const target=direction>0?steps.find(x=>x>size+.05):steps.findLast(x=>x<size-.05);
+ if(target){
+   applySize(target);
+   if($('fontSizePicker')?.querySelector('option[value="'+target+'"]'))$('fontSizePicker').value=target;
+   if($('fontSizeDirect'))$('fontSizeDirect').value=target;
+ }
+}
+function wordChangeCase(){
+ pick('Change Case','Pilih bentuk huruf. Jika tidak ada seleksi, perubahan berlaku pada paragraf aktif.',[
+  {label:'UPPERCASE',value:'upper'},{label:'lowercase',value:'lower'},{label:'Capitalize Each Word',value:'title'},{label:'tOGGLE cASE',value:'toggle'}
+ ],mode=>{
+  if(documentState.restricted)return;
+  restoreSelection();
+  const selected=selectionForFont(),block=wordParagraphAt(window.getSelection()?.anchorNode);
+  if(!selected&&!block)return;
+  const range=selected||document.createRange();
+  if(!selected)range.selectNodeContents(block);
+  const runs=editableTextNodes().filter(node=>node.length&&range.intersectsNode(node)&&!node.parentElement.closest('[contenteditable="false"]'))
+    .map(node=>({node,start:node===range.startContainer?range.startOffset:0,end:node===range.endContainer?range.endOffset:node.length}))
+    .filter(run=>run.end>run.start);
+  if(!runs.length)return;
+  captureDoc();
+  let newWord=true,previousBlock;
+  for(const run of runs){
+    const nodeBlock=wordParagraphAt(run.node);
+    if(nodeBlock!==previousBlock){newWord=true;previousBlock=nodeBlock}
+    const before=run.node.data.slice(0,run.start),text=run.node.data.slice(run.start,run.end),after=run.node.data.slice(run.end);
+    let result='';
+    for(const char of text){
+      const upper=char.toLocaleUpperCase('id'),lower=char.toLocaleLowerCase('id');
+      result+=mode==='upper'?upper:mode==='lower'?lower:mode==='toggle'?(char===upper?lower:upper):newWord?upper:lower;
+      newWord=!/[\p{L}\p{M}\p{N}]/u.test(char);
+    }
+    run.node.data=before+result+after;
+    run.end=before.length+result.length;
+  }
+  if(selected){
+    const first=runs[0],last=runs.at(-1);
+    window.getSelection().setBaseAndExtent(first.node,first.start,last.node,last.end);
+    saveSelection();
+  }
+  recordAction('changeCase_'+mode);afterEdit();
+ });
+}
+function wordMultilevelList(){
+ if(documentState.restricted)return;
+ restoreSelection();
+ const selected=currentSelectedElement();
+ const numbered=selected?.closest('ol');
+ captureDoc();
+ if(!numbered)document.execCommand('insertOrderedList');
+ const list=(currentSelectedElement()?.closest('ol')||numbered);
+ if(!list||!editor.contains(list))return;
+ list.classList.add('word-outline-list');
+ recordAction('multilevelList');afterEdit();saveSelection();
+}
+function wordLineSpacing(){
+ pick('Line and Paragraph Spacing','Pilih jarak antarbaris.',['1','1.15','1.5','2','2.5','3'],value=>
+  updateWordBlocks('lineSpacing_'+value,block=>{block.style.lineHeight=value})
+ );
+}
+function wordShading(){
+ showModal('Paragraph Shading','<label for="wordShadeColor">Warna latar paragraf</label><input id="wordShadeColor" type="color" value="#fff3cb">',[
+  {label:'No Color',onClick:()=>{closeModal();updateWordBlocks('shading',block=>block.style.removeProperty('background-color'))}},
+  {label:'Apply',primary:true,onClick:()=>{const color=$('wordShadeColor').value;closeModal();updateWordBlocks('shading',block=>{block.style.backgroundColor=color})}},
+ ]);
+}
+function wordParagraphBorder(){
+ pick('Paragraph Borders','Terapkan garis pada paragraf yang dipilih.',[
+  {label:'Bottom Border',value:'bottom'},{label:'Top Border',value:'top'},
+  {label:'Outside Borders',value:'outside'},{label:'No Border',value:'none'},
+ ],kind=>updateWordBlocks('paragraphBorder',block=>{
+   for(const side of ['top','right','bottom','left'])block.style.removeProperty('border-'+side);
+   if(kind==='outside')block.style.border='1px solid #185abd';
+   else if(kind!=='none')block.style.setProperty('border-'+kind,'2px solid #185abd');
+ }));
+}
 function command(cmd,v=''){
  if(['bold','italic','underline','strikeThrough','superscript','subscript','removeFormat','justifyLeft','justifyCenter','justifyRight','justifyFull','insertUnorderedList','insertOrderedList','indent','outdent'].includes(cmd)){appliedStyleCommand(cmd);return}
  switch(cmd){
  case 'selectAll':selectDocumentContents();return;
  case 'formatPainter':formatPainterSelection();break;
- case 'style':{const valid=targetSelectionMatches();exec('formatBlock',v);if(valid)recordAction('style_'+v);else toast('Pilih teks target dahulu');break}
+ case 'style':{
+  if(documentState.restricted)return;
+  const valid=targetSelectionMatches();exec('formatBlock',v);
+  wordSelectedBlocks().forEach(block=>delete block.dataset.wordStyle);
+  if(valid)recordAction('style_'+v);else toast('Pilih teks target dahulu');
+  afterEdit();break;
+ }
+ case 'paragraphStyle':
+  if(documentState.restricted)return;
+  restoreSelection();captureDoc();document.execCommand('formatBlock',false,'P');
+  wordSelectedBlocks().forEach(block=>{block.dataset.wordStyle=v});
+  recordAction('style_'+v);afterEdit();saveSelection();
+  break;
+ case 'growFont':adjustWordFont(1);break;
+ case 'shrinkFont':adjustWordFont(-1);break;
+ case 'changeCase':wordChangeCase();break;
+ case 'multilevelList':wordMultilevelList();break;
+ case 'formattingMarks':{
+  const enabled=editor.toggleAttribute('data-formatting-marks');
+  $('ribbon').querySelector('[data-cmd="formattingMarks"]')?.setAttribute('aria-pressed',String(enabled));
+  toast(enabled?'Tanda paragraf ditampilkan':'Tanda paragraf disembunyikan');
+  break;
+ }
  case 'fontColor':case 'foreColor':showWordColorDialog('Font Color',false);break;
  case 'hiliteColor':showWordColorDialog('Text Highlight Color',true);break;
  case 'paragraphSettings':showParagraphSettings();break;
@@ -1132,9 +1505,9 @@ function command(cmd,v=''){
  case 'tablePosition':applyTableIndentDialog();break;
  case 'cellPadding':showCellPaddingSettings();break;
  case 'headerFooterMargins':showHeaderFooterMarginSettings();break;
- case 'lineSpacing':pick('Line and Paragraph Spacing','Pilih jarak antarbaris',['1','1.5','2'],x=>{const sel=window.getSelection();const p=(sel?.anchorNode?.nodeType===1?sel.anchorNode:sel?.anchorNode?.parentElement)?.closest('p,div,li,h1,h2,h3');if(p&&editor.contains(p))p.style.lineHeight=x;else editor.style.lineHeight=x;recordAction('lineSpacing_'+x);afterEdit()});break;
- case 'shading':restoreSelection();{const p=(window.getSelection()?.anchorNode?.nodeType===1?window.getSelection().anchorNode:window.getSelection()?.anchorNode?.parentElement)?.closest('p,div,li');if(p&&editor.contains(p))p.style.background='#fff3cb';else editor.style.background='#fff3cb';recordAction('shading');afterEdit()}break;
- case 'paragraphBorder':restoreSelection();{const p=(window.getSelection()?.anchorNode?.nodeType===1?window.getSelection().anchorNode:window.getSelection()?.anchorNode?.parentElement)?.closest('p,div,li');if(p&&editor.contains(p))p.style.borderBottom='2px solid #185abd';recordAction('paragraphBorder');afterEdit()}break;
+ case 'lineSpacing':wordLineSpacing();break;
+ case 'shading':wordShading();break;
+ case 'paragraphBorder':wordParagraphBorder();break;
  case 'margins':showMarginsDialog();break;
  case 'orientation':pick('Orientation','Select page orientation',['portrait','landscape'].map(x=>({value:x,label:x==='portrait'?'Portrait':'Landscape'})),x=>{documentState.orientation=x;setPageState();recordAction('orientation_'+x);saveStudentState()});break;
  case 'paperSize':showPaperSizeDialog();break;
@@ -1237,8 +1610,8 @@ function storeSavedDocuments(docs){try{localStorage.setItem('word_class_files_'+
 function virtualSave(name){name=(name||$('docName').value||'Document1').trim();if(!name)return;const all=savedDocuments();all[name]={html:editor.innerHTML,state:{...documentState},at:new Date().toISOString()};if(storeSavedDocuments(all)){documentState.virtualSaved=true;docName=name;$('docName').value=name;recordAction('save');enqueueReport('SIMPAN_VIRTUAL');toast('Saved (virtual): '+name);closeFile()}}
 function virtualSaveAs(){askText('Save As (Virtual)','File name', $('docName').value||'Document1',x=>{if(!x.trim())return;virtualSave(x);recordAction('saveAs')})}
 function renderSavedList(){const f=$('savedList');if(!f)return;const docs=savedDocuments();f.innerHTML=Object.keys(docs).length?Object.entries(docs).map(([name,data])=>`<button class="file-tile" data-open="${esc(name)}">📄 ${esc(name)} <small>(${new Date(data.at).toLocaleDateString('id-ID')})</small></button>`).join(''):'<p>Belum ada dokumen virtual yang disimpan.</p>';f.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openVirtual(b.dataset.open))}
-function openVirtual(name){const data=savedDocuments()[name];if(!data){toast('Dokumen tidak ditemukan');return}history=[];redoHistory=[];editor.innerHTML=data.html||'<p><br></p>';documentState={...freshDocState(),...data.state,virtualOpened:true};$('docName').value=name;setPageState();recordAction('open');enqueueReport('BUKA_DOKUMEN_VIRTUAL');closeFile();afterEdit();toast('Opened: '+name)}
-function newVirtual(){showModal('New Document','<p>Buat dokumen baru untuk latihan? Isi yang sedang dibuka akan tetap tersimpan pada levelnya apabila penyimpanan browser tersedia.</p>',[{label:'Create Blank Document',primary:true,onClick:()=>{editor.innerHTML='<p><br></p>';documentState=freshDocState();$('docName').value='Document'+(Date.now()%1000);setPageState();closeModal();closeFile();recordAction('new');afterEdit()}}])}
+function openVirtual(name){const data=savedDocuments()[name];if(!data){toast('Dokumen tidak ditemukan');return}clearWordHistory();editor.innerHTML=data.html||'<p><br></p>';documentState={...freshDocState(),...data.state,virtualOpened:true};$('docName').value=name;setPageState();recordAction('open');enqueueReport('BUKA_DOKUMEN_VIRTUAL');closeFile();afterEdit();toast('Opened: '+name)}
+function newVirtual(){showModal('New Document','<p>Buat dokumen baru untuk latihan? Isi yang sedang dibuka akan tetap tersimpan pada levelnya apabila penyimpanan browser tersedia.</p>',[{label:'Create Blank Document',primary:true,onClick:()=>{clearWordHistory();editor.innerHTML='<p><br></p>';documentState=freshDocState();$('docName').value='Document'+(Date.now()%1000);setPageState();closeModal();closeFile();recordAction('new');afterEdit()}}])}
 function printPreview(){openRealisticPrintPreview()}
 function fileAction(a){if(a==='close')closeFile();if(a==='new')newVirtual();if(a==='save')virtualSave();if(a==='saveAs')virtualSaveAs();if(a==='open'){fileView='Open';renderFileMenu()}if(a==='print')printPreview();if(a==='export'){documentState.exportVirtual=true;recordAction('export');showModal('Export PDF (Virtual)','<p>PDF berhasil dibuat dalam simulasi. Tidak ada berkas sesungguhnya yang diunduh.</p>',[{label:'OK',primary:true,onClick:closeModal}])}}
 // PRACTICE CURRICULUM: 10 levels x 8 verified missions = 80 tasks
@@ -1344,7 +1717,7 @@ function totalCompleted(){return done.flat().filter(Boolean).length}
 function passedLevelsCount(){return done.filter(x=>x.every(Boolean)).length}
 function startLevel(i){if(!levelUnlocked(i)){toast('🔒 Selesaikan level sebelumnya terlebih dahulu');return}saveActiveDocument();docMissionMode=false;$('docMissionPanel').classList.add('hidden');$('docMissionToggle').classList.add('hidden');$('docMissionExampleFab').classList.remove('active');activeLevel=i;activeMission=done[i].findIndex(x=>!x);if(activeMission<0)activeMission=levels[i].tasks.length-1;loadPracticeDocument(i);practiceView=levelPassed(i)?'win':'mission';renderPractice();enqueueReport('BUKA_LEVEL')}
 function saveActiveDocument(){if(!currentStudent)return;saveStudentState()}
-function loadPracticeDocument(i){history=[];redoHistory=[];const d=practiceDocs[i];if(d){editor.innerHTML=d.html;documentState={...freshDocState(),...d.state};$('docName').value=d.name||'Document'+(i+1);flags={...d.flags};setZoom(d.zoom||fitWordWidth())}else{editor.innerHTML=levels[i].template;documentState=freshDocState();$('docName').value='Latihan_Word_Level_'+(i+1);flags={};setZoom(fitWordWidth())}setPageState();updateWordCount();}
+function loadPracticeDocument(i){clearWordHistory();const d=practiceDocs[i];if(d){editor.innerHTML=d.html;documentState={...freshDocState(),...d.state};$('docName').value=d.name||'Document'+(i+1);flags={...d.flags};setZoom(d.zoom||fitWordWidth())}else{editor.innerHTML=levels[i].template;documentState=freshDocState();$('docName').value='Latihan_Word_Level_'+(i+1);flags={};setZoom(fitWordWidth())}setPageState();updateWordCount();}
 function checkMission(){const t=levels[activeLevel].tasks[activeMission];const results=getWordTaskCriteria(t,activeLevel,activeMission).map(c=>({label:c.label,ok:checkWordCriterion(c,t)}));const good=results.filter(x=>x.ok).length;const passed=good===results.length;
  const score=Math.round(100*good/results.length),id=activeLevel+':'+activeMission,prior=wordMissionScores[id]||{};
  wordMissionScores[id]={best:Math.max(prior.best||0,score),last:score,tries:(prior.tries||0)+1,passed:!!prior.passed||passed,time:new Date().toISOString()};
@@ -1488,7 +1861,13 @@ function exportStudentHTML(){
  setTimeout(()=>URL.revokeObjectURL(url),3500);
  toast('File siswa siap dibagikan. Uji coba sinkronisasi dengan satu akun latihan.');
 }
-$('teacherBtn').onclick=teacherSettings;$('quickSave').onclick=()=>virtualSave();$('quickUndo').onclick=()=>command('undo');$('quickRedo').onclick=()=>command('redo');
+$('teacherBtn').onclick=teacherSettings;$('quickSave').onclick=()=>virtualSave();for(const [id,action] of [['quickUndo','undo'],['quickRedo','redo']]){
+ const button=$(id);
+ button.addEventListener('pointerdown',saveSelection);
+ button.addEventListener('mousedown',event=>event.preventDefault());
+ button.onclick=()=>command(action);
+}
+refreshWordHistory();
 // initialize
 renderRibbon();documentState=freshDocState();setPageState();setZoom(fitWordWidth());updateWordCount();done=levels.map(l=>l.tasks.map(()=>false));updateMonitorStatus();if(reportEndpoint&&navigator.onLine)void flushQueue();
 
@@ -1663,7 +2042,7 @@ function getDocumentMission(id){return DOC_MISSIONS.find(m=>m.id===id)}
 function docMissionCountPassed(){return Object.values(docMissionScores).filter(x=>x&&x.passed).length}
 function openDocumentMissionPicker(){if(!currentStudent){$('loginGate').classList.remove('hidden');return}saveActiveDocument();$('practiceOverlay').classList.remove('open','practice-minimized');$('fileMenu').classList.remove('open');$('docMissionPicker').classList.add('open');renderDocumentMissionCatalog()}
 function renderDocumentMissionCatalog(){const q=($('docMissionSearch').value||'').toLowerCase().trim(),category=$('docMissionCategory').value;const filtered=DOC_MISSIONS.filter(m=>(!category||m.category===category)&&(!q||(m.title+' '+m.desc+' '+m.category).toLowerCase().includes(q)));$('docMissionCounter').textContent=docMissionCountPassed()+' / '+DOC_MISSIONS.length+' lulus';$('docMissionGrid').innerHTML=filtered.map(m=>{const st=docMissionScores[m.id],started=!!docMissionDocs[m.id],state=st?.passed?'<span class="docmission-pill passed">✓ Lulus '+st.best+'/100</span>':started?`<span class="docmission-pill inprogress">${st?'Nilai '+st.best+'/100':'Dikerjakan'}</span>`:'<span class="docmission-pill">Belum dikerjakan</span>';return `<button type="button" class="docmission-card" data-docid="${esc(m.id)}"><div class="emoji">${m.icon}</div><div><h3>${esc(m.title)}</h3><p>${esc(m.desc)}</p><span class="docmission-pill">${esc(m.difficulty)}</span>${state}<small>${esc(m.category)}</small></div></button>`}).join('')||'<p>Belum ada misi yang cocok. Coba pencarian lain.</p>';$('docMissionGrid').querySelectorAll('[data-docid]').forEach(b=>b.onclick=()=>startDocumentMission(b.dataset.docid))}
-function startDocumentMission(id){const m=getDocumentMission(id);if(!m)return;if(currentStudent)saveActiveDocument();history=[];redoHistory=[];docMissionMode=true;currentDocMissionId=id;$('docMissionPicker').classList.remove('open');$('practiceOverlay').classList.remove('open');$('fileMenu').classList.remove('open');const saved=docMissionDocs[id];if(saved){editor.innerHTML=saved.html||'<p><br></p>';documentState={...freshDocState(),...saved.state};flags={...saved.flags};$('docName').value=saved.name||'Misi_'+id;setZoom(saved.zoom||75)}else{editor.innerHTML='<p><br></p>';documentState=freshDocState();flags={};$('docName').value='Misi_'+m.title.replace(/[^A-Za-z0-9]+/g,'_').slice(0,34);setZoom(window.innerWidth<801?55:85)}setPageState();updateWordCount();$('docMissionPanel').classList.remove('hidden');$('docMissionToggle').classList.remove('hidden');$('docMissionExampleFab').classList.add('active');renderDocumentMissionPanel();saveStudentState();enqueueReport('DOK_BUKA_'+id.toUpperCase());}
+function startDocumentMission(id){const m=getDocumentMission(id);if(!m)return;if(currentStudent)saveActiveDocument();clearWordHistory();docMissionMode=true;currentDocMissionId=id;$('docMissionPicker').classList.remove('open');$('practiceOverlay').classList.remove('open');$('fileMenu').classList.remove('open');const saved=docMissionDocs[id];if(saved){editor.innerHTML=saved.html||'<p><br></p>';documentState={...freshDocState(),...saved.state};flags={...saved.flags};$('docName').value=saved.name||'Misi_'+id;setZoom(saved.zoom||75)}else{editor.innerHTML='<p><br></p>';documentState=freshDocState();flags={};$('docName').value='Misi_'+m.title.replace(/[^A-Za-z0-9]+/g,'_').slice(0,34);setZoom(window.innerWidth<801?55:85)}setPageState();updateWordCount();$('docMissionPanel').classList.remove('hidden');$('docMissionToggle').classList.remove('hidden');$('docMissionExampleFab').classList.add('active');renderDocumentMissionPanel();saveStudentState();enqueueReport('DOK_BUKA_'+id.toUpperCase());}
 function hideDocMissionExample(){if(!docMissionMode)return;$('docMissionPanel').classList.add('hidden');$('docMissionToggle').classList.remove('hidden');$('docMissionExampleFab').classList.add('active')}
 function showDocMissionExample(){if(!docMissionMode)return;$('docMissionPanel').classList.remove('hidden');renderDocumentMissionPanel()}
 function docClean(t){return String(t||'').toLowerCase().replace(/\s+/g,' ').trim()}

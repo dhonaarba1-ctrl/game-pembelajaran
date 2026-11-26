@@ -195,6 +195,116 @@ async function wordTests() {
   await page.context().close();
 }
 
+async function wordMobileEditingTests(){
+  const page=await load('Word',{width:390,height:844},true);
+  try{
+    await test('Word phone Undo and Redo stay visible after scrolling the title bar',async()=>{
+      const undo=page.getByRole('button',{name:'Undo',exact:true});
+      const redo=page.getByRole('button',{name:'Redo',exact:true});
+      assert.ok(await undo.isVisible()&&await redo.isVisible());
+      assert.ok((await undo.boundingBox()).width>=40);
+      await page.evaluate(()=>{const bar=document.querySelector('.topbar');bar.scrollLeft=bar.scrollWidth});
+      for(const button of [undo,redo]){
+        const bounds=await button.boundingBox();
+        assert.ok(bounds.x>=0&&bounds.x+bounds.width<=390);
+      }
+    });
+
+    await test('Word Enter on a cover stays on its page and touch Undo/Redo restore visible edits',async()=>{
+      await page.evaluate(()=>{
+        editor.innerHTML='<p><br></p>';
+        insertWordCover('minimal');
+        clearWordHistory();
+        setZoom(40);
+      });
+      await page.locator('[data-word-cover] p').last().tap();
+      await page.keyboard.press('End');
+      const coverParagraphs=await page.locator('[data-word-cover] p').count();
+      await page.keyboard.press('Enter');
+      await page.keyboard.insertText('Baris sampul tambahan');
+      assert.equal(await page.locator('[data-word-cover] p').count(),coverParagraphs+1);
+      assert.deepEqual(await page.evaluate(()=>[pages().length,currentPageFromSelection(),bodies()[1].innerText.trim()]),[2,1,'']);
+      await page.getByRole('button',{name:'Undo',exact:true}).tap();
+      assert.doesNotMatch(await page.locator('[data-word-cover]').innerText(),/Baris sampul tambahan/);
+      await page.getByRole('button',{name:'Undo',exact:true}).tap();
+      assert.equal(await page.locator('[data-word-cover] p').count(),coverParagraphs);
+      await page.getByRole('button',{name:'Redo',exact:true}).tap();
+      await page.getByRole('button',{name:'Redo',exact:true}).tap();
+      assert.match(await page.locator('[data-word-cover]').innerText(),/Baris sampul tambahan/);
+    });
+
+    await test('Word input-based Enter, Shift+Enter and Ctrl+Enter are separate operations',async()=>{
+      await page.evaluate(()=>{
+        editor.innerHTML='<p>AwalAkhir</p>';
+        clearWordHistory();
+      });
+      await wordPosition(page,[0,4]);
+      const intercepted=await page.evaluate(()=>!editor.dispatchEvent(new InputEvent('beforeinput',{
+        inputType:'insertParagraph',bubbles:true,cancelable:true,
+      })));
+      assert.ok(intercepted);
+      assert.deepEqual(await page.evaluate(()=>[...bodies()[0].querySelectorAll('p')].map(p=>p.textContent)),['Awal','Akhir']);
+      await page.keyboard.press('Shift+Enter');
+      assert.equal(await page.locator('#pageBody1 p').count(),2);
+      assert.ok(await page.locator('#pageBody1 p:nth-of-type(2) br').count());
+      await page.keyboard.press('Control+Enter');
+      assert.equal(await page.evaluate(()=>pages().length),2);
+      assert.equal(await page.locator('#pageBody1 [data-hardbreak="true"]').count(),1);
+    });
+
+    await test('Word Enter only starts an automatic new page when the paper is full',async()=>{
+      const last=await page.evaluate(()=>{
+        Object.assign(documentState,{pageHeightCm:10,marginTopCm:1,marginBottomCm:1});
+        setPageState();
+        editor.innerHTML='<p>Baris awal</p>';
+        const body=bodies()[0];
+        let count=0;
+        while(!bodyOverflow(body)&&count<40){
+          const paragraph=document.createElement('p');paragraph.textContent='Paragraf '+(++count);body.append(paragraph);
+        }
+        if(!bodyOverflow(body))throw new Error('Could not fill the test sheet');
+        body.lastElementChild.remove();
+        clearWordHistory();
+        return body.children.length-1;
+      });
+      assert.equal(await page.evaluate(()=>pages().length),1);
+      await wordPosition(page,[last,2]);
+      await page.keyboard.press('End');
+      await page.keyboard.press('Enter');
+      await page.keyboard.insertText('Teks otomatis');
+      await waitFor(page,()=>pages().length===2&&bodies()[1].textContent.includes('Teks otomatis'));
+      assert.equal(await page.locator('#editor [data-hardbreak]').count(),0);
+      await page.evaluate(()=>{Object.assign(documentState,{pageHeightCm:29.7,marginTopCm:2.54,marginBottomCm:2.54});setPageState()});
+    });
+
+    await test('Word phone Home group navigation and additional formatting act on the document',async()=>{
+      await page.evaluate(()=>{editor.innerHTML='<p>alpha beta</p>';clearWordHistory()});
+      assert.deepEqual(await page.locator('#wordHomeNav button').allTextContents(),['Clipboard','Font','Paragraph','Styles','Editing']);
+      await wordPosition(page,[0,0],[0,5]);
+      await page.locator('#wordHomeNav').getByRole('button',{name:'Font',exact:true}).tap();
+      await page.locator('#ribbon').getByRole('button',{name:'Change Case',exact:true}).tap();
+      await page.locator('#choiceValue').selectOption('upper');
+      await page.locator('#modalPanel').getByRole('button',{name:'Terapkan'}).tap();
+      assert.equal(await page.locator('#pageBody1 p').innerText(),'ALPHA beta');
+      await wordPosition(page,[0,0],[0,5]);
+      await page.locator('#ribbon').getByRole('button',{name:'Increase Font Size',exact:true}).tap();
+      assert.match(await page.locator('#pageBody1 p span').first().getAttribute('style'),/font-size: 12pt/);
+      await page.locator('#wordHomeNav').getByRole('button',{name:'Paragraph',exact:true}).tap();
+      await page.locator('#ribbon').getByRole('button',{name:'Show/Hide ¶',exact:true}).tap();
+      assert.equal(await page.locator('#editor').getAttribute('data-formatting-marks'),'');
+      await page.locator('#ribbon').getByRole('button',{name:'Line and Paragraph Spacing',exact:true}).tap();
+      await page.locator('#choiceValue').selectOption('1.5');
+      await page.locator('#modalPanel').getByRole('button',{name:'Terapkan'}).tap();
+      assert.match(await page.locator('#pageBody1 p').getAttribute('style'),/line-height: 1.5/);
+      await page.locator('#wordHomeNav').getByRole('button',{name:'Styles',exact:true}).tap();
+      await page.locator('#ribbon').getByRole('button',{name:'Title',exact:true}).tap();
+      assert.equal(await page.locator('#pageBody1 p').getAttribute('data-word-style'),'title');
+      await page.getByRole('button',{name:'Undo',exact:true}).tap();
+      assert.equal(await page.locator('#pageBody1 p').getAttribute('data-word-style'),null);
+    });
+  }finally{await page.context().close()}
+}
+
 const formulaCases = [
   ['SUM', '=SUM(B1:B4)', 20], ['SUMIF','=SUMIF(A1:A3,"p*",B1:B3)',15], ['SUMIFS','=SUMIFS(B1:B3,A1:A3,"p*",C1:C3,">1")',10], ['nested', '=ROUND(SUM(B1:B3)/3,2)', 6.67], ['PRODUCT', '=PRODUCT(B1:B3)', 250],
   ['ABS', '=ABS(-15)', 15], ['ROUNDUP','=ROUNDUP(2.01,1)',2.1], ['ROUNDDOWN','=ROUNDDOWN(-2.19,1)',-2.1],
@@ -517,6 +627,7 @@ async function layoutTests() {
   browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,headless:true,args:['--no-sandbox']});
   try {
     await wordTests();
+    await wordMobileEditingTests();
     await excelTests();
     await syncTests();
     await layoutTests();

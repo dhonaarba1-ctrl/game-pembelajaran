@@ -16,7 +16,7 @@ Audit dimulai dari `main` pada revisi `5e370174b89467ba813eabdb29d226d7c4b48589`
 
 ## Regresi akhir
 
-**Lulus 123 · Gagal 0** pada Chromium headless melalui Playwright. Kedua aplikasi dimuat dari HTML lokal dengan jaringan dinonaktifkan. Tangkapan layar diperiksa pada desktop 1366×768 dan 1920×1080, HP 390×844 dan 844×390, serta tablet 820×1180. Viewport dan input sentuh diemulasikan.
+**Lulus 128 · Gagal 0** pada Chromium headless melalui Playwright. Kedua aplikasi dimuat dari HTML lokal dengan jaringan dinonaktifkan. Tangkapan layar diperiksa pada desktop 1366×768 dan 1920×1080, HP 390×844 dan 844×390, serta tablet 820×1180. Viewport dan input sentuh diemulasikan.
 
 | Area | Cakupan |
 | --- | --- |
@@ -26,6 +26,14 @@ Audit dimulai dari `main` pada revisi `5e370174b89467ba813eabdb29d226d7c4b48589`
 | Pelaporan | Apps Script diuji dengan layanan spreadsheet tiruan untuk validasi dan deduplikasi. Browser diuji terhadap server tiruan untuk keadaan offline, kegagalan, dan bukti penerimaan. Ekspor HTML diuji bebas dari contoh data siswa dan bisa dibuka offline. |
 
 Daftar kasus dan cara menjalankan ulang tersedia di [test-classroom.cjs](test-classroom.cjs) dan [panduan pengembang](README.md#untuk-pengembang).
+
+## Perbaikan Word untuk layar HP
+
+Undo dan Redo sebelumnya disembunyikan oleh aturan tampilan saat layar selebar 520 px atau kurang. Keduanya sekarang dipasang di sisi kiri bilah atas, dengan label teks dan status aktif sesuai riwayat dokumen.
+
+Enter membuat paragraf pada halaman tempat kursor berada. Pengujian mencakup sampul dengan pemisah halaman, sebuah paragraf dengan kursor di tengah, Shift+Enter, Ctrl+Enter, serta pemindahan otomatis ketika kertas penuh. Uji sentuh juga memeriksa Undo dan Redo dan navigasi grup Home.
+
+Home menyediakan pintasan ke Clipboard, Font, Paragraph, Styles, dan Editing. Di dalamnya tersedia atur besar huruf, Change Case, Multilevel List, tanda paragraf, jarak baris, batas dan warna paragraf, serta gaya Title dan Subtitle.
 
 ## Batasan yang masih berlaku
 
